@@ -1,0 +1,375 @@
+\documentclass[letterpaper, 12pt, oneside, spanish]{tesis}
+
+% Paquetes para idioma
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Otros paquetes instalados
+% Básicos
+\usepackage[backend=bibtex,style=alphabetic]{biblatex}
+\addbibresource{bibliografia.bib}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{url}
+\usepackage{datetime}
+\longdate
+
+% Para dibujar figuras
+\usepackage{tikz}
+
+% Para cambiar el color de las letras
+\usepackage{color}
+
+% Para incluir código (básico)
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+
+% Para incluir referencias
+\usepackage{hyperref}
+\usepackage{nameref}
+\hypersetup{urlcolor=blue, colorlinks=false}
+
+% Para más símbolos matemáticos
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+% Para colocar teoremas en cajas
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+
+% Para texto Lorem Ipsum
+\usepackage{blindtext}
+
+% Para suprimir algunas advertencias
+\usepackage{silence}
+
+\WarningFilter{blindtext}{}     % Supress the "spanish not defined, using English instead"
+
+% Paquetes locales
+% Puedes agregar paquetes locales (archivos .sty) en un subdirectorio % 'paquetes'.
+% Utiliza la sintaxis \usepackage{paquetes/nombrePaquete}
+
+% Todas las imágenes se cargan del subdirectorio 'img' por defecto.
+\graphicspath{{img/}}
+
+% Sangrías de 3 espacios (3 veces el espacio de la x)
+\parindent 3ex
+
+% Interlineado
+\setlength{\baselineskip}{1.5pt}
+
+% Interpárrafo
+\setlength{\parskip}{16.5pt}
+
+\topmargin 2cm
+
+\renewcommand{\tablename}{Tabla}
+\newcommand\listsymbolname{Acrónimos y Símbolos}
+
+% item lists
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\textendash$}
+
+\newcommand\getcurrentref[1]{%      \getcurrentref{chapter|section|subsection}
+ \ifnumequal{\value{#1}}{0}
+  {??}
+  {\the\value{#1}}%
+}
+
+% compact itemize
+\setlist[itemize]{nosep}
+
+% Marco de color con título
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\newtcolorbox{coloredframe}[3][]{
+    empty,
+    breakable=true,
+    sharp corners=all,
+    top=4mm, left=4mm,
+    borderline west={1.5pt}{0pt}{#3}, borderline north={1.5pt}{0pt}{#3},
+    attach boxed title to top left={yshift=-1.75ex,xshift=6ex},
+    coltitle=black,
+    colback=white, colbacktitle=white,
+    fonttitle=\bfseries,
+    boxed title style={boxrule=0pt,colframe=white},
+    title=#2,
+    #1
+}
+
+% \newenvironment{coloredframe}[3][]{
+%     \mdfsetup{
+%         hidealllines=true, leftline=true,
+%         frametitlerule=true, frametitlerulewidth=.25pt,
+%         frametitle=#2,
+%         frametitlebackgroundcolor=#3!10,
+%         linewidth=1.5pt, linecolor=#3,
+%         #1
+%     }
+%     \begin{mdframed}
+% }{
+%     \end{mdframed}
+% }
+
+% greens
+\definecolor{caribbeangreen}{rgb}{0.0, 0.8, 0.6}
+
+% blues
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{cyan process}{rgb}{0.0, 0.72, 0.92}
+
+% reds
+\definecolor{crimson}{rgb}{0.86, 0.08, 0.24}
+\definecolor{darkcandyapplered}{rgb}{0.64, 0.0, 0.0}
+
+% code and mathematics
+\lstdefinelanguage{graciela}{
+    keywordstyle=\bfseries,
+    % list of keywords
+    keywords=[1]{
+        proc, func, program, begin, end, abstract, type,
+        if, do, in, out, inout, fi, od, write,
+        writeln, read, from, where, of, implements,
+        set, relation, multiset, sequence, function,
+        var, const, array, int, bool, float, char,
+        new, free, abort, warn, skip, random
+    },
+    keywordstyle=[1]\color{crimson},
+    % symbol keywords
+    morekeywords=[2]{
+        +,  /\\, \//, ∧, ∨, -, *, /, div, mod, \\, ->, →, <->,
+        ↔, [, ], elem, notelem, ∈, ∉, union, intersect, ∪, ∩,
+        msum, ⊎, ++, ⧺, subset, ssubset, superset, ssuperset,
+        ⊆, ⊂, ⊊, ⊇, ⊃, ⊋, ×, ÷, ^, sqrt, √, ⇒ ⇐, ≡, ≢,
+        ==>, <==, ===, !==, ==, !=, ≠, <=, <, >, >=, ≤, ≥, !, ¬,
+        forall, exist, notexist, max, min, product, sum, count,
+        ∀, ∃, ∄, ∑, ∏, \#
+    },
+    keywordstyle=[2]\color{cyan process},
+    morekeywords=[3]{repinv, coupinv, pre, post, bound, inv},
+    keywordstyle=[3]\color{cerulean},
+    morekeywords=[4]{true, false, null},
+    keywordstyle=[4]\color{caribbeangreen},
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    breaklines=true,
+    frame=top,
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    stringstyle=\color{rgb(179, 160, 82)}\ttfamily,
+    morestring=[b]',
+    morestring=[b]",
+    numberstyle=\scriptsize\color{caribbeangreen},
+    sensitive=true,                 % keywords are case-sensitive
+    morecomment=[l]{\-\-},          % [l]ine comments
+    morecomment=[n]{\{\-}{\-\}},    % [n]ested block comments
+    morestring=[b]",                % strings are in double quotes
+    morestring=[d]',                % characters are in single quotes
+}
+
+\newcommand{\inlinemath}[1]{{\small\bfseries\color{cyan process}\texttt{$#1$}}}
+\newcommand{\inlinecode}[1]{{\small\bfseries\color{darkcandyapplered}\texttt{#1}}}
+\lstdefinestyle{code}{
+    keywordstyle={\color{cerulean}\bfseries},   % style for keywords: bold
+    keywordstyle={[2]\bfseries},
+    commentstyle={\color{gray}},        % style for comments
+    captionpos=t,                       % caption position: top
+    frame=l,                            % frame: [l]eft [r]ight [t]op [b]ottom
+    frameround=ffff,                    % roundness: TR, BR, BL, TL
+    framerule=0.75pt,                   % thickness of the frame
+    framesep=0.5cm,                     % separation from frame to code
+    rulecolor=\color{gray},
+    columns=flexible,                   % flexible character width
+    keepspaces=true,                    % keep all spaces
+    % margins
+    aboveskip=1cm, xleftmargin=1.25cm, xrightmargin=1.25cm,
+    % listings does not support UTF-8
+    literate= {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+              {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+              {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+              {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+              {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+              {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+              {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+              {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+              {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+              {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+              {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+              {€}{{\EUR}}1 {£}{{\pounds}}1 {¿}{{\textquestiondown}}1
+              {¡}{{\textexclamdown}}1,
+}
+
+\lstnewenvironment{gracielacode}[1][]{
+    \linespread{1}
+    \lstset{
+        language=graciela,
+        style=code,
+        #1                  % settings for the lst environment
+    }
+}{}
+
+\lstnewenvironment{haskellcode}[1][]{
+    \linespread{1}
+    \lstset{
+        language=haskell,
+        keywords={          % taken from wiki.haskell.org/Keywords
+            as, case, class, data, default, deriving, do, else, family, forall,
+            foreign, hiding, if, import, in, infix, infixl, infixr, instance,
+            let, mdo, module, newtype, of, proc, qualified, rec, then, type,
+            where
+        },
+        style=code,
+        #1                  % settings for the lst environment
+    }
+}{}
+
+% Macros
+\newcommand{\projectTitle}{Graciela}
+\newcommand{\authorName}{Moisés Ackerman Lañado \and Carlos Spaggiari Roa}
+\newcommand{\tutorName}{Ernesto Hernández-Novich}
+
+\newdate{presentationdate}{16}{3}{2016}
+
+\begin{titlepage}
+    \title{
+        \vspace{-2cm} \includegraphics[width=1.2in]{./usb.png} \\[.2cm]
+        \large Universidad Simón Bolívar \\
+        Decanato de Estudios Profesionales \\
+        Coordinación de Ingeniería de la Computación
+        \vfill \LARGE \projectTitle \vfill
+    }
+    \author{Por: \\
+        \authorName \\[1.2cm]
+        Realizado con la asesoría de: \\
+        \tutorName \\[1.2cm]
+        PROYECTO DE GRADO \\
+        Presentado ante la Ilustre Universidad Simón Bolívar \\
+        como requisito parcial para optar al título de \\
+        Ingeniero de Computación
+    }
+    \date{Sartenejas, \monthname[\the\month] de \the\year}
+\end{titlepage}
+
+\begin{document}
+\frontmatter
+\maketitle
+\setstretch{1.3}
+
+% Se incluye el acta de evaluación, verificar que se corresponda
+% con el formato aceptado actualmente por el Decanato.
+\input{./partes/acta}
+
+% El resumen debe ser de una sola página
+\addtotoc{Resumen}
+\abstract{
+\addtocontents{toc}{\vspace{1em}}
+\blindtext
+
+% Las palabras clave son generalmente los nombres de áreas de investigación a
+% los cuales está asociado el trabajo. Generalmente son tres o cuatro.
+\noindent \begin{small} \textbf{Palabras clave}: @palabra1, @palabra2, @palabra3.
+\end{small}
+}
+
+% Iniciar nueva página luego del resumen
+\clearpage
+\setstretch{1.3}
+
+% Agradecimientos
+\acknowledgements{
+\addtocontents{toc}{\vspace{1em}}
+\blindtext
+}
+\clearpage
+
+\pagestyle{fancy}
+
+% Tabla de contenidos o índice
+\lhead{\emph{Índice General}}
+\tableofcontents
+
+% Estos índices solamente se usan si el libro contiene figuras, tablas y
+% algoritmos. Si alguno de estos no se utiliza, comentar o eliminar las líneas
+% pertinentes.
+\lhead{\emph{Índice de Figuras}}
+\listoffigures
+
+\lhead{\emph{Índice de Tablas}}
+\renewcommand*\listtablename{Índice de Tablas}
+\listoftables
+
+%\lhead{\emph{Índice de Algoritmos}}
+%\renewcommand*\listalgorithmname{Índice de algoritmos}
+%\listofalgorithms
+
+\setstretch{1.5}
+\clearpage
+\lhead{\emph{Acrónimos y símbolos}}
+\listofsymbols{ll}
+{
+
+    % Aquí van las siglas
+    \textbf{SIGLAS} & \textbf{S}iglas \textbf{I}sla \textbf{G}rafo
+                      \textbf{L}aos \textbf{A}ve \textbf{S}erpiente\\
+    \textbf{ACM} & \textbf{A}ssociation for \textbf{C}omputing \textbf{M}achinery\\
+    &\\
+    \hline
+    &\\
+
+    % Aquí van los símbolos
+    $\iff$ & doble implicación, si y sólo si\\
+    $\Rightarrow$ & implicación lógica\\
+    $[u:=v]$ & sustitución textual de $u$ por $v$
+}
+
+%% ----------------------------------------------------------------
+% End of the pre-able, contents and lists of things
+% Begin the Dedication page
+
+\setstretch{1.3}  % Return the line spacing back to 1.3
+
+\pagestyle{empty}  % Page style needs to be empty for this page
+
+\dedicatory{
+    \textbf{Dedicatoria} \bigskip
+
+    A @personasImportantes, por @razonesDedicatoria.
+}
+
+\addtocontents{toc}{\vspace{2em}}
+
+\mainmatter
+\pagestyle{fancy}
+
+% Se incluye el cuerpo de la tesis en este documento.
+
+\input{./partes/introduccion}
+
+% El número de capítulos varía. En mi libro fueron cuatro (sin contar
+% introducción y conclusión).
+\input{./partes/capitulo1}
+\input{./partes/capitulo2}
+\input{./partes/capitulo3}
+\input{./partes/capitulo4}
+
+\input{./partes/conclusiones}
+
+% El estilo de la bibliografía es AAAI, definido en el archivo aaai.bst.
+\label{bibliography}
+\printbibliography
+\lhead{\emph{Bibliografía}}
+\addtocontents{toc}{\vspace{2em}}
+\addcontentsline{toc}{chapter}{Bibliografía}
+
+% Apéndices
+\appendix
+\input{./partes/apendiceA}
+\input{./partes/apendiceB}
+\addtocontents{toc}{\vspace{2em}}
+
+\backmatter
+
+\end{document}

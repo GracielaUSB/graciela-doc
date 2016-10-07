@@ -1,7 +1,9 @@
-latex-templates
-===============
+# Formato de Proyecto de Grado de la Universidad Simón Bolívar
 
-Useful LaTeX templates for frequently used document types.
+Esta plantilla de LaTeX tiene todo lo que necesitas para empezar a
+escribir *el libro de la tesis*.
 
-Templates that are prefixed with `usb` were specifically made for courses at
-Universidad Simón Bolívar.
+Utiliza `make` para una compilación completa de las referencias.
+Puedes usar solo `pdflatex` sobre el documento principal, `tesis.tex`, cuando
+quieras realizar cambios sencillos sobre el documento y verlos reflejados
+rápidamente.
