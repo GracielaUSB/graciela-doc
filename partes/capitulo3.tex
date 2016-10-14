@@ -1,5 +1,132 @@
-\chapter{@nombreCapítulo}
+\chapter{Desarrollo}
 \label{capitulo3}
-\lhead{Capítulo 3. \emph{@nombreCapítulo}}
+\lhead{Capítulo 3. \emph{Desarrollo}}
 
-\Blindtext
+El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
+a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
+etapa,
+ se estudió el estado del compilador elaborado por Araujo y Jiménez,
+ se evaluaron las recomendaciones que sobre la semántica de este lenguaje hizo el
+jurado de este primer proyecto,
+ se revisó la bibliografía relacionada con el manejo de tipos definidos por el
+usuario en el contexto de programación formal,
+ se investigó sobre posibles estructuras de datos para implantar tipos que modelen la teoría de conjuntos,
+ se especificó formalmente la sintaxis para las nuevas funcionalidades propuestas
+y
+ se extendieron los analizadores lexicográfico y sintáctico para concordar con
+dicha especificación formal.
+
+En la segunda etapa,
+ se completó la verificación de tipos en presencia de tipos definidos por el
+usuario y tipos que modelan la teoría de conjuntos,
+ se extendió la biblioteca
+externa de Graciela para soportar expresiones de tipos que modelan la teoría de
+conjuntos,
+ se inició la extensión al generador de código intermedio LLVM para producir las
+instrucciones correspondientes a las nuevas funcionalidades y
+ se escribió una colección de programas que ejercitan las capacidades del
+lenguaje, tanto nuevas como originales, a fin de evaluar que el código generado
+fuera correcto.
+
+En la tercera etapa,
+ se culminó la extensión al generador de código intermedio iniciada en la etapa
+anterior,
+ se extendió el manual de usuario para presentar las nuevas funcionalidades del
+lenguaje,
+ se investigaron formas para permitir que usuarios noveles instalen el compilador
+sin mayor dificultad
+ se estudiaron las herramientas necesarias para incorporar facilidades de
+depuración (\emph{debugging}) y análisis de rendimiento (\emph{profiling}) al
+compilador.
+
+\section{Primera etapa}
+\subsection{Revisión del proyecto de Araujo y Jiménez}
+\blindtext[1]
+% - Recomendaciones
+% - Modularizar proyecto para permitir futuros desarrollos
+% - Reestructuración de la gramática de los programas en Graciela
+
+\subsection{Recuperación de errores en análisis sintáctico y Megaparsec}
+\blindtext[1]
+%     - Razones Megaparsec > Parsec
+%         - Recuperación de errores -> `withRecovery`
+%         - Monad Transformers
+%         - Análisis lexicográfico más sencillo
+
+\subsection{Consideraciones sobre arreglos}
+\blindtext[1]
+% - Arreglos multidimensionales en lugar de arreglos de arreglos
+% - Verificar tamaños de arreglos
+
+\subsection{Consideraciones sobre funciones y procedimientos}
+\blindtext[1]
+% - Cota
+% - Cambios en proc (sin : antes de los parámetros)
+%     - {pre} y {post} están juntas, {bound} opcional para procedimientos
+%       recursivos
+%     - se elminó el modo de parámetros "ref", equivalente a in-out -- MONASCAL?
+
+\subsection{Consideraciones sobre cuantificaciones}
+\blindtext[1]
+%     - Posibilidad de usar colecciones como rango
+%     - Separación del "rango" en "rango" y condiciones
+
+\subsection{Teoría de conjuntos}
+\blindtext[1]
+% - Similares a cuantificaciones, aplican restricciones similares
+% - Notación para relation y function:
+%     : relation int <-> char, rel(<conjunto de pares>)
+%     : function char -> float, func(<conjunto de pares>)
+
+\subsection{Tipos definidos por el usuario}
+\blindtext[1]
+%  - breve discusión de Carroll Morgan
+%  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA
+% ¿Qué es un tipo de dato (abstracto/concreto)?
+        % - Consideraciones
+        % - Qué significa que un TDC implemente un TDA, relación de refinamiento
+        % - Variables de tipo
+        % - Invariantes de representación, acoplamiento
+        % - Procedimientos y Funciones de/sobre un TAD
+
+\section{Segunda etapa}
+\subsection{Verificación de tipos}
+\blindtext[1]
+% - breve discusión de =:= y <> de tipos, también de funciones con argumentos
+%   con variables de tipo
+
+
+\subsection{Apuntadores}
+\blindtext[1]
+        % - malloc
+        % - free
+        % - Apuntadores y estructuras (malloc recibe tamaño en bytes, debe ser calculado: getElementPointer)
+
+\subsection{Biblioteca externa para teoría de conjuntos}
+\blindtext[1]
+% - Backend en C++ (std)
+
+\subsection{Generación de código intermedio}
+\blindtext[1]
+% TDDDPEU
+% Cotas de funciones y procedimientos
+% Cuantificaciones
+% Conjuntos
+
+\subsection{Colección de programas}
+\blindtext[1]
+% Referencia a los anexos
+
+\section{Tercera etapa}
+\subsection{Generación de código intermedio (cont.)}
+\blindtext[1]
+% - Variables de tipo
+% - Invariantes de representación, acoplamiento
+%     - Invariante de acoplamiento "compilable"
+% - Procedimientos y Funciones de/sobre un TAD
+
+\subsection{Facilidad de instalación para usuarios noveles}
+\blindtext[1]
+
+\subsection{Depuración y análisis de rendimiento}
+\blindtext[1]

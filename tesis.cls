@@ -150,10 +150,10 @@
 \newcommand*{\FACULTY}[1]{\def\FACNAME{#1}}
 \newcommand*{\subject}[1]{\def\subjectname{#1}}
 \newcommand*{\keywords}[1]{\def\keywordnames{#1}}
-\supervisor  {Michael Doggett}
+\supervisor  {Ernesto Hernández-Novich}
 \examiner    {}
 \degree      {}
-\authors     {@autor1, @autor2}
+\authors     {Moisés Ackerman Lañado, Carlos Spaggiari Roa}
 \university  {\texorpdfstring{\href{http://www.usb.ve}
                 {Universidad Simón Bolívar}}
                 {Universidad Simón Bolívar}}
@@ -228,7 +228,7 @@
 %   \cleardoublepage
 % }
 \newenvironment{abstract}
-{ 
+{
   \btypeout{Abstract Page}
   \thispagestyle{plain}
   \begin{center}
