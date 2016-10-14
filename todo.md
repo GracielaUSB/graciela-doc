@@ -10,3 +10,5 @@
 - {unbounded}
 
 - Generar código sin aserciones (?)
+
+- Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
