@@ -18,6 +18,7 @@
     - Haskell
     - Valgrind
     - C, C++
+    - Git
 - Desarrollo                     (#0)
     - Revisión del proyecto de Araujo y Jiménez
         - Recuperación de errores en análisis sintáctico y Megaparsec

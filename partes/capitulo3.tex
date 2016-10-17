@@ -3,55 +3,149 @@
 \lhead{Capítulo 3. \emph{Desarrollo}}
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
-a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
-etapa,
- se estudió el estado del compilador elaborado por Araujo y Jiménez,
- se evaluaron las recomendaciones que sobre la semántica de este lenguaje hizo el
-jurado de este primer proyecto,
- se revisó la bibliografía relacionada con el manejo de tipos definidos por el
-usuario en el contexto de programación formal,
- se investigó sobre posibles estructuras de datos para implantar tipos que modelen la teoría de conjuntos,
- se especificó formalmente la sintaxis para las nuevas funcionalidades propuestas
-y
- se extendieron los analizadores lexicográfico y sintáctico para concordar con
-dicha especificación formal.
+a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
+revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
+(1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
+por el programador, (4) Herramientas para el programador.
 
-En la segunda etapa,
- se completó la verificación de tipos en presencia de tipos definidos por el
-usuario y tipos que modelan la teoría de conjuntos,
- se extendió la biblioteca
-externa de Graciela para soportar expresiones de tipos que modelan la teoría de
-conjuntos,
- se inició la extensión al generador de código intermedio LLVM para producir las
-instrucciones correspondientes a las nuevas funcionalidades y
- se escribió una colección de programas que ejercitan las capacidades del
-lenguaje, tanto nuevas como originales, a fin de evaluar que el código generado
-fuera correcto.
+% El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
+% a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
+% etapa,
+%#  se estudió el estado del compilador elaborado por Araujo y Jiménez,
+%#  se evaluaron las recomendaciones que sobre la semántica de este lenguaje hizo el
+%# jurado de este primer proyecto,
+%  se revisó la bibliografía relacionada con el manejo de tipos definidos por el
+% usuario en el contexto de programación formal,
+%  se investigó sobre posibles estructuras de datos para implantar tipos que modelen la teoría de conjuntos,
+%  se especificó formalmente la sintaxis para las nuevas funcionalidades propuestas
+% y
+%  se extendieron los analizadores lexicográfico y sintáctico para concordar con
+% dicha especificación formal.
+%
+% En la segunda etapa,
+%  se completó la verificación de tipos en presencia de tipos definidos por el
+% usuario y tipos que modelan la teoría de conjuntos,
+%  se extendió la biblioteca
+% externa de Graciela para soportar expresiones de tipos que modelan la teoría de
+% conjuntos,
+%  se inició la extensión al generador de código intermedio LLVM para producir las
+% instrucciones correspondientes a las nuevas funcionalidades y
+%  se escribió una colección de programas que ejercitan las capacidades del
+% lenguaje, tanto nuevas como originales, a fin de evaluar que el código generado
+% fuera correcto.
+%
+% En la tercera etapa,
+%  se culminó la extensión al generador de código intermedio iniciada en la etapa
+% anterior,
+%  se extendió el manual de usuario para presentar las nuevas funcionalidades del
+% lenguaje,
+%  se investigaron formas para permitir que usuarios noveles instalen el compilador
+% sin mayor dificultad
+%  se estudiaron las herramientas necesarias para incorporar facilidades de
+% depuración (\emph{debugging}) y análisis de rendimiento (\emph{profiling}) al
+% compilador.
 
-En la tercera etapa,
- se culminó la extensión al generador de código intermedio iniciada en la etapa
-anterior,
- se extendió el manual de usuario para presentar las nuevas funcionalidades del
-lenguaje,
- se investigaron formas para permitir que usuarios noveles instalen el compilador
-sin mayor dificultad
- se estudiaron las herramientas necesarias para incorporar facilidades de
-depuración (\emph{debugging}) y análisis de rendimiento (\emph{profiling}) al
-compilador.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% REVISIÓN DEL TRABAJO PREVIO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Revisión del trabajo previo}
 
-\section{Primera etapa}
-\subsection{Revisión del proyecto de Araujo y Jiménez}
-\blindtext[1]
+En la primera etapa de este proyecto, se estudió el estado del compilador
+elaborado por Araujo y Jiménez y se evaluaron las recomendaciones que sobre la
+semántica de este lenguaje hizo el jurado de este primer proyecto.
+
+Se observó que existían aspectos del compilador que podían ser mejorados, y que
+además estas mejoras facilitarían el desarrollo de los objetivos del proyecto,
+por lo cual se decidió hacer los cambios que se mencionan en esta sección.
+
 % - Recomendaciones
 % - Modularizar proyecto para permitir futuros desarrollos
 % - Reestructuración de la gramática de los programas en Graciela
 
-\subsection{Recuperación de errores en análisis sintáctico y Megaparsec}
-\blindtext[1]
-%     - Razones Megaparsec > Parsec
-%         - Recuperación de errores -> `withRecovery`
-%         - Monad Transformers
-%         - Análisis lexicográfico más sencillo
+\subsection{Modularización de la base de código}
+
+La base de código que recibimos, en la forma de un repositorio \emph{git},
+consistía de unos veinticinco archivos escritos en \emph{Haskell} organizados en
+un solo directorio. No existía entre estos archivos gran separación de
+responsabilidades y varios de ellos contenían código para acciones que no
+guardaban relación entre ellas. En particular, se encontró que el Árbol
+Sintáctico Abstracto (\textsc{ASA}) estaba representado como un solo tipo de
+datos con más de cuarenta constructores distintos.
+
+Así, se decidió separar el código fuente del compilador en cuatro áreas:
+\begin{itemize}
+
+  \item Estructuras de datos para representar el \textsc{ASA} de un programa
+  escrito en Graciela. Almacenado en el directorio \texttt{AST}, por las siglas
+  en inglés para \textsc{ASA} (\emph{Abstract Syntax Tree}).
+
+  \item Análisis sintáctico para convertir un archivo de código Graciela en un
+  ASA, verificando simultáneamente su corrección. Almacenado en el directorio
+  \texttt{Parser}, por el término en inglés para análizador sintáctico.
+
+  \item Generación de código intermedio LLVM para programas escritos
+  correctamente en Graciela que ya han sido convertidos en un ASA. Almacenado en el
+  directorio \texttt{LLVM}.
+
+  \item Código que se usa en más de una de las áreas anteriores, como la Tabla
+  de Símbolos del compilador y las estructuras de datos para la emisión de
+  mensajes de error, y el archivo principal del compilador. Almacenado en el
+  directorio raíz del código fuente.
+
+\end{itemize}
+
+En cada una de las primeras tres áreas, se separaron a su vez los procedimientos
+y estructuras según la parte del lenguaje Graciela que se estuviera tratando.
+Así, el archivo \texttt{AST/Expression.hs} contiene las estructuras de datos
+para representar únicamente las expresiones del lenguaje Graciela como un
+\textsc{ASA}, mientras que el \texttt{Parser/Expression.hs} contiene la lógica
+del analizador sintáctico para interpretar y verificar la corrección de las
+expresiones, y \texttt{LLVM/Expression.hs} contiene las reglas de traducción de
+\textsc{ASA} a código intermedio \textsc{LLVM} para expresiones.
+
+\subsection{Recuperación de errores en análisis sintáctico}
+
+También se observó que, enfrentado a archivos Graciela con errores sintácticos,
+el compilador producía errores difíciles de interpretar. Si bien no es sencillo
+generar mensajes de error y continuar el proceso de análisis sintáctico para
+archivos que no pertenecen a la gramática del compilador, esta es una
+característica que se espera de cualquier compilador si se desea popularizar su
+uso.
+
+Desafortunadamente, la biblioteca de análisis sintáctico con la que había sido
+desarrollado el proyecto, \texttt{Parsec}, no está diseñada para ofrecer
+recuperación de errores, de modo que cualquier solución que usara esta
+biblioteca tendría problemas en este aspecto, o al menos resultaría compleja y
+más propensa a defectos de programación.
+
+Así, se investigaron bibliotecas alternativas para análisis sintáctico y se
+consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico
+\todo{explicar en el Marco Tecnológico}, \texttt{Megaparsec} provee el
+combinador \texttt{withRecovery}, que permite agregar recuperación de errores a
+un analizador sintáctico de manera sencilla. Este combinador recibe una función
+de recuperación y un analizador sintáctico base, y ejecuta la primera cuando
+dicho analizador falla. Por ejemplo, para agregar recuperación de errores a las
+instrucciones, separadas por punto y coma, se usó código como el siguiente:
+
+\begin{haskellcode}
+  withRecovery recover instruction
+    where
+      recover err = void anyToken \`manyTill\` match TokSemicolon >> tell err
+\end{haskellcode}
+
+Así, con ligeros cambios según el contexto del analizador, fue posible agregar
+recuperación de errores al compilador.
+
+Otra ventaja de la biblioteca \texttt{Megaparsec} sobre \texttt{Parsec} es que
+el \emph{Monad} provisto por la primera, a diferencia del provisto por la
+segunda, puede ser utilizado \emph{dentro} de Transformadores de \emph{Monad}s,
+permitiendo acumular distintos efectos en una pila de \emph{Monad}s. La utilidad
+de esto quedará más clara en la subsección sobre Cuantificaciones.
+
+Finalmente, por tratarse de una bifurcación (\emph{fork}, en inglés) de la
+biblioteca \texttt{Parsec}, la mayoría de sus combinadores son idénticos o muy
+similares a los de dicha biblioteca, lo cual permitió que la migración del
+código de una biblioteca a la otra fuera muy simple.
 
 \subsection{Consideraciones sobre arreglos}
 \blindtext[1]
@@ -65,21 +159,51 @@ compilador.
 %     - {pre} y {post} están juntas, {bound} opcional para procedimientos
 %       recursivos
 %     - se elminó el modo de parámetros "ref", equivalente a in-out -- MONASCAL?
+\subsubsection{Generación de código intermedio}
+% Cotas de funciones y procedimientos
 
 \subsection{Consideraciones sobre cuantificaciones}
 \blindtext[1]
 %     - Posibilidad de usar colecciones como rango
 %     - Separación del "rango" en "rango" y condiciones
 
-\subsection{Teoría de conjuntos}
+\subsubsection{Generación de código intermedio}
+% Cuantificaciones
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Manejo de apuntadores}
+\blindtext[1]
+        % - malloc
+        % - free
+        % - Apuntadores y estructuras (malloc recibe tamaño en bytes, debe ser calculado: getElementPointer)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Teoría de conjuntos}
+\subsection{Consideraciones}
 \blindtext[1]
 % - Similares a cuantificaciones, aplican restricciones similares
 % - Notación para relation y function:
 %     : relation int <-> char, rel(<conjunto de pares>)
 %     : function char -> float, func(<conjunto de pares>)
 
-\subsection{Tipos definidos por el usuario}
+\subsection{Biblioteca externa para teoría de conjuntos}
 \blindtext[1]
+% - Backend en C++ (std)
+
+\subsection{Generación de código intermedio}
+\blindtext[1]
+% Conjuntos
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tipos de datos definidos por el programador}
+\blindtext[1]
+\subsection{Consideraciones}
 %  - breve discusión de Carroll Morgan
 %  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA
 % ¿Qué es un tipo de dato (abstracto/concreto)?
@@ -88,43 +212,25 @@ compilador.
         % - Variables de tipo
         % - Invariantes de representación, acoplamiento
         % - Procedimientos y Funciones de/sobre un TAD
+\subsection{Generación de código intermedio}
+% TDDDPEU
+% Variables de tipo
+% - Invariantes de representación, acoplamiento
+%     - Invariante de acoplamiento "compilable"
+% - Procedimientos y Funciones de/sobre un TAD
 
-\section{Segunda etapa}
 \subsection{Verificación de tipos}
 \blindtext[1]
 % - breve discusión de =:= y <> de tipos, también de funciones con argumentos
 %   con variables de tipo
 
-
-\subsection{Apuntadores}
-\blindtext[1]
-        % - malloc
-        % - free
-        % - Apuntadores y estructuras (malloc recibe tamaño en bytes, debe ser calculado: getElementPointer)
-
-\subsection{Biblioteca externa para teoría de conjuntos}
-\blindtext[1]
-% - Backend en C++ (std)
-
-\subsection{Generación de código intermedio}
-\blindtext[1]
-% TDDDPEU
-% Cotas de funciones y procedimientos
-% Cuantificaciones
-% Conjuntos
-
-\subsection{Colección de programas}
-\blindtext[1]
-% Referencia a los anexos
-
-\section{Tercera etapa}
-\subsection{Generación de código intermedio (cont.)}
-\blindtext[1]
-% - Variables de tipo
-% - Invariantes de representación, acoplamiento
-%     - Invariante de acoplamiento "compilable"
-% - Procedimientos y Funciones de/sobre un TAD
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para el programador}
+% \subsection{Colección de programas}
+% \blindtext[1]
+% % Referencia a los anexos
 \subsection{Facilidad de instalación para usuarios noveles}
 \blindtext[1]
 
