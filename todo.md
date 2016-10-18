@@ -9,9 +9,10 @@
 
 - Generar código sin aserciones (?)
 
-- Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
-
 - fix arithmetic precalc
 
-- Que `trace` sólo funcione con un flag (que NO debe aparecer en el info) -> GetOpt siempre imprime las opciones :/
 
+- Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
+
+- Que `trace` sólo funcione con un flag (que NO debe aparecer en el info) -> GetOpt siempre imprime las opciones :/
+  --> how about pragmas? {-# LANGUAGE Trace #-}, {-# LANGUAGE LogicAnywhere #-}

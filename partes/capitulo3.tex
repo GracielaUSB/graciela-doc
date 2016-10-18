@@ -65,8 +65,10 @@ por lo cual se decidió hacer los cambios que se mencionan en esta sección.
 
 % - Reestructuración de la gramática de los programas en Graciela
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Recomendaciones del Jurado del proyecto de grado de Araujo y Jiménez}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
 
 La base de código que recibimos, en la forma de un repositorio \emph{git},
@@ -108,6 +110,7 @@ analizador sintáctico para interpretar y verificar la corrección de las
 expresiones, y \texttt{LLVM/Expression.hs} contiene las reglas de traducción de
 \textsc{ASA} a código intermedio \textsc{LLVM} para expresiones.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Recuperación de errores en análisis sintáctico}
 
 También se observó que, enfrentado a archivos Graciela con errores sintácticos,
@@ -152,18 +155,21 @@ biblioteca \texttt{Parsec}, la mayoría de sus combinadores son idénticos o muy
 similares a los de dicha biblioteca, lo cual permitió que la migración del
 código de una biblioteca a la otra fuera muy simple.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre arreglos}
 
-Durante la revisión del compilador original, se consiguió que, como la mayoría
-de los lenguajes de bajo nivel, no se ofrecía verificación de acceso a arreglos
-dentro de los límites de los mismos. A pesar de que implantar este tipo de
-verificaciones no formara parte de los explícita de los objetivos del proyecto,
-se consideró que podría agregarse esta funcionalidad para mejorar la experiencia
-del programador novel. También se consideró que sería cómodo para el programador
-poder hablar de arreglos multidimensionales en lugar de arreglos de arreglos, y
-así recibir errores apropiados, a tiempo de compilación, al usar un arreglo de
-\texttt{n} dimensiones con un número de índices distinto de \texttt{n}. Por
-ejemplo, intentar compilar el siguiente fragmento de código,
+Durante la revisión del compilador original, se consiguió que, como en la
+mayoría de los lenguajes de bajo nivel, no se ofrecía verificación de acceso a
+arreglos dentro de los límites de los mismos. A pesar de que implantar este tipo
+de verificaciones no formara parte explícita de los objetivos del proyecto, se
+consideró que podría agregarse esta funcionalidad para mejorar la experiencia
+del programador novel. 
+
+También se consideró que sería cómodo para el programador poder hablar de
+arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
+errores apropiados, a tiempo de compilación, al usar un arreglo de \texttt{n}
+dimensiones con un número de índices distinto de \texttt{n}. Por ejemplo,
+intentar compilar el siguiente fragmento de código,
 
 \begin{gracielacode}
   |[ var arr : array [5, 10] of int
@@ -177,8 +183,8 @@ situación equivalente produciría un error acerca de intentar imprimir un objet
 de tipo arreglo de entero, que no expresa el verdadero problema del caso.
 
 Para evitarle confusión a los programadores, se eliminó la posibiliad de
-declarar arreglos de arreglos, y se emite un error a tiempo de compilación cuando esto se hace, 
-sugiriendo en cambio utilizar arreglos multidimensionales.
+declarar arreglos de arreglos, y se emite un error a tiempo de compilación
+cuando esto se hace, sugiriendo en cambio utilizar arreglos multidimensionales.
 
 Para implementar estos cambios, fue necesario cambiar la representación interna
 de los arreglos. Originalmente, funcionaban como los arreglos del lenguaje C; es
@@ -215,24 +221,147 @@ respecto a la liberación de memoria ocupada por arreglos dinámicos. Sin embarg
 este caso fue tomado en cuenta y la liberación de memoria procede en dos partes,
 liberando primero el bloque de elementos, y posteriormente la <<cabecera>>.
 
+La última consideración sobre los arreglos está asociada con su uso como
+parámetros de subrutinas (procedimientos y funciones). Se decidió permitir el
+pase de arreglos de tamaño variable como parámetros siempre que todas las
+variables en las expresiones que denotan su tamaño sean parámetros anteriores de
+la subrutina, pasados en modo \texttt{in} (todos los parámetros de las funciones
+son pasados en modo \texttt{in}). Por ejemplo, la firma del siguiente
+procedimiento sería aceptada por el compilador:
+
+\begin{gracielacode}
+  proc sub(in size : int, inout arr : array [size, size * 2] of int)
+\end{gracielacode}
+
+Desafortunadamente, un procedimiento (o una función) con una firma similar a la
+de \texttt{sub} podría ser llamado con argumentos que no concuerden, por
+ejemplo,
+
+\begin{gracielacode}
+  |[ var arr : array [5, 5]
+  ;  sub (5, arr)
+  ]|
+\end{gracielacode}
+
+En este caso, el procedimiento \texttt{sub} espera un arreglo rectangular de
+tamaño \texttt{[size, (size * 2)]}, y como recibe \texttt{size = 5}, espera que
+el tamaño del arreglo sea \texttt{[5, 10]}. Sin embargo, recibe un arreglo de
+tamaño \texttt{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa
+llamada. Esta verificación no puede hacerse a tiempo de compilación en el caso
+general, puesto que sería necesario \todo{consultar esto con Monascal}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre funciones y procedimientos}
-\blindtext[1]
-% - Gramática
-% - Cota
-% - Cambios en proc (sin : antes de los parámetros)
-%     - {pre} y {post} están juntas, {bound} opcional para procedimientos
-%       recursivos
-%     - se elminó el modo de parámetros "ref", equivalente a in-out -- MONASCAL?
-\subsubsection{Generación de código intermedio}
-% Cotas de funciones y procedimientos
 
+Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
+para que fueran más similaras a sus equivalentes en GCL. Simplemente, se
+eliminaron los lexemas \texttt{begin} y \texttt{end}, antes usados para
+delimitar el procedimiento, y el lexema \texttt{:} entre el identificador de la
+subrutina y su lista de parámetros, y se movió la poscondición junto a la
+precondición, antes del cuerpo de la subrutina.
+
+Además, se agregó la posibilidad de especificar cotas para las subrutinas luego
+de la poscondición y antes del cuerpo, como requisito para hacer llamadas
+recursivas dentro de la misma. Así, es un error a tiempo de compilación escribir
+una llamada recursiva de una subrutina sin cota. En el caso contrario, el de una
+subrutina con cota pero sin recursión, ésta simplemente es ignorada. A pesar de
+que esto no estaba dentro de los objetivos de este proyecto, se consideró de
+suma importancia, puesto que la recursión sin cotas es equivalente a la
+iteración sin cotas, prohibida en el caso de la instrucción \texttt{do .. od}.
+
+El código intermedio LLVM generado para una subrutina recursiva, necesariamente
+con cota, además de incluir el cuerpo especificado por el programador, incluye
+verificaciones para el decrecimiento y la no-negatividad de la cota. Esto se
+logra pasando dos parámetros adicionales a las subrutinas recursivas. El
+primero, de tipo booleano, indica si la llamada en curso es la primera llamada a
+la subrutina o si se trata de una llamada recursiva. En ambos casos, al entrar a
+la subrutina se calcula el valor de la cota, y si es negativa se da un error y
+el programa aborta. En caso contrario, si se trata de la primera llamada a la
+subrutina, se ejecuta el cuerpo de ésta, pero si se trata de una llamada
+recursiva, se compara la cota actual con la anterior, recibida como el segundo
+parámetro implícito. Si no hubo decremento en la cota, también se da un error y
+el programa aborta. En caso contrario, se ejecuta el cuerpo de la subrutina.
+
+Por último, cabe mencionar que se eliminó el modo de parámetros
+<<\texttt{ref}>>, puesto que resulta equivalente al modo <<\texttt{inout}>>
+\todo{Consultar con Monascal.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre cuantificaciones}
-\blindtext[1]
-%     - Posibilidad de usar colecciones como rango
-%     - Separación del "rango" en "rango" y condiciones
 
-\subsubsection{Generación de código intermedio}
-% Cuantificaciones
+Durante el análisis del compilador original, se conoció que las cuantificaciones
+presentaban limitaciones en la expresividad de sus rangos. El analizador
+sintáctico de esta parte del lenguaje esperaba, específicamente, dos
+comparaciones aritméticas, separadas por un operador de conjunción
+(\texttt{/\\}), seguidas por un lexema <<barra vertical>> (\texttt{|}). Esto
+impedía expresar condiciones lógicas distintas de comparaciones aritméticas,
+como predicados definidos por el programador, o incluso condiciones con más de
+dos comparaciones aritméticas.
+
+Para solucionar esto, se agregó un estado al analizador sintáctico de las
+expresiones, usando el \emph{Monad Transformer} \texttt{StateT} sobre el
+\emph{Monad} \texttt{Parsec}. En este estado, se guarda información sobre la
+pila de variables \emph{dummy} presentes en un momento dado (la pila vacía en el
+caso de las expresiones sin cuantificaciones). Además, se permitió que el
+analizador sintáctico de las expresiones devolviera, además de la expresión
+conseguida, el rango asociado a ella. Por ejemplo, con la variable \emph{dummy}
+\texttt{x}, la expresión \texttt{x >= 5} tiene asociado el rango $[5, \infty)$.
+
+Cuando el analizador sintáctico se encuentra en una cuantificación, agrega la
+variable \emph{dummy} correspondiente a la pila del estado, e intenta construir
+un rango. Los únicos operadores que construyen rangos son la igualdad
+(\texttt{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
+(\texttt{>}, \texttt{>=}, \texttt{<}, \texttt{<=}), que construyen rangos
+<<aritméticos>>; y el operador <<pertenece>> de la teoría de conjuntos ($\in$)
+\todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
+adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
+constante booleana \texttt{false} produce el rango <<vacío>>. 
+
+Además, el operador de conjunción (\texttt{/\\}) devuelve, si es posible, el
+rango que resulta de intersectar los rangos asociados a cada uno de sus
+operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
+consideran los rangos generados por el operador de disjunción (\texttt{\\/}),
+por lo cual si se desea que un rango sea procesado como tal, debe estar escrito
+en Forma Normal Conjuntiva. Esto no le resta expresividad al lenguaje, ya que
+pueden conseguirse expresiones equivalentes con el uso de teoremas lógicos,
+convirtiendo una cuantificación en la disjunción de varias, o usando el operador
+de unión de conjuntos ($\cup$).
+
+Finalmente, si se ha construido un rango válido, este se registra en
+el ASA correspondiente a la cuantificación. Si el rango es <<aritmético>>, se
+exige que existan límites superior e inferior, emitiéndose el error apropiado en
+caso de faltar uno de los límites. Cabe mencionar que si la variable
+\texttt{dummy} es de tipo número de punto flotante, las comparaciones
+aritméticas \emph{no} generarán rangos, puesto que es imposible iterar sobre
+números de este tipo. 
+
+El código intermedio LLVM generado para cada cuantificación dependerá de la
+clase del rango sobre el cual esté definida:
+
+\begin{description}
+
+  \item [Rango <<vacío>>] se genera el valor neutro del cuantificador, o, en el
+caso de los cuantificadores \texttt{max} y \texttt{min}, una llamada al mensaje
+de error apropiado.
+
+  \item [Rango <<unitario>>] se genera el código del cuerpo de la cuantificación
+con la sustitución apropiada de la variable \emph{dummy}.
+
+  \item [Rango <<aritmético>>] se genera una iteración en la cual la variable
+\emph{dummy} toma todos los valores entre el límite inferior y el superior, y se
+evalúa el cuerpo, acumulando los resultados. Existe la posibilidad de que a
+tiempo de ejecución esto resulte en un rango vacío, y en este caso el
+comportamiento es el esperado, pues la iteración es vacía.
+
+  \item [Rango <<conjunto>>] se genera una iteración en la cual la variable
+\emph{dummy} toma todos los valores pertenecientes al conjunto (o multiconjunto,
+o secuencia), y se evalúa el cuerpo, acumulando los resultados. En el caso de un
+rango secuencia, el órden de la iteración es el mismo de la secuencia, mientras
+que para conjuntos y multiconjuntos no se garantiza ningún órden en particular.
+De nuevo, es posible que un rango de esta clase resulte en un rango vacío a
+tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
