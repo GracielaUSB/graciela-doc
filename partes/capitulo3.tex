@@ -238,7 +238,32 @@ liberando primero el bloque de elementos, y posteriormente la <<cabecera>>.
 %% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Manejo de apuntadores}
-\blindtext[1]
+  
+\subsection{Consideraciones}
+Los apuntador se diseñaron para apuntar a un objeto cualquier tipo básico,
+arreglo o un tipo definido por el usuario. La sintaxis para declarar un
+apuntador es parecida a la que usa el lenguaje C, es decir, se escribe el tipo
+base seguido de tantos asteriscos como apuntadores se desee. El operador para
+desreferenciar un apuntador es igualmente el asterisco, el cual debe colocarse
+como operador prefijo a una variable de tipo apuntador. Se eligió esta
+sintaxis para poder introducir al estudiante a los apuntadores del lenguaje C.
+
+La reserva y liberación de memoria dinámica para un apuntador se realiza con las funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con consideraciones especiales para el caso de apuntadores y estructuras, las cuales se explican en sus secciones respectivas. El siguiente fragmento de codigo ejemplifica la declaración y uso de un apuntador a entero.
+
+\begin{gracielacode}
+  |[ var p : int*
+  ;  new(p)
+  ;  *p := 10
+  ;  free(p)
+  ]|
+\end{gracielacode}
+
+\subsection{Generación de código intermedio}
+LLVM ofrece un soporte completo para el manejo de apuntadores, por lo que la generacion de codigo intermedio fue de cierta manera sencilla. Sin embargo, carece de instrucciones para la reserva y liberación de memoria dinámica, Por lo que hubo la necesidad de colocar funciones en la biblioteca externa que reciban como argumento el apuntador en cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de realizar dichas operaciones.
+
+Para la reserva de memoria dinámica, se utilizó la función standard de C \texttt{kalloc}, la cual reserva la cantidad de memoria que se le da como argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de memoria dinámica hace llamando a la función standard de C \texttt{free} y luego asignando al apuntador que se esta liberando un valor nulo, de manera de evitar que el programador pueda interactuar con apuntadores a direcciones que no puede acceder. En caso de tratar de liberar un apuntador mas de una vez o si este contiene un valor nulo, se emite un error diciendo el lugar donde se realizó la operación y se aborta el programa, en vez de permitir que sea el sistema operativo quien emita el error.
+
+
   % - malloc
   % - free
   % - Apuntadores y estructuras (malloc recibe tamaño en bytes, debe ser calculado: getElementPointer)
