@@ -369,15 +369,15 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 \section{Manejo de apuntadores}
   
 \subsection{Consideraciones}
-Los apuntador se diseñaron para apuntar a un objeto cualquier tipo básico,
-arreglo o un tipo definido por el usuario. La sintaxis para declarar un
-apuntador es parecida a la que usa el lenguaje C, es decir, se escribe el tipo
-base seguido de tantos asteriscos como apuntadores se desee. El operador para
-desreferenciar un apuntador es igualmente el asterisco, el cual debe colocarse
-como operador prefijo a una variable de tipo apuntador. Se eligió esta
-sintaxis para poder introducir al estudiante a los apuntadores del lenguaje C.
+Los apuntador implementados para el lenguaje graciela pueden apuntar a un
+objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
+sintaxis para declarar un apuntador es parecida a la presente en  el lenguaje
+C, es decir, se escribe el tipo base seguido de tantos asteriscos (\texttt{*})
+como apuntadores se desee. El operador para acceder a la memoria apuntada por
+un apuntador es igualmente el asterisco, el cual debe colocarse como operador
+prefijo a una expresión de tipo apuntador.
 
-La reserva y liberación de memoria dinámica para un apuntador se realiza con las funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con consideraciones especiales para el caso de apuntadores y estructuras, las cuales se explican en sus secciones respectivas. El siguiente fragmento de codigo ejemplifica la declaración y uso de un apuntador a entero.
+La reserva y liberación de memoria dinámica para un apuntador se realiza con las funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores a tipos definidos por el programador, que se describen detalladamente en sus respectivas secciones. El siguiente fragmento de código ejemplifica la declaración y uso de un apuntador a entero.
 
 \begin{gracielacode}
   |[ var p : int*
@@ -388,9 +388,11 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 \end{gracielacode}
 
 \subsection{Generación de código intermedio}
-LLVM ofrece un soporte completo para el manejo de apuntadores, por lo que la generacion de codigo intermedio fue de cierta manera sencilla. Sin embargo, carece de instrucciones para la reserva y liberación de memoria dinámica, Por lo que hubo la necesidad de colocar funciones en la biblioteca externa que reciban como argumento el apuntador en cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de realizar dichas operaciones.
+LLVM ofrece un soporte completo para el manejo de apuntadores, lo que facilitó enormemente la tarea de implementar la generación de código intermedio para el manejo de apuntadores. Sin embargo, carece de instrucciones para la reserva y liberación de memoria dinámica, razón por la cual hubo la necesidad de colocar funciones en la biblioteca externa que recibieran como argumento al apuntador en cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de realizar dichas operaciones.
 
-Para la reserva de memoria dinámica, se utilizó la función standard de C \texttt{kalloc}, la cual reserva la cantidad de memoria que se le da como argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de memoria dinámica hace llamando a la función standard de C \texttt{free} y luego asignando al apuntador que se esta liberando un valor nulo, de manera de evitar que el programador pueda interactuar con apuntadores a direcciones que no puede acceder. En caso de tratar de liberar un apuntador mas de una vez o si este contiene un valor nulo, se emite un error diciendo el lugar donde se realizó la operación y se aborta el programa, en vez de permitir que sea el sistema operativo quien emita el error.
+En el momento en que se crea un apuntador, éste se inicializa con un valor nulo, evitando así poder acceder a una dirección basura. En caso de tratar acceder a la memoria apuntada por un apuntador que contenga la dirección nula, se emite un error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que sea el sistema operativo quien emita el error.
+
+Para la reserva de memoria dinámica, se utilizó la función estandar de C \texttt{kalloc}, la cual reserva la cantidad de memoria que se le da como argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de memoria dinámica se realiza llamando a la función estandar de C \texttt{free} y luego asignando al apuntador un valor nulo, para evitar que el programador pueda interactuar con las direcciones de memorias previamente liberadas. En caso de tratar de liberar un apuntador mas de una vez o si este contenia un valor nulo, se emite un error a tiempo de ejecución indicando el lugar donde se realizó la operación, en lugar de permitir que sea la función \texttt{free} quien emita el error.
 
 
   % - malloc
