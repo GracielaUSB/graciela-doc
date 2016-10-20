@@ -49,6 +49,9 @@
 
 \WarningFilter{blindtext}{}     % Supress the "spanish not defined, using English instead"
 
+\usepackage[shortcuts]{extdash}
+
+
 % Paquetes locales
 % Puedes agregar paquetes locales (archivos .sty) en un subdirectorio % 'paquetes'.
 % Utiliza la sintaxis \usepackage{paquetes/nombrePaquete}
@@ -233,7 +236,10 @@
 % Macros
 \newcommand{\projectTitle}{Graciela}
 \newcommand{\authorName}{Moisés Ackerman Lañado \and Carlos Spaggiari Roa}
-\newcommand{\tutorName}{Ernesto Hernández-Novich}
+\newcommand{\tutorName}{Ernesto Hernández\nobreakdash-Novich}
+\hyphenation{Araujo Jiménez Ackerman Spaggiari}
+
+
 
 \makeatletter
 \let\oldchapter\chapter

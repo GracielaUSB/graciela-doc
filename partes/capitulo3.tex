@@ -67,6 +67,7 @@ por lo cual se decidió hacer los cambios que se mencionan en esta sección.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Recomendaciones del Jurado del proyecto de grado de Araujo y Jiménez}
+%% TODO!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
@@ -163,7 +164,7 @@ mayoría de los lenguajes de bajo nivel, no se ofrecía verificación de acceso 
 arreglos dentro de los límites de los mismos. A pesar de que implantar este tipo
 de verificaciones no formara parte explícita de los objetivos del proyecto, se
 consideró que podría agregarse esta funcionalidad para mejorar la experiencia
-del programador novel. 
+del programador novel.
 
 También se consideró que sería cómodo para el programador poder hablar de
 arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
@@ -293,7 +294,7 @@ Durante el análisis del compilador original, se conoció que las cuantificacion
 presentaban limitaciones en la expresividad de sus rangos. El analizador
 sintáctico de esta parte del lenguaje esperaba, específicamente, dos
 comparaciones aritméticas, separadas por un operador de conjunción
-(\texttt{/\\}), seguidas por un lexema <<barra vertical>> (\texttt{|}). Esto
+(\texttt{/\textbackslash{}}), seguidas por un lexema <<barra vertical>> (\texttt{|}). Esto
 impedía expresar condiciones lógicas distintas de comparaciones aritméticas,
 como predicados definidos por el programador, o incluso condiciones con más de
 dos comparaciones aritméticas.
@@ -315,12 +316,12 @@ un rango. Los únicos operadores que construyen rangos son la igualdad
 <<aritméticos>>; y el operador <<pertenece>> de la teoría de conjuntos ($\in$)
 \todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
 adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
-constante booleana \texttt{false} produce el rango <<vacío>>. 
+constante booleana \texttt{false} produce el rango <<vacío>>.
 
-Además, el operador de conjunción (\texttt{/\\}) devuelve, si es posible, el
-rango que resulta de intersectar los rangos asociados a cada uno de sus
-operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
-consideran los rangos generados por el operador de disjunción (\texttt{\\/}),
+Además, el operador de conjunción (\texttt{/\textbackslash{}}) devuelve, si es
+posible, el rango que resulta de intersectar los rangos asociados a cada uno de
+sus operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
+consideran los rangos generados por el operador de disjunción (\texttt{\textbackslash{}/}),
 por lo cual si se desea que un rango sea procesado como tal, debe estar escrito
 en Forma Normal Conjuntiva. Esto no le resta expresividad al lenguaje, ya que
 pueden conseguirse expresiones equivalentes con el uso de teoremas lógicos,
@@ -331,9 +332,9 @@ Finalmente, si se ha construido un rango válido, este se registra en
 el ASA correspondiente a la cuantificación. Si el rango es <<aritmético>>, se
 exige que existan límites superior e inferior, emitiéndose el error apropiado en
 caso de faltar uno de los límites. Cabe mencionar que si la variable
-\texttt{dummy} es de tipo número de punto flotante, las comparaciones
+\emph{dummy} es de tipo número de punto flotante, las comparaciones
 aritméticas \emph{no} generarán rangos, puesto que es imposible iterar sobre
-números de este tipo. 
+números de este tipo.
 
 El código intermedio LLVM generado para cada cuantificación dependerá de la
 clase del rango sobre el cual esté definida:
@@ -367,7 +368,7 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 %% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Manejo de apuntadores}
-  
+
 \subsection{Consideraciones}
 Los apuntador implementados para el lenguaje graciela pueden apuntar a un
 objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
@@ -377,7 +378,12 @@ como apuntadores se desee. El operador para acceder a la memoria apuntada por
 un apuntador es igualmente el asterisco, el cual debe colocarse como operador
 prefijo a una expresión de tipo apuntador.
 
-La reserva y liberación de memoria dinámica para un apuntador se realiza con las funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores a tipos definidos por el programador, que se describen detalladamente en sus respectivas secciones. El siguiente fragmento de código ejemplifica la declaración y uso de un apuntador a entero.
+La reserva y liberación de memoria dinámica para un apuntador se realiza con las
+funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con
+consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
+a tipos definidos por el programador, que se describen detalladamente en sus
+respectivas secciones. El siguiente fragmento de código ejemplifica la
+declaración y uso de un apuntador a entero.
 
 \begin{gracielacode}
   |[ var p : int*
@@ -388,16 +394,31 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 \end{gracielacode}
 
 \subsection{Generación de código intermedio}
-LLVM ofrece un soporte completo para el manejo de apuntadores, lo que facilitó enormemente la tarea de implementar la generación de código intermedio para el manejo de apuntadores. Sin embargo, carece de instrucciones para la reserva y liberación de memoria dinámica, razón por la cual hubo la necesidad de colocar funciones en la biblioteca externa que recibieran como argumento al apuntador en cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de realizar dichas operaciones.
 
-En el momento en que se crea un apuntador, éste se inicializa con un valor nulo, evitando así poder acceder a una dirección basura. En caso de tratar acceder a la memoria apuntada por un apuntador que contenga la dirección nula, se emite un error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que sea el sistema operativo quien emita el error.
+LLVM ofrece un soporte completo para el manejo de apuntadores, lo que facilitó
+enormemente la tarea de implementar la generación de código intermedio para el
+manejo de apuntadores. Sin embargo, carece de instrucciones para la reserva y
+liberación de memoria dinámica, razón por la cual hubo la necesidad de colocar
+funciones en la biblioteca externa que recibieran como argumento al apuntador en
+cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de
+realizar dichas operaciones.
 
-Para la reserva de memoria dinámica, se utilizó la función estandar de C \texttt{kalloc}, la cual reserva la cantidad de memoria que se le da como argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de memoria dinámica se realiza llamando a la función estandar de C \texttt{free} y luego asignando al apuntador un valor nulo, para evitar que el programador pueda interactuar con las direcciones de memorias previamente liberadas. En caso de tratar de liberar un apuntador mas de una vez o si este contenia un valor nulo, se emite un error a tiempo de ejecución indicando el lugar donde se realizó la operación, en lugar de permitir que sea la función \texttt{free} quien emita el error.
+En el momento en que se crea un apuntador, éste se inicializa con un valor nulo,
+evitando así poder acceder a una dirección basura. En caso de tratar acceder a
+la memoria apuntada por un apuntador que contenga la dirección nula, se emite un
+error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que
+sea el sistema operativo quien emita el error.
 
-
-  % - malloc
-  % - free
-  % - Apuntadores y estructuras (malloc recibe tamaño en bytes, debe ser calculado: getElementPointer)
+Para la reserva de memoria dinámica, se utilizó la función estandar de C
+\texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
+argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
+memoria dinámica se realiza llamando a la función estandar de C \texttt{free} y
+luego asignando al apuntador un valor nulo, para evitar que el programador pueda
+interactuar con las direcciones de memorias previamente liberadas. En caso de
+tratar de liberar un apuntador mas de una vez o si este contenia un valor nulo,
+se emite un error a tiempo de ejecución indicando el lugar donde se realizó la
+operación, en lugar de permitir que sea la función \texttt{free} quien emita el
+error.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,18 +1,31 @@
-- Variables `out` reciben el valor por defecto de su tipo al entrar al procedimiento respectivo
+# Graciela-Doc
+- Recomendaciones jurado anterior
 
-- Generar código para expresiones de tipo `ANY`
-    func({})(y)
+- Teoría de conjuntos
 
-- trace(T)
+- Tipos de Datos
 
-- {unbounded}
+- Herramientas para el programador
 
+- FIXME: consideraciones sobre procedimientos
+
+# Graciela
+- Parameter Modes // All copies are *shallow*
+    - In:    new(x'); x' := copy(x); f ( x');
+    - Out:   new(x');                f ( x'); x := copy (x')
+    - Inout: new(x'); x' := copy(x); f ( x'); x := copy (x')
+    - Ref:                           f (&x )
+
+- Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
+  tengan una mala inicialización
+- Agregar a los procedimientos incluso aunque haya errores en definición.
+
+- {unbounded} (?)
 - Generar código sin aserciones (?)
 
+- trace(T)
+- Generar código para expresiones de tipo `ANY`
+    func({})(y)
 - fix arithmetic precalc
-
-
 - Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
-
-- Que `trace` sólo funcione con un flag (que NO debe aparecer en el info) -> GetOpt siempre imprime las opciones :/
-  --> how about pragmas? {-# LANGUAGE Trace #-}, {-# LANGUAGE LogicAnywhere #-}
+- ¡Pragmas! /*% LANGUAGE Trace %*/, /*% LANGUAGE LogicAnywhere %*/
