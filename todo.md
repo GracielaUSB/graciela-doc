@@ -20,12 +20,12 @@
   tengan una mala inicialización
 - Agregar a los procedimientos incluso aunque haya errores en definición.
 
+- mejor mensaje intentando leer expresión
+
 - {unbounded} (?)
 - Generar código sin aserciones (?)
 
 - trace(T)
-- Generar código para expresiones de tipo `ANY`
-    func({})(y)
 - fix arithmetic precalc
 - Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
 - ¡Pragmas! /*% LANGUAGE Trace %*/, /*% LANGUAGE LogicAnywhere %*/

@@ -294,10 +294,10 @@ Durante el análisis del compilador original, se conoció que las cuantificacion
 presentaban limitaciones en la expresividad de sus rangos. El analizador
 sintáctico de esta parte del lenguaje esperaba, específicamente, dos
 comparaciones aritméticas, separadas por un operador de conjunción
-(\texttt{/\textbackslash{}}), seguidas por un lexema <<barra vertical>> (\texttt{|}). Esto
-impedía expresar condiciones lógicas distintas de comparaciones aritméticas,
-como predicados definidos por el programador, o incluso condiciones con más de
-dos comparaciones aritméticas.
+(\texttt{/\textbackslash{}}), seguidas por un lexema <<barra vertical>>
+(\texttt{|}). Esto impedía expresar condiciones lógicas distintas de
+comparaciones aritméticas, como predicados definidos por el programador, o
+incluso condiciones con más de dos comparaciones aritméticas.
 
 Para solucionar esto, se agregó un estado al analizador sintáctico de las
 expresiones, usando el \emph{Monad Transformer} \texttt{StateT} sobre el
@@ -321,12 +321,12 @@ constante booleana \texttt{false} produce el rango <<vacío>>.
 Además, el operador de conjunción (\texttt{/\textbackslash{}}) devuelve, si es
 posible, el rango que resulta de intersectar los rangos asociados a cada uno de
 sus operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
-consideran los rangos generados por el operador de disjunción (\texttt{\textbackslash{}/}),
-por lo cual si se desea que un rango sea procesado como tal, debe estar escrito
-en Forma Normal Conjuntiva. Esto no le resta expresividad al lenguaje, ya que
-pueden conseguirse expresiones equivalentes con el uso de teoremas lógicos,
-convirtiendo una cuantificación en la disjunción de varias, o usando el operador
-de unión de conjuntos ($\cup$).
+consideran los rangos generados por el operador de disjunción
+(\texttt{\textbackslash{}/}), por lo cual si se desea que un rango sea procesado
+como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
+expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
+el uso de teoremas lógicos, convirtiendo una cuantificación en la disjunción de
+varias, o usando el operador de unión de conjuntos ($\cup$).
 
 Finalmente, si se ha construido un rango válido, este se registra en
 el ASA correspondiente a la cuantificación. Si el rango es <<aritmético>>, se
@@ -443,22 +443,61 @@ error.
 %% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tipos de datos definidos por el programador}
-\blindtext[1]
-\subsection{Consideraciones}
-%  - breve discusión de Carroll Morgan
-%  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA
+
+%  - breve discusión de Carroll Morgan --> Marco Teórico
+%  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA -> SOBRE TODO EL WHERE
+
 % ¿Qué es un tipo de dato (abstracto/concreto)?
-        % - Consideraciones
-        % - Qué significa que un TDC implemente un TDA, relación de refinamiento
-        % - Variables de tipo
-        % - Invariantes de representación, acoplamiento
-        % - Procedimientos y Funciones de/sobre un TAD
+
+\subsection{Consideraciones}
+% - Consideraciones
+
+El objetivo principal de este proyecto es agregar al lenguaje Graciela y a su
+compilador, las características y el soporte necesarios para permitir al
+programador definir tipos de datos estructurados abstractos. Como se busca
+lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
+GCL, es necesario que su compilador permita definir restricciones y
+comportamientos abstractos para estos tipos, a través del uso de aserciones de
+alto nivel como el invariante de representación y las precondiciones y
+poscondiciones de los procedimientos y funciones que definen su interfaz.
+
+Estos tipos de datos, definidos dentro del lenguaje de programación con la
+palabra reservada \texttt{abstract}, nunca definen una implementación en
+particular, sino que se limitan, precisamente, a definir los comportamientos que
+debería cumplir cualquier estructura de datos que pretenda implementarlos. Para
+aprovechar la definición de un tipo de dato abstracto, es necesario definir un
+nuevo tipo de dato que, usando únicamente, \todo{estructuras de bajo nivel????}
+y un invariante de acoplamiento que precise la correspondencia entre estas
+estructuras de bajo nivel y las de alto nivel del tipo de dato abstracto, logre
+cumplir las restricciones y comportamientos de este último.
+
+Sin embargo, en el caso general, no es posible verificar, a tiempo de
+compilación, que una implementación de un tipo de dato, junto con sus
+procedimientos y funciones, cumpla a cabalidad con los invariantes y aserciones
+del tipo de dato abstracto que se supone implementa. Por lo tanto, se decidió
+dejar algunas de estas verificaciones para tiempo de ejecución.
+
+\subsection{Invariante de representación}
+% - Invariantes de representación
+
+\subsection{Relación de refinamiento e invariante de acoplamiento}
+% - Qué significa que un TDC implemente un TDA, relación de refinamiento
+% - Invariantes de acoplamiento
+% - WHERE
+
+\subsection{Variables de tipo}
+% - Variables de tipo
+
+\subsection{Procedimientos y funciones}
+% - Procedimientos y Funciones de/sobre un TAD
+
 \subsection{Generación de código intermedio}
 % TDDDPEU
 % Variables de tipo
 % - Invariantes de representación, acoplamiento
 %     - Invariante de acoplamiento "compilable"
 % - Procedimientos y Funciones de/sobre un TAD
+% - Funciones predefinidas (inicializador y destructor)
 
 \subsection{Verificación de tipos}
 \blindtext[1]
