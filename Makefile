@@ -1,10 +1,10 @@
 
 all:
 	OS=`uname`
-	pdflatex tesis.tex
+	xelatex tesis.tex
 	bibtex tesis.aux
-	pdflatex tesis.tex
-	pdflatex tesis.tex
+	xelatex tesis.tex
+	xelatex tesis.tex
 	if [ `uname` = "Darwin" ]; then open tesis.pdf; else evince tesis.pdf; fi &
 
 clean:

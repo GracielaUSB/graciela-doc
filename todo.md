@@ -9,13 +9,9 @@
 
 - FIXME: consideraciones sobre procedimientos
 
-# Graciela
-- Parameter Modes // All copies are *shallow*
-    - In:    new(x'); x' := copy(x); f ( x');
-    - Out:   new(x');                f ( x'); x := copy (x')
-    - Inout: new(x'); x' := copy(x); f ( x'); x := copy (x')
-    - Ref:                           f (&x )
+- Hablar de TALs y explicar por qué se decidió no agregarlos al lenguaje
 
+# Graciela, AFTER THE DAMN BOOK
 - Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
   tengan una mala inicialización
 - Agregar a los procedimientos incluso aunque haya errores en definición.
@@ -25,7 +21,10 @@
 - {unbounded} (?)
 - Generar código sin aserciones (?)
 
-- trace(T)
-- fix arithmetic precalc
-- Asegurar que teoría de conjuntos sólo se usa en abstracto/invariantes/pre/post/etc
-- ¡Pragmas! /*% LANGUAGE Trace %*/, /*% LANGUAGE LogicAnywhere %*/
+- Save dumb people from bad char
+
+- Only first five errors given by default
+
+
+# Syntax Highlighting
+- Agregar operador msum (misma categoría que union)

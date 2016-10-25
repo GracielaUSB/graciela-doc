@@ -17,7 +17,7 @@
     - ALGO PARA PERFILAR?
     - Haskell
     - Valgrind
-    - C, C++
+    - C, C++, stdlib
     - Git
 - Desarrollo                     (#0)
     - Revisión del proyecto de Araujo y Jiménez

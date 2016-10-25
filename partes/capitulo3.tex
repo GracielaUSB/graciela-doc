@@ -223,15 +223,17 @@ este caso fue tomado en cuenta y la liberación de memoria procede en dos partes
 liberando primero el bloque de elementos, y posteriormente la <<cabecera>>.
 
 La última consideración sobre los arreglos está asociada con su uso como
-parámetros de subrutinas (procedimientos y funciones). Se decidió permitir el
-pase de arreglos de tamaño variable como parámetros siempre que todas las
-variables en las expresiones que denotan su tamaño sean parámetros anteriores de
-la subrutina, pasados en modo \texttt{in} (todos los parámetros de las funciones
-son pasados en modo \texttt{in}). Por ejemplo, la firma del siguiente
-procedimiento sería aceptada por el compilador:
+parámetros de subrutinas (procedimientos y funciones). Se agregó al lenguaje la
+capacidad para usar arreglos como parámetros de los modos in, inout y out,
+además del modo ref ya provisto en la especificación original. Adicionalmente,
+se decidió permitir el pase de arreglos de tamaño variable como parámetros
+siempre que todas las variables en las expresiones que denotan su tamaño sean
+parámetros anteriores de la subrutina, pasados en modo \texttt{const} en el caso
+de los procedimientos. Por ejemplo, la firma del siguiente procedimiento sería
+aceptada por el compilador:
 
 \begin{gracielacode}
-  proc sub(in size : int, inout arr : array [size, size * 2] of int)
+  proc sub(const size : int, inout arr : array [size, size * 2] of int)
 \end{gracielacode}
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
@@ -283,9 +285,15 @@ recursiva, se compara la cota actual con la anterior, recibida como el segundo
 parámetro implícito. Si no hubo decremento en la cota, también se da un error y
 el programa aborta. En caso contrario, se ejecuta el cuerpo de la subrutina.
 
-Por último, cabe mencionar que se eliminó el modo de parámetros
-<<\texttt{ref}>>, puesto que resulta equivalente al modo <<\texttt{inout}>>
-\todo{Consultar con Monascal.}
+Por último, cabe mencionar que se cambió la semántica del modo de parámetros
+\texttt{in}, de forma que los parámetros declarados con este modo pueden ser
+reasignados dentro del cuerpo del procedimiento sin afectar el valor del
+argumento usado en el punto de llamada. Originalmente, los parámetros de modo
+\texttt{in} no podían ser reasignados, pero se consideró que sería conveniente
+poder reasignarlos para ofrecer la posibilidad de usar parámetros por su valor
+pero aprovechando su espacio en memoria. El comportamiento asociado
+anteriormente al modo \texttt{in} ahora corresponde al modo de parámetros
+\texttt{const}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre cuantificaciones}
@@ -425,19 +433,117 @@ error.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Teoría de conjuntos}
 \subsection{Consideraciones}
-\blindtext[1]
-% - Similares a cuantificaciones, aplican restricciones similares
-% - Notación para relation y function:
-%     : relation int <-> char, rel(<conjunto de pares>)
-%     : function char -> float, func(<conjunto de pares>)
+
+Para permitir mayor expresividad en las aserciones del lenguaje, específicamente
+en aquellas asociadas con los tipos de datos definidos por el programador, como
+invariantes de representación y de acoplamiento, se decidió agregar al lenguaje
+Graciela facilidades para escribir expresiones de la teoría de conjuntos.
+
+Específicamente, se decidió permitir la escritura de expresiones de tipo
+conjunto, multiconjunto, y secuencia (usaremos el término \textit{colección}
+para referirnos a los tres tipos indistintamente). Sólo se permite que estos
+tipos \textit{colección} alberguen objetos de un solo tipo básico, es decir,
+sólo se permiten colecciones de enteros, caracteres, números de punto flotante o
+valores booleanos, o pares de objetos de tipos básicos, y nunca colecciones de
+colecciones, ni colecciones con enteros y caracteres a la vez. Como las
+variables de tipos siempre serán instanciadas en tipos básicos, como se explica
+en \todo{sección sobre variables de tipos}, también se permiten colecciones de
+objetos del tipo de una variable de tipo ligada en el punto donde sea definida
+la colección.
+
+Para distinguir gráficamente los conjuntos y los multiconjuntos, se decidió usar
+los símbolos \texttt{\{} y \texttt{\}} para los primeros y \texttt{\{\{} y
+\texttt{\}\}} para los segundos. Esto se hizo a diferencia de lo usual en
+discusiones teóricas, que es usar el primer par de símbolos para ambos tipos de
+colección, ditinguiendo según el contexto, para permitir identificar la
+colección en cuestión a simple vista. Por otro lado, para representar secuencias
+se decidió usar los símbolos \texttt{<\null<} y \texttt{>\null>}.
+Adicionalmente, si se usan caracteres UTF-8, los multiconjuntos pueden ser
+representados con los símbolos \texttt{\Lbag} y \texttt{\Rbag}, y las secuencias
+con \texttt{\Lseq} y \texttt{\Rseq}.
+
+Para proveer un nivel de abstracción similar al de la teoría manejada en los
+cursos de algoritmos básicos \todo{revisar esto}, se permite escribir
+colecciones de dos maneras, por extensión y por comprensión. En el primer caso,
+simplemente se nombran los elementos de la colección separados por comas,
+existiendo la posibilidad de no especificar elementos para la colección vacía.
+Así, el conjunto, multiconjunto y secuencia con los números 1, 2 y 3 pueden
+escribirse en Graciela, respectivamente, como
+
+\begin{gracielacode}
+   {1, 2, 3}
+  {{1, 2, 3}} // ó ~\Lbag~1, 2, 3~\Rbag~
+  <<1, 2, 3>> // ó ~\Lseq~1, 2, 3~\Rseq~
+\end{gracielacode}
+
+En el caso de las colecciones definidas por comprensión, se usa una notación
+bastante similar a la de las cuantificaciones. Esta notación consiste en tres
+partes escritas entre los símbolos correspondientes a la colección deseada y
+separadas por caracteres \texttt{|}. En la primera parte se define una variable
+auxiliar o \textit{dummy} con uno de los tipos permitidos para colecciones. En
+la segunda, el rango, se delimita el rango de la variable auxiliar, con las
+mismas consideraciones que para las cuantificaciones. La tercera parte, el
+cuerpo, es la expresión que será agregada a la colección para cada valor posible
+de la variable auxiliar. Así, las mismas colecciones del ejemplo anterior
+podrían escribirse, respectivamente, como
+
+\begin{gracielacode}
+   {i : int | 0 < i /\ i < 4 | i}
+  {{i : int | 0 < i /\ i < 4 | i}} // ó ~\Lbag~i : int | 0 < i /\ i < 4 | i~\Rbag~
+  <<i : int | 0 < i /\ i < 4 | i>> // ó ~\Lseq~i : int | 0 < i /\ i < 4 | i~\Rseq~
+\end{gracielacode}
+
+Además de permitir el uso de expresiones de tipos \textit{colección}, es
+necesario permitir la declaración de variables con estos tipos. La notación para
+esto es la misma que para las declaraciones de tipos básicos, cambiando el tipo
+usado. Así, para definir, respectivamente, un conjunto, un multiconjunto, y una
+secuencia de enteros, se usa la siguiente notación:
+
+\begin{gracielacode}
+  var x : set of int;
+  var y : multiset of int;
+  var z : sequence of int;
+\end{gracielacode}
+
+Además de las colecciones, se agregaron al lenguaje los tipos abstractos de la
+teoría de conjuntos \textit{función} y \textit{relación}. En la mayoría de la
+literatura que hace uso de la teoría de conjuntos, estos tipos no son más que
+conjuntos de pares ordenados, con la restricción adicional de que no pueden
+pertenecer a la misma función dos pares con el mismo primer elemento. En el
+lenguaje Graciela, para distinguir visualmente estos tipos de los
+conjuntos sencillos, y entre ellos, se optó por definir las funciones
+\texttt{func} y \texttt{rel}, que toman un conjunto de pares ordenados (A, B),
+donde A y B son tipos básicos posiblemente distintos, y devuelven,
+respectivamente, la función de A en B y la relación entre A y B correspondientes
+al conjunto de pares dado. Adicionalmente, en el caso en que el conjunto pasado
+a \texttt{func} contuviese dos pares ordenados con el mismo primer elemento, se
+daría un error a tiempo de ejecución, por incumplirse la definición matemática
+de \textit{función}.
+
+De manera similar a las colecciones, se permite la declaración de funciones y
+relaciones entre dos tipos, con la siguiente notación, respectivamente:
+
+\begin{gracielacode}
+  var x : function int -> char;
+  var y : relation int <-> char;
+\end{gracielacode}
+
+Finalmente, se agregaron los operadores usuales de la teoría de conjuntos. Se
+hace una exposición de ellos en el apéndice NUMERODEAPENDICE.
 
 \subsection{Biblioteca externa para teoría de conjuntos}
-\blindtext[1]
-% - Backend en C++ (std)
 
-\subsection{Generación de código intermedio}
-\blindtext[1]
-% Conjuntos
+Internamente, los valores de la teoría de conjuntos son manejados como
+apuntadores a las estructuras correspondientes ofrecidas por la biblioteca
+estándar del lenguaje C++. Esto se hace de manera transparente al programador,
+por lo cual éste no debe preocuparse por manejar dichos apuntadores. Como  estas
+estructuras se crean de manera dinámica y su manejo es responsabilidad del
+compilador y de la biblioteca externa, se diseñó un sencillo manejador de
+memoria dinámica que libera el espacio asignado a dichas estructuras cada vez
+que salen de alcance. Si el programa termina de manera inesperada por haberse
+incumplido una aserción, o por haber alcanzado un condicional sin guardas
+verdaderas, este manejador de memoria se encarga de liberar toda la memoria
+reservada para estas estructuras.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
