@@ -11,6 +11,8 @@
 
 - Hablar de TALs y explicar por qué se decidió no agregarlos al lenguaje
 
+- Variable generadora
+
 # Graciela, AFTER THE DAMN BOOK
 - Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
   tengan una mala inicialización
