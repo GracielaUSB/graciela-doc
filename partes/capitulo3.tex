@@ -313,7 +313,7 @@ variable \emph{dummy} correspondiente a la pila del estado, e intenta construir
 un rango. Los únicos operadores que construyen rangos son la igualdad
 (\texttt{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
 (\texttt{>}, \texttt{>=}, \texttt{<}, \texttt{<=}), que construyen rangos
-<<aritméticos>>; y el operador <<pertenece>> de la teoría de conjuntos ($\in$)
+<<aritméticos>>; y el operador <<pertenece>> de la Teoría de Conjuntos ($\in$)
 \todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
 adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
 constante booleana \texttt{false} produce el rango <<vacío>>.
@@ -454,7 +454,7 @@ error.
 
 El objetivo principal de este proyecto es agregar al lenguaje Graciela y a su
 compilador, las características y el soporte necesarios para permitir al
-programador definir tipos de datos estructurados abstractos. Como se busca
+programador definir tipos de datos estructurados abstractos o TDA. Como se busca
 lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
 GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
@@ -477,21 +477,227 @@ procedimientos y funciones, cumpla a cabalidad con los invariantes y aserciones
 del tipo de dato abstracto que se supone implementa. Por lo tanto, se decidió
 dejar algunas de estas verificaciones para tiempo de ejecución.
 
-\subsection{Invariante de representación}
-% - Invariantes de representación
+\subsection{Modelo de representación}
+Dentro de un tipo de datos se pueden declarar variables y constantes, a los
+cuales puede darse un valor inicial en caso de ser de un tipo básico o
+apuntador. Estas declaraciones corresponden al modelo de representación
+del tipo de dato. Si se trata de un tipo de dato abstracto, se pueden declarar
+variables con un tipo de alto nivel, es decir, tipos de la Teoría de Conjuntos.
 
-\subsection{Relación de refinamiento e invariante de acoplamiento}
+\subsection{Invariante de representación}
+El invariante de representación define las características y restricciones que
+deben ser satisfechas por el modelo de representación de un tipo de dato, sea un
+TDA o una implementación de un TDA. El invariante de representación se indica
+como una expresión booleana contenida entre el par de lexemas
+\texttt{\{repinv} y \texttt{repinv\}}. Es importante destacar que, en caso de
+ser una implementación, pueden utilizarse variables y constantes del TDA
+dentro del invariante de representación, siempre y cuando estos no sean de un
+tipo de la Teoría de Conjuntos.
+
+\subsection{Relación de acoplamiento}
+
+Cuando se implementa un tipo de dato abstracto, se debe establecer una una
+expresión lógica que especifique la relación entre las estructuras de bajo
+nivel usadas en la implementación, con las de alto nivel que se encuentran en
+el TDA, es decir, se debe definir una correspondencia entre los dos modelos de
+representación. Sin embargo, debido a que en el caso general no es posible
+analizar cualquier expresiones lógicas que determine una relación de
+acoplamiento, se tomarón en cuentas las siguientes consideraciones.
+
+En primer lugar, se agrego sintaxis para poder definir el mecanismo a través
+del cual se llevará a cabo la relación entre ambas estructuras. Este mecanismo
+se especifica como una serie asignaciónes a las estructuras de alto nivel,
+dentro de un bloque precedido por la palabra reservada \texttt{where}. Para
+dichas asignaciones, se puede hacer uso de la sintaxis incorporada al lenguaje
+para construir expresiones de la Teoría de Conjuntos.
+
+En segundo lugar, debido que representar la relación de acoplamiento como
+simples asignaciones hace que el lenguaje pierda expresividad, se decidió
+incorporar sintaxis que permitiera agregar restricciones a dicha relación, en
+la forma de una expresión booleana contenida por los lexemas
+\texttt{\{coupinv} y \texttt{coupinv\}}.
+
+
+
 % - Qué significa que un TDC implemente un TDA, relación de refinamiento
 % - Invariantes de acoplamiento
 % - WHERE
 
 \subsection{Variables de tipo}
+Para que el lenguaje Graciela cuente con la expresividad de GCL, es necesario
+poder especificar tipos de datos estructurados que no dependan de un tipo
+concreto. Para ello se dotó al lenguaje con la capacidad de poder declarar
+tipos genéricos que permitan definir aserciones y comportamientos igualmente
+genéricos.
+
+Estos tipos genéricos, o variables de tipo, se pueden declarar junto con la
+definicion de un tipo de dato y usarse en la especificación interna de éste.
+Las variables de tipos solo pueden ser correspondidas con un tipo básico, es
+decir, tipo entero, flotante, caracter o booleano. Para usar una variable de
+de un tipo de dato definido por el usuario que tenga asociado una o mas variables
+de tipo, se debe especificar dicha correspondencia a la hora de definir la
+variable en cuestion. Ejemplo de esto, serian las siguientes lineas de codigo.
+ 
+\begin{gracielacode}
+  abstract ConjuntoA (T) begin
+    var a : T;
+  end
+
+  type Conjunto (N) implements ConjuntoA(N) begin
+    var b : N;
+  end
+
+  main
+   |[ var c : Conjunto(int)
+    ; skip 
+   ]|
+
+\end{gracielacode}
+
+En este caso, se definió un tipo de dato abstracto \texttt{ConjuntoA} y una
+implementación \texttt{Conjunto}, ambas asociadas a una variable de
+tipo, \texttt{T} y \texttt{N} respectivamente. Como se puede apreciar, el tipo
+\texttt{Conjunto} implementa al TDA \texttt{ConjuntoA} con la
+variable de tipo \texttt{N}, por lo que cada ocurrencia de \texttt{T} dentro
+de la especificación de \texttt{ConjuntoA}, sera sustituida por la variable de
+tipo \texttt{N}.
+
+Por otro lado, cuando se declara la variable \texttt{c}, es necesario indicar
+un tipo concreto, en este caso \texttt{int}, para el tipo \texttt{Conjunto}. De esta
+forma cualquier ocurrencia de \texttt{N}, dentro de la especificación de
+\texttt{Conjunto} y \texttt{ConjuntoA}, es sustituido por el tipo \texttt{int}.
+
+
+
 % - Variables de tipo
 
 \subsection{Procedimientos y funciones}
+Como se mencionó previamente, los tipos de datos abstractos definen una
+interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
+cada una con sus respectivas precondiciones y poscondiciones.
+
+Para definir una implementación de un tipo abstracto, se deben definir la
+implementación de todos los procedimientos y funciones que se encuentran en la
+interfaz del TDA, junto con un nuevo par de precondiciones y poscondiciones.
+Sin embargo, pueden agregarse nuevos procedimientos y funciones adicionales.
+
+Cabe mencionar las siguientes consideraciones:
+
+\begin{itemize}
+
+  \item Si un procedimiento posee algun uso de una variable de tipo, es
+  necesario que al menos uno de sus parametros sea del tipo de dato dentro del
+  cual se definio dicho procedimiento.
+
+  \item Dentro de un tipo de dato, cada procedimiento debe tener un nombre único.
+  Sin embargo, ese nombre puede ser reutilizado en otro tipo de dato, siempre
+  y cuando uno de sus parametros sea del tipo de dato en cuentión. Al momento
+  de evualuar cual procedimiento se debe escoger, se toma el primer
+  argumento, de izquierda a derecha, cuyo tipo sea un tipo de dato definido por
+  el usuario, como el desempate. En caso de haber más de un procedimiento que
+  no cumpla esta condición, se toma como un caso ambiguo y se emite un error.
+
+\end{itemize}
+
+Estas consideraciones aplican igualmente para funciones.
+
 % - Procedimientos y Funciones de/sobre un TAD
 
 \subsection{Generación de código intermedio}
+Durante el analisis sintáctico, se registran todos los usos de un tipo de dato
+definido por el usuario, y los diferentes tipos concretos que se les asigno en
+cada uso. De esta forma, para un tipo \texttt{Diccionario(T0,T1)}, se toma nota de
+cuales usos se le dieron y con cuales tipos basicos. Si los usos fueron
+\texttt{Diccionario(int, char)} y \texttt{Diccionario(int, float)}, al llegar a la fase de
+generación de codigo intermedio, se generan dos estructuras de bajo nivel
+llamadas con el nombre del tipo en cuentión seguido de las iniciales de los
+tipos basicos utilizados separados por guiones, es decir,
+\texttt{Diccionario-i-c} y \texttt{Diccionario-i-f}, ambas conteniendo los
+campos de la implementación y del TDA. Cabe destacar, que nunca se generan
+estructuras en el codigo intermedio para los TDA.
+
+Es necesario destacar que los arreglos, al estar divididos en una cabezera y
+un cuerpo, solo la cabezera es incluida dentro de la estructura. El cuerpo es
+reservado aparte en la pila en caso de ser una variable estatica, o en memoria
+dinamica en caso de tratarse de un apuntador.
+
+\subsubsection{Invariantes de representación y de acoplamiento}
+Por cada estructura generada para cada tipo de dato, se generan
+automaticamente tres subrutinas. Dos rutinas para el invariante de
+representación del TDA y de la implementación respectivamente, y una para la
+relación de acoplamiento. Estas rutinas seran llamadas repetidamente dentro de
+las verificaciones de cada procedimiento y funcion dentro del tipo de dato.
+
+\subsubsection{Procedimientos y funciones}
+Para los procedimientos y funciones debemos considerar dos casos. Si el
+procedimiento no hace uso alguno de una variable de tipo, se genera una unica
+rutina en codigo intermedio. Por otro lado, si hizo uso de una variable de
+tipo, se generan tantas rutinas en codigo intermedio como estructuras del tipo
+de dato en cuestión se hayan generado. De esta forma, para el procedimiento \texttt{agregar} del tipo \texttt{Diccionario(int,char)}, se declaran dos rutinas en codigo intermedio llamadas
+\texttt{agregar-Conjuto-i} y \texttt{agregar-Conjunto-f}.
+
+Con respecto a la verificación de las precondiciones, poscondiciones e
+invariantes, se tomaron las siguientes consideraciones.
+
+\begin{itemize}
+
+  \item Antes de iniciar con el cuerpo del procedimiento, se
+  evalua la precondición de la implementación. En caso de ser falsa, se 
+  emite una advertencia a tiempo de ejecución y no se hacen mas verificaciones.
+
+  \item Si la precondicion se cumple, se utiliza relación de acoplamiento y se
+  evalua de su correspondiente invariante. En caso de que éste último sea
+  falso, se emite un error a tiempo de ejecución.
+
+  \item Se procede a evaluar la precondición del TDA y en caso de ser falsa, 
+  se emite un error a tiempo de ejecución, aclarando que el procedimiento no
+  implementa al abstracto.
+
+  \item Luego, para cada argumento cuyo tipo sea un tipo de dato, se verifica
+  su invariante de representacion e invariante de representacion del TDA
+  correspondiente. Si ambas invariantes se cumplen, se procede a ejecutar el
+  cuerpo del procedimiento.
+
+  \item Antes de finalizar el procedimiento, se realiza nuevamente la relacion
+  de acoplamiento y el invariante de representación del tipo que implementa y
+  el invariante de representación del TDA, en este mismo orden.
+
+  \item Se evalua la precondicion del TDA y en caso de ser falsa se emite un
+  error a tiempo de ejecución aclarando que el procedimiento no implementa el
+  abstracto.
+
+  \item Por ultimo se evalua la poscondición dela implementación y en caso de
+  ser falsa, se emite un error a tiempo de ejecución.
+
+\end{itemize}
+
+Estas consideraciones aplican para las funciones, excepto que los invariantes
+no se verifican por segunda vez al salir de la funcion. Esto debido que son
+funciones puras y por lo tanto, no realizan cambios en las variables
+involucradas.
+
+\subsubsection{Otras rutinas por defecto}
+Para cada estructura creada a partir de tipo de dato definido por el usuario,
+se generan automaticamente un contructor, un destructor y una rutina para la
+copia de las estructuras. estas rutinas contemplan las siguientes
+cosideraciónes.
+
+\begin{itemize}
+
+  \item El constructor es llamada cuando se declara una variable del tipo en cuestión, o despues de haber reservado memoria para un apuntador del mismo tipo.
+  Esta rutina se encarga de asignar a todos los campos de la estructura, el
+  valor inicial en caso de tener alguno y llamar a los contructores de las estructuras internas.
+
+  \item La rutina de copia se utiliza para copiar la estructura cuando se
+  intenta pasar como argumento In o InOut a un procedimiento. La copia llega a
+  un nivel superficial cuando de apuntadores se trata.
+
+  \item Antes de liberar un apuntador hacia una estructura, se llama al
+  destructor, el cual se encarga de liberar la memoria reservada por el cuerpo
+  de los arreglos. Esta rutina se encarga de llamar a los destructores de las estructuras internas.
+
+\end{itemize}
+
 % TDDDPEU
 % Variables de tipo
 % - Invariantes de representación, acoplamiento
