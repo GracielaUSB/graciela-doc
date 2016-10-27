@@ -3,23 +3,114 @@
 \lhead{Capítulo 2. \emph{Marco Tecnológico}}
 
 \section{Haskell}
+Haskell es un lenguaje de programación funcional puro compilado, de proposito
+general, que se basa en el \textit{cálculo lambda}. Al ser un lenguaje
+funcional puro, todo programa se escribe haciendo uso de expresiones
+matemáticas puras y se asegura que para todo valor que se proporcione como
+entrada, cada función llamada dentro de la ejecución del mismo, devolvera el
+mismo resultado. Esto se debe a la carencia de variables mutables y efectos de
+borde, lo que permite a su vez, generar código ensamblador mas astuto con
+respecto a los lenguajes imperativos.
 
-\section{Parsec}
+Entre sus principales caracteristicas está la de un sistema de tipos estático
+y fuertemente tipado, es decir, para todas las estructuras declaradas en el
+programa, se verifica su tipo a tiempo de compilación y toda conversión entre
+tipo debe colocarse de manera explícita. Por otro lado, La evaluación de
+expresiones es de forma perezosa, dando como consecuencia que ninguna
+expresión se evalue hasta el momento en el que se usa y la posibilidad de
+poder crear estructuras infinitas, las cuales son construidas parcialmente
+mientras van siendo utilizadas.
 
-\section{Megaparsec}
+Escribir un programa haciendo uso exclusivamente de expresiones matemáticas
+puras, trae consigo limitaciones cuando se requiere realizar operaciones de
+entrada y salida, o cualquier otra operación que implique efectos de bordes.
+Este tipo de cómputo se puede lograr dentro de un lenguaje funcional haciendo
+uso de los \textit{monads}, estructuras que permiten representar cálculos una
+como secuencia de operaciones y que proporcionan contexto a las expresiones
+puras. Estos contextos monádicos permiten realizar computos de entrada y
+salida, manejo de excepciones, entre otros, sin dejar de lado la pureza
+funcional.
+
+Uno de los factores que se debe tomar en cuenta cuando se elige un lenguaje de
+programación, es la cantidad y calidad de las bibliotecas disponibles para el
+mismo. Haskell, posee una amplia gama de bibliotecas de mucha utilidad, entre la
+cuales destacan las bibliotecas que permiten depurar y perfilar programas,
+manejar y reresentar estructuras complejas, y en el caso del presente
+proyecto, bibliotecas que proporcionan facilidades para construir reconocedores
+recursivos descendentes y para generación de código intermedio LLVM, las
+cuales seran menciadas en detalles en las siguientes secciones.
+
+\subsection{Parsec}
+\textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
+construcción de un reconocedor recursivo descendente. Esta biblioteca provee
+de una estructuras monádica, con las que se pueden generar reconocedores
+sintácticos básicos y combinarlos para formar reconocedores cada vez más
+complejos. Debido a la naturaleza monádica de los computos que se realizan, se
+puede hacer uso de funciones y operadores, como por ejemplo, \texttt{many} o
+\texttt{<|>}, los cuales permiten ejecutar cero o mas veces un reconocedor, o
+ejercutar un segundo reconocedor en caso de que el primero falle,
+respectivamente.
+
+Si bien no se ofrece soporte para recuperación de errores, se puede
+implementar haciendo uso la función \texttt{try}, la cual reestablece el
+estado original del flujo de entrada, en caso de que un reconocedor falle,
+habiendo o no consumido de la entrada.
+
+
+\subsection{Megaparsec}
+La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés)
+de la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
+funcionalidades que ésta ultima, agrega otras funcionalidades de especial
+importancia para la elaboración de un analizador sintáctico, como el soporte
+para la recuperación de errores.
+
+\subsection{llvm-general y llvm-general-pure}
+Las bibliotecas \texttt{llvm-general} y \texttt{llvm-general-pure} ofrecen una
+muy interfaz sencilla y completa con las libreria externas de LLVM para la
+generación de código intermedio. Por un lado, \textit{llvm-general-pure}
+brinda una serie de estructuras de datos que se corresponden con las
+definiciones, instrucciones y expresiones del código intermedio de LLVM. A su
+vez, \textit{llvm-general} da las facilidades para poder traducir, haciendo
+uso de las estructuras encontradas en \textit{llvm-general-pure}, el arbol
+sintáctico generado por el analizador sintáctico, a un nuevo arbol sintáctico
+con el que posteriormente se genera automáticamente un archivo con la
+representación intermedia de LLVM del programa.
 
 \section{LLVM}
 
-\section{llvm-general y llvm-general-pure}
+
+
 
 \section{Valgrind}
+\textit{Valgrind} es una herramienta de software, que ayuda a la depuraración y
+detección errores relacionados a una mala gestión de la memoria de un
+proceso, como accesos indebidos o la fuga de memoria dinámica. Tambien ofrece
+herramienta para realizar un perfilaje detallado de la ejecución de un
+programa y para detectar errores en procesos multihilo.
 
 \section{C, C++}
+\textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
+el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
+estáticos y debilmente tipificados, pero ofrecen ventajas para realizar
+operaciones a muy bajo nivel, como el manejo y acceso manual de la memoria.
+
+Ambos lenguajes poseen mecanismo para declarar estructuras de datos basicos,
+funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un
+lenguaje orientado a objetos, entran conceptos como cleses, herencia de clases
+y encapsulamiento. Tambien, a diferencia del lenguaje \textit{C}, \textit{C++}
+posee una biblioteca estandar mas extensa, en la cual se ofrecen estructuras
+de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
+ordenamiento o busqueda sobre dichas estructuras.
 
 \section{git}
 
-\section{vi}
+
+\section{Vi}
+Es un editor de texto presente en todos los sistemas operativos derivados de Unix,
+que  permite mover, copiar, eliminar o insertar caracteres con mucha
+versatilidad. Cuenta con una versión mejorada llamada \textit{Vim}
 
 \section{Sublime Text y Package Control}
 
 \section{Homebrew}
+Manejador de paquetes para los sistema operativo Mac OS X y macOS.
