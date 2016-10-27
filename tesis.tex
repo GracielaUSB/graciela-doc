@@ -50,6 +50,11 @@
 
 \WarningFilter{blindtext}{}     % Supress the "spanish not defined, using English instead"
 
+% Otros paquetes
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{stackengine}
+\usepackage{rotating}
 \usepackage[shortcuts]{extdash}
 
 
@@ -269,12 +274,13 @@
 \makeatother
 
 
-\setmonofont{Fira Mono}
-\newcommand{\Lbag}{\setmainfont{DejaVu Sans Mono} ⟅}
-\newcommand{\Rbag}{\setmainfont{DejaVu Sans Mono} ⟆}
-\newcommand{\Lseq}{\setmainfont{DejaVu Sans Mono} ⟨}
-\newcommand{\Rseq}{\setmainfont{DejaVu Sans Mono} ⟩}
-
+\setmonofont[Contextuals={Alternate}]{Fira Code}
+\newfontfamily{\fallbackfont}{DejaVu Sans Mono}
+\DeclareTextFontCommand{\textfallback}{\fallbackfont}
+\newcommand{\Lbag}{\textfallback{⟅}}
+\newcommand{\Rbag}{\textfallback{⟆}}
+\newcommand{\Lseq}{\textfallback{⟨}}
+\newcommand{\Rseq}{\textfallback{⟩}}
 
 \newdate{presentationdate}{16}{3}{2016}
 
@@ -336,9 +342,9 @@
 % \input{./partes/acta}
 
 % El resumen debe ser de una sola página
-\addtotoc{Resumen}
+% \addtotoc{Resumen} -- ¿Debe aparecer en el índice?
 \abstract{
-\addtocontents{toc}{\vspace{1em}}
+% \addtocontents{toc}{\vspace{1em}}
 
 
 % Las palabras clave son generalmente los nombres de áreas de investigación a
@@ -353,8 +359,6 @@
 
 % Agradecimientos
 \acknowledgements{
-\addtocontents{toc}{\vspace{1em}}
-
 }
 \clearpage
 

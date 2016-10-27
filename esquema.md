@@ -11,14 +11,27 @@
 
 # Segunda Parte                  
 - Marco teórico                  (#)
+  - YACKSONVILLE -> recopilar fuentes de cada aspecto
+
+  - Maaaaaybe algo de arreglos conformantes (?)
+
+  - Programación formal y tripletas de Hoare (funciones?)
+
+  - Lógica de Separación [moises]
+
+  - Teoría de conjuntos [moises]
+
+  - Tipos de datos abstractos [both]
+
+
+
 - Marco tecnológico              (#)
-    - Megaparsec
-    - LLVM
-    - ALGO PARA PERFILAR?
-    - Haskell
-    - Valgrind
-    - C, C++, stdlib
-    - Git
+    - Megaparsec  [carlos]
+    - LLVM  [moises]
+    - ALGO PARA PERFILAR? [todo]
+    - Haskell [carlos]
+    - Valgrind  [carlos]
+    - C, C++, stdlib  [carlos]
 - Desarrollo                     (#0)
     - Revisión del proyecto de Araujo y Jiménez
         - Recuperación de errores en análisis sintáctico y Megaparsec
@@ -64,6 +77,18 @@
 
 # Tercera Parte                  
 - Resultados                     (#)
+  - cambios en gramatica [moises]
+  - recuperación de errores [moises]
+  - mejoras para los arreglos (multidimension, inbound check) [moises]
+  - funciones y procedimientos (cotas) [moises]
+  - cuantificaciones (rangos) [moises]
+
+  - apuntadores y su notación [carlos]
+  - colecciones
+  - tipos de datos abstractos [carlos]
+
+  - Herramientas para el programador [todo]
+
 - Conclusiones y recomendaciones (#)
 
 # Notas finales                  

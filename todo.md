@@ -18,6 +18,8 @@
   tengan una mala inicialización
 - Agregar a los procedimientos incluso aunque haya errores en definición.
 
+- Parser no debe especificar orden para tipos/procedimientos
+
 - mejor mensaje intentando leer expresión
 
 - {unbounded} (?)
