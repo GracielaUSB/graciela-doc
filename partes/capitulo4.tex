@@ -1,3 +1,88 @@
 \chapter{Resultados}
 \label{capitulo4}
 \lhead{Capítulo 4. \emph{Resultados}}
+
+El resultado del presente Proyecto de Grado es doble, pues se extendió el
+lenguaje Graciela para incluir manejo de apuntadores, expresiones de la teoría
+de conjuntos y tipos de dato definidos por el programador, y se dotó al
+compilador \texttt{graciela} de la capacidad de analizar y generar código para
+los usos de estas nuevas características del lenguaje. Adicionalmente, se
+mejoraron algunas características ya presentes en el lenguaje y en el compilador
+para mejorar la experiencia del programador novel.
+
+\todo{hablar más (?)}
+
+\section{Cambios en la gramática}
+
+Para dar más claridad a los programas escritos en Graciela, se decidió que el
+bloque principal debe estar precedido por la palabra clave \texttt{main}.  Por
+otro lado, en la definición de procedimientos y funciones, se movió la
+poscondición junto con la precondición, de modo que aparecen antes del cuerpo de
+la subrutina, eliminándose así la necesidad de usar las palabras clave
+\texttt{begin} y \texttt{end} para delimitar el cuerpo de la subrutina. En los
+procedimientos, también se eliminó el  símbolo \texttt{:} entre el identificador
+del procedimiento y el conjunto de parámetros delimitado por paréntesis, por
+carecer de valor semántico \texttt{revisar}.
+
+\section{Recuperación de errores durante el análisis sintáctico}
+
+El compilador \texttt{graciela} cuenta ahora con una mejor capacidad para
+recuperarse de errores durante el análisis sintáctico de un archivo, y ofrece
+mensajes de error más fáciles de entender en gran parte de los casos.
+\todo{ejemplos de esto}
+
+\section{Arreglos}
+
+Para mejorar la experiencia de los programadores del lenguaje Graciela, se
+agregaron al lenguaje verificaciones para cada acceso a un arreglo, de modo que
+intentar usar posiciones más allá de los límites de un arreglo resulta en un
+error a tiempo de ejecución, independientemente de si se intentaba leer del
+arreglo o escribir a él. Dado que el uso equivocado de índices sobre arreglos
+suele ser una fuente de defectos en el código, esta nueva característica puede
+ser de gran utilidad para los estudiantes de los cursos introductorios de
+algoritmos.
+
+Por otro lado, se decidió ofrecer arreglos multidimensionales como parte del
+lenguaje. Anteriormente, era posible utilizar arreglos multidimensionales
+declarándolos como arreglos de arreglos de algún tipo, y para utilizar sus
+elementos se hacían tantos usos de subíndices (\texttt{[i]}) como dimensiones
+tuviera el arreglo. Ahora, son declarados como arreglos de varias dimensiones,
+especificando entre corechetes sus tamaños en cada dimensión, separados por
+comas, de la siguiente manera:
+
+\begin{gracielacode}
+var unArreglo : array [x, y, z] of int
+\end{gracielacode}
+
+Similarmente, para hacer uso de sus elementos, se usan tantos subíndices como
+dimensiones tuviera el arreglo de interés, pero entre un mismo par de corchetes,
+de la siguiente manera:
+
+\begin{gracielacode}
+writeln (unArreglo[1, 2, 3])
+\end{gracielacode}
+
+Es importante destacar que si se usa una secuencia de subíndices de más o menos
+dimensiones que las que tiene el arreglo que se desea usar, se da un error
+bastante claro a momento de compilación, especificando las dimensiones del
+arreglo y de la secuencia de subíndices. Esto puede compararse con la
+implementación original, en la que el error emitido mencionaría, o bien un
+intento de subindizar una variable que no es un arreglo, o bien un intento de
+usar un arreglo en donde se esperaba un valor de un tipo básico; estos errores,
+a pesar de ser ciertos, no indican la verdadera razón del problema, la falta de
+concordancia entre las dimensiones del arreglo y las de la subindización
+utilizada.
+
+\section{Subrutinas}
+
+Anteriormente, se permitía que procedimientos y funciones fueran recursivos sin
+importar si esta recursión era acotada. De hecho, no existía en la gramática del
+lenguaje la posibilidad de dar una cota a procedimientos o a funciones. Ahora,
+para poder hacer llamadas recursivas de una subrutina, es necesario declarar
+para ella una expresión de cota, la cual, de manera equivalente a la cota de la
+instrucción \texttt{do}, será evaluada cada vez que sea llamada la subrutina, y
+en caso de no descender, o de volverse negativa, se dará el correspondiente
+error a tiempo de ejecución. Si se define una cota para una subrutina que no es
+recursiva, esta símplemente es ignorada.
+
+\section{Cuantificaciones}

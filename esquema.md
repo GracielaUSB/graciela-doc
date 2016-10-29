@@ -24,7 +24,6 @@
   - Tipos de datos abstractos [both]
 
 
-
 - Marco tecnológico              (#)
     - Megaparsec  [carlos]
     - LLVM  [moises]
@@ -77,10 +76,10 @@
 
 # Tercera Parte                  
 - Resultados                     (#)
-  - cambios en gramatica [moises]
-  - recuperación de errores [moises]
-  - mejoras para los arreglos (multidimension, inbound check) [moises]
-  - funciones y procedimientos (cotas) [moises]
+  - cambios en gramatica [moises-]
+  - recuperación de errores [moises-]
+  - mejoras para los arreglos (multidimension, inbound check) [moises+]
+  - funciones y procedimientos (cotas) [moises+]
   - cuantificaciones (rangos) [moises]
 
   - apuntadores y su notación [carlos]
