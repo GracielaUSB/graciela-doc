@@ -420,13 +420,7 @@ sea el sistema operativo quien emita el error.
 Para la reserva de memoria dinámica, se utilizó la función estandar de C
 \texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
 argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
-memoria dinámica se realiza llamando a la función estandar de C \texttt{free} y
-luego asignando al apuntador un valor nulo, para evitar que el programador pueda
-interactuar con las direcciones de memorias previamente liberadas. En caso de
-tratar de liberar un apuntador mas de una vez o si este contenia un valor nulo,
-se emite un error a tiempo de ejecución indicando el lugar donde se realizó la
-operación, en lugar de permitir que sea la función \texttt{free} quien emita el
-error.
+memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
