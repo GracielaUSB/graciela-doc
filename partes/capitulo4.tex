@@ -1,3 +1,179 @@
 \chapter{Resultados}
 \label{capitulo4}
 \lhead{Capítulo 4. \emph{Resultados}}
+
+\subsection{Apuntadores}
+
+Los apuntadores se declaran como cualquier otra variable dentro del lenguaje
+Graciela. El tipo de un apuntador se especifica colocando el tipo que se desea
+apuntar, seguido de un asterisco (\texttt{*}). Se pueden declarar apuntadores
+a tipos básicos, arreglos, tipos definidos por el programador y a otros
+apuntadores. De igual forma se pueden especificar parámetros para funciones y
+procedimientos con apuntadores. Cabe acotar que para declarar apuntadores a
+tipos cuya sintaxis pueda generar ambigüedad, se pueden colocar entre paréntesis
+antes de colocar el asterisco. Ejemplo de éste caso seria poder declarar un apuntador a
+un arreglo de enteros y un arreglo de apuntadores a entero.
+
+\begin{gracielacode}
+var ptrToArray : (array[10] of int)*
+var arrayOfPtr :  array[10] of int*
+\end{gracielacode}
+
+Una variable de tipo apuntador puede ser comparada con otra, siempre que los
+tipos apuntados sean los mismos, haciendo uso de los operadores de igualdad
+(\texttt{==}) y desigualdad (\texttt{!=}). Tambien se puede asignar el valor
+de un apuntador a otro, siempre y cuando se cumpla la condición mencionada
+anteriormente. Se cuenta con el símbolo reservado del lenguaje
+\texttt{null}, que representa a la dirección nula y con el que se pueden
+realizar comparaciones y asignaciones a cualquier variables de un
+tipo apuntador. No está permitida la aritmética de apuntadores ni el uso de
+variables de este tipo en las rutinas \texttt{read} y \texttt{write}.
+
+Cuando se declara una variable de tipo apuntador, ésta contendrá la dirección
+nula. Para poder reservar memoria dinámica a la cual apuntar, se puede hacer
+uso de la rutina propia del lenguaje \texttt{new}, la cual recibe el apuntador
+en cuestión y le asigna una sección de memoria inicializada en cero, del
+tamaño del tipo interno. Así mismo, debe utilizarse la rutina propia del
+lenguaje \texttt{free}, la cual libera la memoria que apunta la variable que
+se le es dada como argumento.
+
+Para poder acceder al contenido de un apuntador, se debe usar el operador
+prefijo de desreferencia (\texttt{*}). No se permite desreferenciar un
+apuntador cuyo valor sea la dirección nula, y caso de realizarlo, se emite un
+error durante la ejecución. De este modo, el siguiente código debe ejecutarse
+cumpliendo todas las aserciones.
+
+\begin{gracielacode}
+main
+	|[ var p1, p2 : int*; { p1 == p2 ∧ p2 == null }
+	 ; new(p1)            { p1 != null ∧ *p1 == 0 }
+	 ; new(p2)            { p2 != null ∧ *p2 == 0 }
+	 ; *p1 := 1           { p1 != p2 ∧ *p1 == 1 }
+	 ; *p2 := *p1 + 1     { p1 != p2 ∧ *p2 == 2 }
+	 ; free(p1)
+	 ; free(p2)
+	 ; p1 := null         { p1 == null }
+	 ; p2 := p1           { p2 == null }
+	]|
+\end{gracielacode}
+
+
+\section{Tipos de Datos}
+Existen dos clasificaciones de los tipos de datos que pueden definirse en el
+lenguaje Graciela, los tipos de datos abstractos o TDA y los tipos de datos
+que implementan a un TDA. Estos deben ser definidos dentro del espacio global
+de definiciones.
+
+\subsection{Tipos de Datos Abstractos}
+
+Los tipos de datos abstractos pueden declararse con la palabra reservada
+\texttt{abstract} seguida de un identificador y, de forma opcional, una
+secuencia de variables de tipo dentro de paréntesis y separadas por coma.
+Podemos separar la estructura interna de un TDA en tres secciones. Primero se
+debe especificar el modelo de representación, en el cual se permite declarar
+contantes y variables de cualquier tipo, incluyendo tipos de la Teoría de
+Conjuntos. A continuación se debe especificar el invariante de representación
+dentro de un bloque contenido por los símbolos \texttt{\{repinv}} y
+\texttt{repinv\}}. Por último, se declaran todos los procedimientos y
+funciones abstractas con sus respectivas precondiciones y poscondiciones.
+
+Dentro de los procedimientos abstractos de un TDA pueden ser declaradas
+variables, especialmente variables de tipo de la Teoría de Conjuntos, con el
+fin de poder usarlas dentro de la precondición y la poscondición. Así, un tipo
+de dato abstracto \texttt{Diccionario} con un procedimiento para agregar un
+elemento, puede declararse de la siguiente forma.
+
+\begin{gracielacode}
+abstract Diccionario (T0, T1) begin
+  const MAX := 100 : int;
+  var   conoc      : set of T0;
+  var   tabla      : function T0 -> T1;
+
+  {inv MAX > 0 ∧ #conoc ≤ MAX ∧ conoc == domain(tabla) inv}  
+  
+  proc agregar (inout d : Diccionario(T0,T1), in c : T0, in v : T1)
+  	var tabla' := d.tabla : function T0 -> T1;
+    var conoc' := d.conoc : set of T0;
+    {pre c ∉ d.conoc ∧ #d.conoc < d.MAX pre}
+    {post d.conoc == conoc' ∪ {c}
+        ∧ d.tabla == tabla' ∪ func({(c, v)}) post}
+end
+\end{gracielacode}
+
+\subsection{Implementación de Tipos de Datos Abstractos}
+
+Aquellos tipos de datos que pretendan implementar un TDA, deben ser declarados
+con la palabra reservada \texttt{type}, un identificador y sus variables de
+tipo, seguido de la palabra reservada \texttt{implements} y el TDA que se
+desea implementar. La especificación interna, es similar a la de un TDA, con la
+excepción del invariante y relación de acoplamiento.
+
+En primer lugar, el modelo de representación solo puede albergar constantes y
+variables de tipos básicos, arreglos, apuntadores y otros tipos de datos
+definidos por el programador. A continuación, deben ser especificados el
+invariante de representación y el invariante y relación de acoplamiento. El
+invariante de acoplamiento se escribe en un bloque contenido por los símbolos
+\texttt{\{coupinv}} y \texttt{coupinv\}}, mientras que la relación de
+acoplamiento se escribe dentro de un bloque entre llaves y precedido por la
+palabra reservada \texttt{where}. La relación de acoplamiento debe especificar
+un mecanismo, a través de asignaciones, con el cual poder materializar todas
+las variables de alto nivel, encontradas en el TDA sin excepción. El bloque
+\texttt{where} es opcional, siempre y cuando el TDA no tenga variables de alto
+nivel, mas no se permite que quede vacío.
+
+Los procedimientos y funciones dentro de un tipo de dato se definen como
+cualquier otro fuera de éste. Sin embargo, ciertas condiciones aplican al
+momento de especificar el tipo de dato. La primera condición, es que todos
+procedimientos y funciones halladas en la especificación del TDA deben
+implementarse, aunque esto no evita poder definir otros métodos. La segunda
+condición es que, cualquier uso de variables de tipo dentro del cuerpo o
+cabezera de un método, está restringido al caso en el que uno de los
+parámetros del mismo, sea del tipo de dato dentro del cual se está definiendo
+y contenga a su vez las variables de tipo en cuestión.
+
+Todas las variables y constantes presentes en el TDA, estarán disponibles en
+cualquier lugar del código como uno de los campos de la
+\textit{implementación}, si y solo si, no sea de un tipo de la Teoría de
+Conjuntos. El único lugar donde se está permitido hacer uso de las variables
+de alto nivel del TDA como campos de la \textit{implementación}, es dentro del
+invariante y la relación de acoplamiento. De esta forma, una posible
+implementación del TDA \texttt{Diccionario} debería verse de la siguiente
+manera.
+
+\begin{gracielacode}
+type Dicc (T0, T1) implements Diccionario (T0, T1) begin
+  var clave : array [MAX] of T0;
+  var valor : array [MAX] of T1;
+  var tam   : int;
+
+  {repinv MAX > 0 ∧ 0 ≤ tam ∧ tam ≤ MAX ∧
+    (\% ∀ i : int | 0 ≤ i ∧ i < tam
+      | (\% ∀ j : int | 0 ≤ j ∧ j < tam ∧ i != j | clave[i] != clave[j] \%)
+    \%)
+  repinv}
+
+  {coupinv true coupinv}
+
+  where { 
+  	tabla := func({i : int | 0 ≤ i ∧ i < tam | (clave[i], valor[i])});
+    conoc := domain(tabla)
+  }
+  
+  proc agregar (inout d : Dicc (T0,T1), in c : T0, in v : T1)
+    var tam' := d.tam : int;  
+    var clave'        : array[d.MAX] of T0;
+    var valor'        : array[d.MAX] of T1;
+
+    {pre ¬(\% ∃ i : int | 0 ≤ i ∧ i < d.tam | d.clave[i] == c \%) ∧ d.tam < d.MAX pre}
+
+    {post d.tam == tam' + 1 ∧ d.clave[tam'] == c ∧  d.valor[tam'] == v 
+              ∧ (\% ∀ i : int | 0 ≤ i ∧ i < tam' | d.clave[i] == clave'[i]
+                                                ∧ d.valor[i] == valor'[i] \%) post}
+    ⟦ 
+     ...
+    ⟧
+\end{gracielacode}
+
+Cabe mencionar que no se pueden declarar variables de un TDA fuera del mismo y
+pueden existir multiples implementaciones para un mismo TDA.
+
