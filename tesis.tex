@@ -131,8 +131,7 @@
 
 % blues
 \definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
-% \definecolor{cyanprocess}{rgb}{0.0, 0.72, 0.92}
-\definecolor{cyanprocess}{rgb}{0.0, 0.36, 0.46}
+\definecolor{cyan process}{rgb}{0.0, 0.36, 0.46}
 
 % reds
 \definecolor{crimson}{rgb}{0.86, 0.08, 0.24}
@@ -168,13 +167,13 @@
         toFloat, toInt, toChar, toBoolean, toSequence, toSet, toMultiset
         ∀, ∃, ∄, ∑, ∏, \#
     },
-    keywordstyle=[3]\color{cyanprocess},
+    keywordstyle=[3]\color{cyan process},
     morekeywords=[4]{repinv, coupinv, pre, post, bound, inv},
     keywordstyle=[4]\color{darkcandyapplered},
     morekeywords=[5]{true, false, null},
     keywordstyle=[5]\color{caribbeangreen},
-    numbers=left,
-    stepnumber=0,
+    numbers=none,
+    stepnumber=1,
     showstringspaces=false,
     breaklines=true,
     frame=top,
@@ -303,14 +302,20 @@
   ]{Fira Code}
 \newfontfamily{\monofallbackfont}{DejaVu Sans Mono}
 \DeclareTextFontCommand{\textmonofallback}{\monofallbackfont\textscale{0.95}}
-\newcommand{\qop} {\color{cyanprocess}{\textit{qop}}}
-\newcommand{\op}  {\color{cyanprocess}{\textit{op}} }
+\newcommand{\qop} {\color{cyan process}{\textit{qop}}}
+\newcommand{\op}  {\color{cyan process}{\textit{op}} }
 \newcommand{\Lbag}{\textmonofallback{⟅}}
 \newcommand{\Rbag}{\textmonofallback{⟆}}
 \newcommand{\Lseq}{\textmonofallback{⟨}}
 \newcommand{\Rseq}{\textmonofallback{⟩}}
-\newcommand{\Elem}{\textmonofallback{∈}}
 \newcommand{\Union}{\textmonofallback{∪}}
+\newcommand{\Land}{\textmonofallback{∧}}
+\newcommand{\Lor}{\textmonofallback{∨}}
+\newcommand{\Elem}{\textmonofallback{∈}}
+\newcommand{\Notelem}{\textmonofallback{∉}}
+\newcommand{\Forall}{\textmonofallback{∀}}
+\newcommand{\Exist}{\textmonofallback{∃}}
+\newcommand{\Apost}{\textmonofallback{'}}
 
 \newdate{presentationdate}{16}{3}{2016}
 
