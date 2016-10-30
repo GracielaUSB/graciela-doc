@@ -80,10 +80,10 @@
   - recuperación de errores [moises-]
   - mejoras para los arreglos (multidimension, inbound check) [moises+]
   - funciones y procedimientos (cotas) [moises+]
-  - cuantificaciones (rangos) [moises]
+  - cuantificaciones (rangos) [moises+]
 
   - apuntadores y su notación [carlos]
-  - colecciones
+  - colecciones [moises+]
   - tipos de datos abstractos [carlos]
 
   - Herramientas para el programador [todo]

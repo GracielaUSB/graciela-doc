@@ -29,6 +29,7 @@
 
 - Only first five errors given by default
 
+- Agregar backend de conversiones
 
 # Syntax Highlighting
 - Agregar operador msum (misma categoría que union)

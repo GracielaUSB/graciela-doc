@@ -56,6 +56,8 @@
 \usepackage{stackengine}
 \usepackage{rotating}
 \usepackage[shortcuts]{extdash}
+\usepackage{relsize}
+\usepackage{etoolbox}
 
 
 % Paquetes locales
@@ -125,11 +127,12 @@
 % }
 
 % greens
-\definecolor{caribbeangreen}{rgb}{0.0, 0.8, 0.6}
+\definecolor{caribbeangreen}{rgb}{0.0, 0.6, 0.45}
 
 % blues
 \definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
-\definecolor{cyan process}{rgb}{0.0, 0.72, 0.92}
+% \definecolor{cyanprocess}{rgb}{0.0, 0.72, 0.92}
+\definecolor{cyanprocess}{rgb}{0.0, 0.36, 0.46}
 
 % reds
 \definecolor{crimson}{rgb}{0.86, 0.08, 0.24}
@@ -138,35 +141,40 @@
 \definecolor{goldensand}{rgb}{0.70,0.62,0.32}
 
 % code and mathematics
-\lstdefinelanguage{graciela}{
-    keywordstyle=\bfseries,
+\lstdefinelanguage{graciela}{ %
+    keywordstyle=\bfseries\color{crimson},
     % list of keywords
-    keywords=[1]{
+    keywords=[1]{},
+    morekeywords=[2]{
         proc, func, program, begin, end, abstract, type,
         if, do, in, out, inout, fi, od, write,
         writeln, read, from, where, of, implements,
-        set, relation, multiset, sequence, function,
-        var, const, array, int, bool, float, char,
+        set, rel, relation, multiset, sequence, function,
+        var, const, array, int, boolean, float, char,
         new, free, abort, warn, skip, random
     },
-    keywordstyle=[1]\color{crimson},
+    keywordstyle=[2]{\color{cerulean}\bfseries},
     % symbol keywords
-    morekeywords=[2]{
-        +,  /\\, \//, ∧, ∨, -, *, /, div, mod, \\, ->, →, <->,
-        ↔, [, ], elem, notelem, ∈, ∉, union, intersect, ∪, ∩,
+    alsoletter={
+         +, /, \\, -, *, <, >, =, !
+    },
+    morekeywords=[3]{
+        +,  /\\, \\/, ∧, ∨, -, *, /, div, mod, \\, ->, →, <->,
+        ↔, [, ], elem, notelem, ∈, ∉, union, intersect, ∪, ∩, \Union
         msum, ⊎, ++, ⧺, subset, ssubset, superset, ssuperset,
         ⊆, ⊂, ⊊, ⊇, ⊃, ⊋, ×, ÷, ^, sqrt, √, ⇒ ⇐, ≡, ≢,
         ==>, <==, ===, !==, ==, !=, ≠, <=, <, >, >=, ≤, ≥, !, ¬,
         forall, exist, notexist, max, min, product, sum, count,
+        toFloat, toInt, toChar, toBoolean, toSequence, toSet, toMultiset
         ∀, ∃, ∄, ∑, ∏, \#
     },
-    keywordstyle=[2]\color{cyan process},
-    morekeywords=[3]{repinv, coupinv, pre, post, bound, inv},
-    keywordstyle=[3]\color{cerulean},
-    morekeywords=[4]{true, false, null},
-    keywordstyle=[4]\color{caribbeangreen},
+    keywordstyle=[3]\color{cyanprocess},
+    morekeywords=[4]{repinv, coupinv, pre, post, bound, inv},
+    keywordstyle=[4]\color{darkcandyapplered},
+    morekeywords=[5]{true, false, null},
+    keywordstyle=[5]\color{caribbeangreen},
     numbers=left,
-    stepnumber=1,
+    stepnumber=0,
     showstringspaces=false,
     breaklines=true,
     frame=top,
@@ -175,7 +183,6 @@
     stringstyle=\color{goldensand}\ttfamily,
     morestring=[b]',
     morestring=[b]",
-    numberstyle=\scriptsize\color{caribbeangreen},
     sensitive=true,                 % keywords are case-sensitive
     morestring=[b]",                % strings are in double quotes
     morestring=[d]',                % characters are in single quotes
@@ -183,9 +190,8 @@
 
 \newcommand{\inlinemath}[1]{{\small\bfseries\color{cyan process}\texttt{$#1$}}}
 \newcommand{\inlinecode}[1]{{\small\bfseries\color{darkcandyapplered}\texttt{#1}}}
-\lstdefinestyle{code}{
-    keywordstyle={\color{cerulean}\bfseries},   % style for keywords: bold
-    keywordstyle={[2]\bfseries},
+\lstdefinestyle{code}{%
+    basicstyle=\ttfamily\footnotesize,
     commentstyle={\color{gray}},        % style for comments
     captionpos=t,                       % caption position: top
     frame=l,                            % frame: [l]eft [r]ight [t]op [b]ottom
@@ -210,7 +216,12 @@
               {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
               {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
               {€}{{\EUR}}1 {£}{{\pounds}}1 {¿}{{\textquestiondown}}1
-              {¡}{{\textexclamdown}}1,
+              {¡}{{\textexclamdown}}1
+}
+
+\lstset{
+    style=code,
+    escapechar=\~,
 }
 
 \lstnewenvironment{gracielacode}[1][]{
@@ -218,10 +229,18 @@
     \lstset{
         language=graciela,
         style=code,
-        escapechar=\~
+        escapechar=\~,
         #1                  % settings for the lst environment
     }
 }{}
+
+% http://tex.stackexchange.com/q/43526
+% fix the apparently deliberate but undocumented behaviour of disabling escapes other than mathescape in TextStyle (used by \lstinline)
+% there may be a good reason why this is disabled by default, so beware in case it causes any problems
+\makeatletter
+\patchcmd{\lsthk@TextStyle}{\let\lst@DefEsc\@empty}{}{}{\errmessage{failed to patch}}
+\makeatother
+\newcommand{\ingra}{\lstinline[language=graciela]}
 
 \lstnewenvironment{haskellcode}[1][]{
     \linespread{1}
@@ -233,6 +252,8 @@
             let, mdo, module, newtype, of, proc, qualified, rec, then, type,
             where
         },
+        keywordstyle={\color{cerulean}\bfseries},
+        keywordstyle={[2]\bfseries},
         style=code,
         #1                  % settings for the lst environment
     }
@@ -274,13 +295,22 @@
 \makeatother
 
 
-\setmonofont[Contextuals={Alternate}]{Fira Code}
-\newfontfamily{\fallbackfont}{DejaVu Sans Mono}
-\DeclareTextFontCommand{\textfallback}{\fallbackfont}
-\newcommand{\Lbag}{\textfallback{⟅}}
-\newcommand{\Rbag}{\textfallback{⟆}}
-\newcommand{\Lseq}{\textfallback{⟨}}
-\newcommand{\Rseq}{\textfallback{⟩}}
+\setmonofont[
+  Contextuals={Alternate},
+  BoldFont={Fira Code Bold},
+  ItalicFont={Fira Sans Italic},
+  BoldItalicFont={Fira Sans Bold Italic}
+  ]{Fira Code}
+\newfontfamily{\monofallbackfont}{DejaVu Sans Mono}
+\DeclareTextFontCommand{\textmonofallback}{\monofallbackfont\textscale{0.95}}
+\newcommand{\qop} {\color{cyanprocess}{\textit{qop}}}
+\newcommand{\op}  {\color{cyanprocess}{\textit{op}} }
+\newcommand{\Lbag}{\textmonofallback{⟅}}
+\newcommand{\Rbag}{\textmonofallback{⟆}}
+\newcommand{\Lseq}{\textmonofallback{⟨}}
+\newcommand{\Rseq}{\textmonofallback{⟩}}
+\newcommand{\Elem}{\textmonofallback{∈}}
+\newcommand{\Union}{\textmonofallback{∪}}
 
 \newdate{presentationdate}{16}{3}{2016}
 

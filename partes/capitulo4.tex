@@ -12,18 +12,24 @@ para mejorar la experiencia del programador novel.
 
 \todo{hablar más (?)}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GRAMÁTICA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cambios en la gramática}
 
 Para dar más claridad a los programas escritos en Graciela, se decidió que el
-bloque principal debe estar precedido por la palabra clave \texttt{main}.  Por
+bloque principal debe estar precedido por la palabra clave \ingra{main}.  Por
 otro lado, en la definición de procedimientos y funciones, se movió la
 poscondición junto con la precondición, de modo que aparecen antes del cuerpo de
 la subrutina, eliminándose así la necesidad de usar las palabras clave
-\texttt{begin} y \texttt{end} para delimitar el cuerpo de la subrutina. En los
-procedimientos, también se eliminó el  símbolo \texttt{:} entre el identificador
+\ingra{begin} y \ingra{end} para delimitar el cuerpo de la subrutina. En los
+procedimientos, también se eliminó el  símbolo \ingra{:} entre el identificador
 del procedimiento y el conjunto de parámetros delimitado por paréntesis, por
-carecer de valor semántico \texttt{revisar}.
+carecer de valor semántico \ingra{revisar}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% RECUPERACIÓN DE ERRORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Recuperación de errores durante el análisis sintáctico}
 
 El compilador \texttt{graciela} cuenta ahora con una mejor capacidad para
@@ -31,6 +37,9 @@ recuperarse de errores durante el análisis sintáctico de un archivo, y ofrece
 mensajes de error más fáciles de entender en gran parte de los casos.
 \todo{ejemplos de esto}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ARREGLOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Arreglos}
 
 Para mejorar la experiencia de los programadores del lenguaje Graciela, se
@@ -45,7 +54,7 @@ algoritmos.
 Por otro lado, se decidió ofrecer arreglos multidimensionales como parte del
 lenguaje. Anteriormente, era posible utilizar arreglos multidimensionales
 declarándolos como arreglos de arreglos de algún tipo, y para utilizar sus
-elementos se hacían tantos usos de subíndices (\texttt{[i]}) como dimensiones
+elementos se hacía uso de tantos subíndices (\ingra{[i]}) como dimensiones
 tuviera el arreglo. Ahora, son declarados como arreglos de varias dimensiones,
 especificando entre corechetes sus tamaños en cada dimensión, separados por
 comas, de la siguiente manera:
@@ -73,6 +82,9 @@ a pesar de ser ciertos, no indican la verdadera razón del problema, la falta de
 concordancia entre las dimensiones del arreglo y las de la subindización
 utilizada.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SUBRUTINAS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Subrutinas}
 
 Anteriormente, se permitía que procedimientos y funciones fueran recursivos sin
@@ -80,19 +92,136 @@ importar si esta recursión era acotada. De hecho, no existía en la gramática 
 lenguaje la posibilidad de dar una cota a procedimientos o a funciones. Ahora,
 para poder hacer llamadas recursivas de una subrutina, es necesario declarar
 para ella una expresión de cota, la cual, de manera equivalente a la cota de la
-instrucción \texttt{do}, será evaluada cada vez que sea llamada la subrutina, y
+instrucción \ingra{do}, será evaluada cada vez que sea llamada la subrutina, y
 en caso de no descender, o de volverse negativa, se dará el correspondiente
 error a tiempo de ejecución. Si se define una cota para una subrutina que no es
 recursiva, esta símplemente es ignorada.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CUANTIFICACIONES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cuantificaciones}
 
+Las cuantificaciones ya formaban parte del lenguaje en su versión original, pero
+se les hicieron algunas modificaciones. En primer lugar, la variable auxiliar
+ahora puede ser de tipo \ingra{float} o de una variable de tipo, en adición a
+los tipos permitidos anteriormente,  \ingra{int}, \ingra{char} o
+\ingra{boolean}. Se permiten variables de tipo \ingra{float} gracias a la
+adición de los tipos colección, explicados más adelante, ahora es posible
+definir iteraciones sobre números de punto flotante, usando el operador de
+pertenencia (\Elem) sobre una colección, mientras que se permiten las variables
+de tipo debido a que éstas siempre serán instanciadas a\todo{en?} alguno de los
+tipos \ingra{int}, \ingra{char}, \ingra{boolean} o \ingra{float}).
 
-\subsection{Apuntadores}
+En segundo lugar, ahora el compilador admite expresiones booleanas más generales
+en el rango de una cuantificación. La versión original del lenguaje permitía
+expresiones arbitrarias en el rango, pero el compilador correspondiente sólo
+admitía una conjunción de dos operaciones relacionales, y fallaba si se usaba
+otra forma de expresión. Ahora, se aceptan expresiones lógicas en Forma Normal
+Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
+
+\begin{itemize}
+
+	\item La variable auxiliar aparece, sola, en al menos dos desigualdades
+	% (\ingra{<}, \ingra{<=}, \ingra{>} o \ingra{>=}), como el operando menor y
+	mayor en al menos una desigualdad, respectivamente, y adicionalmente el tipo
+	de la variable auxiliar es \ingra{int} o \ingra{char}. En este caso, se
+	forma un rango númerico entre el máximo de los límites inferiores y el mínimo
+	de los límites superiores definidos por las desigualdades. Ejemplo:
+
+\begin{gracielacode}
+(% ~\qop~ i : int | 0 <= i /\ i < 100 | ... %)
+\end{gracielacode}
+
+	En este caso, el rango resultante es el comprendido entre $0$ y $100$,
+	incluyendo  el límite inferior pero no el superior.\\
+
+	\item La variable auxiliar aparece del lado izquierdo de un operador de
+	pertenencia (\Elem), con una colección en el lado derecho. En este caso, se
+	forma un rango de pertenenecia sobre la colección en cuestión. Ejemplo:
+
+\begin{gracielacode}
+var s : set of A
+...
+(% ~\qop~ i : A | i ~\Elem~ s | ... %)
+\end{gracielacode}
+
+	En este caso, el rango resultante es el conjunto \ingra{s}.\\
+
+	\item La variable auxiliar aparece, sola, en cualquier lado de un operador de
+	igualdad (\ingra{==}). En este caso, se forma un rango puntual
+	correspondiente a la expresión del otro lado del operador. Ejemplo:
+
+\begin{gracielacode}
+var a, b, c : int
+...
+(% ~\qop~ i : int | i == a ~\op~b ~\op~c | ... %)
+\end{gracielacode}
+
+	En este caso, el rango resultante es el valor de la expresión
+	\lstinline[language=graciela]{a ~\op~b ~\op~c}.\\
+
+	\item La expresión puede ser evaluada como la constante \ingra{false} a
+	tiempo de compilación, resultando un rango vacío. Ejemplo:
+
+\begin{gracielacode}
+(% ~\qop~ i : A | false | ... %)
+\end{gracielacode}
+
+	En este caso, el rango resultante es el rango vacío, con todas las
+	consecuencias que pueda tener esto para el valor de la cuantificación y la
+	ejecución del programa.
+
+\end{itemize}
+
+De cumplirse más de una de las condiciones simultáneamente, se utiliza como
+rango de iteración el primero de los rangos formados según la siguiente lista, y
+la pertenencia en el segundo se evaluará para cada elemento de la iteración.
+
+\begin{enumerate}
+	\item Rango vacío
+	\item Rango puntual
+	\item Rango de pertenencia
+	\item Rango numérico
+\end{enumerate}
+
+Es decir, si a partir de una expresión de rango pueden formarse,
+simultáneamente, un rango vacío y uno puntual, se tomará el vacío. En caso de
+poder formarse dos rangos de pertenencia, se tomará la primera colección para
+ejecutar la iteración, y la segunda relación de pertenencia será evaluada para
+cada elemento. En caso de poderse formar más de un rango numérico, se tomará su
+intersección.
+
+Por último, se agregó el operador de cuantifiación \ingra{count}, o
+equivalentemente \ingra{#}. Este operador exige un cuerpo de tipo booleano, y el
+resultado de la cuantificación será el número de veces que sea cierta la
+expresión del cuerpo para los valores en el rango dado. De esta forma, se
+cumplen las siguientes equivalencias.
+
+\begin{gracielacode}
+(% forall i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) ===
+    (% count i : T | ~\textit{Rango}(~i) | ! ~\textit{Cuerpo}~(i) %) == 0
+\end{gracielacode}
+
+y
+
+\begin{gracielacode}
+(% exist i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) ===
+    (% count i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) != 0
+\end{gracielacode}
+
+Este operador de cuantificación fue sugerido por Dijkstra
+\todo{http://www.cs.utexas.edu/users/EWD/transcriptions/EWD07xx/EWD737.html},
+por lo cual se consideró apropiado agregarlo al lenguaje inspirado por su GCL.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Apuntadores}
 
 Los apuntadores se declaran como cualquier otra variable dentro del lenguaje
 Graciela. El tipo de un apuntador se especifica colocando el tipo que se desea
-apuntar, seguido de un asterisco (\texttt{*}). Se pueden declarar apuntadores
+apuntar, seguido de un asterisco (\ingra{*}). Se pueden declarar apuntadores
 a tipos básicos, arreglos, tipos definidos por el programador y a otros
 apuntadores. De igual forma se pueden especificar parámetros para funciones y
 procedimientos con apuntadores. Cabe acotar que para declarar apuntadores a
@@ -102,48 +231,174 @@ un arreglo de enteros y un arreglo de apuntadores a entero.
 
 \begin{gracielacode}
 var ptrToArray : (array[10] of int)*
-var arrayOfPtr :  array[10] of int*
+var arrayOfPtr :  array[10] of int *
 \end{gracielacode}
 
 Una variable de tipo apuntador puede ser comparada con otra, siempre que los
 tipos apuntados sean los mismos, haciendo uso de los operadores de igualdad
-(\texttt{==}) y desigualdad (\texttt{!=}). Tambien se puede asignar el valor
+(\ingra{==}) y desigualdad (\ingra{!=}). Tambien se puede asignar el valor
 de un apuntador a otro, siempre y cuando se cumpla la condición mencionada
 anteriormente. Se cuenta con el símbolo reservado del lenguaje
-\texttt{null}, que representa a la dirección nula y con el que se pueden
+\ingra{null}, que representa a la dirección nula y con el que se pueden
 realizar comparaciones y asignaciones a cualquier variables de un
 tipo apuntador. No está permitida la aritmética de apuntadores ni el uso de
-variables de este tipo en las rutinas \texttt{read} y \texttt{write}.
+variables de este tipo en las rutinas \ingra{read} y \ingra{write}.
 
 Cuando se declara una variable de tipo apuntador, ésta contendrá la dirección
 nula. Para poder reservar memoria dinámica a la cual apuntar, se puede hacer
-uso de la rutina propia del lenguaje \texttt{new}, la cual recibe el apuntador
+uso de la rutina propia del lenguaje \ingra{new}, la cual recibe el apuntador
 en cuestión y le asigna una sección de memoria inicializada en cero, del
 tamaño del tipo interno. Así mismo, debe utilizarse la rutina propia del
-lenguaje \texttt{free}, la cual libera la memoria que apunta la variable que
+lenguaje \ingra{free}, la cual libera la memoria que apunta la variable que
 se le es dada como argumento.
 
 Para poder acceder al contenido de un apuntador, se debe usar el operador
-prefijo de desreferencia (\texttt{*}). No se permite desreferenciar un
+prefijo de desreferencia (\ingra{*}). No se permite desreferenciar un
 apuntador cuyo valor sea la dirección nula, y caso de realizarlo, se emite un
 error durante la ejecución. De este modo, el siguiente código debe ejecutarse
 cumpliendo todas las aserciones.
 
 \begin{gracielacode}
 main
-	|[ var p1, p2 : int*; { p1 == p2 ∧ p2 == null }
-	 ; new(p1)            { p1 != null ∧ *p1 == 0 }
-	 ; new(p2)            { p2 != null ∧ *p2 == 0 }
-	 ; *p1 := 1           { p1 != p2 ∧ *p1 == 1 }
-	 ; *p2 := *p1 + 1     { p1 != p2 ∧ *p2 == 2 }
-	 ; free(p1)
-	 ; free(p2)
-	 ; p1 := null         { p1 == null }
-	 ; p2 := p1           { p2 == null }
-	]|
+  |[ var p1, p2 : int *; { p1 == p2 /\ p2 == null }
+   ; new(p1)             { p1 != null /\ *p1 == 0 }
+   ; new(p2)             { p2 != null /\ *p2 == 0 }
+   ; *p1 := 1            { p1 != p2 /\ *p1 == 1 }
+   ; *p2 := *p1 + 1      { p1 != p2 /\ *p2 == 2 }
+   ; free(p1)
+   ; free(p2)
+   ; p1 := null          { p1 == null }
+   ; p2 := p1            { p2 == null }
+  ]|
 \end{gracielacode}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Teoría de Conjuntos}
 
+El lenguaje permite, en las aserciones, el uso de expresiones de la teoría de
+conjuntos. Específicamente, se permiten expresiones de tipo Conjunto,
+Multiconjunto y Secuencia. En adelante, usaremos el término \textit{colección}
+para referirnos a los tres tipos indistintamente. Sólo se permiten colecciones
+de un nivel, es decir, no se permiten colecciones de colecciones sino únicamente
+de elementos de los tipos básicos (\ingra{int}, \ingra{char}, \ingra{float},
+\ingra{boolean}) o de pares ordenados de tipos básicos. Los conjuntos son
+representados con los símbolos \ingra|{| y \ingra|}|, los multiconjuntos con
+\Lbag{} y \Rbag{} si se usan caracteres UTF-8, o \ingra|{{| y \ingra|}}| si no, y
+las colecciones con \Lseq{} y \Rseq{} si se usan caracteres UTF-8, o \ingra|<<| y
+\ingra|>>| si no.
+
+Se permite escribir colecciones de dos maneras, por extensión y por comprensión.
+En el primer caso, simplemente se nombran los elementos de la colección
+separados por comas, existiendo la posibilidad de no especificar elementos para
+la colección vacía. Así, el conjunto, multiconjunto y secuencia con los números
+1, 2 y 3 pueden escribirse en Graciela, respectivamente, como
+
+\begin{gracielacode}
+{1, 2, 3}
+~\Lbag~1, 2, 3~\Rbag~ // ó {{1, 2, 3}} sin UTF-8
+~\Lseq~1, 2, 3~\Rseq~ // ó <<1, 2, 3>> sin UTF-8
+\end{gracielacode}
+
+En el caso de las colecciones definidas por comprensión, se usa una notación
+bastante similar a la de las cuantificaciones. Esta notación consiste en tres
+partes escritas entre los símbolos correspondientes a la colección deseada y
+separadas por caracteres \ingra{|}. En la primera parte se define una variable
+generadora con uno de los tipos permitidos para colecciones. En la segunda, el
+rango, se delimita el rango de la variable auxiliar, con las mismas
+consideraciones que para las cuantificaciones. La tercera parte, el cuerpo, es
+la expresión que será agregada a la colección para cada valor posible de la
+variable auxiliar. Así, las mismas colecciones del ejemplo anterior podrían
+escribirse, respectivamente, como
+
+\begin{gracielacode}
+{i : int | 0 < i /\ i < 4 | i}
+~\Lbag~i : int | 0 < i /\ i < 4 | i~\Rbag~
+  // ó {{i : int | 0 < i /\ i < 4 | i}} sin UTF-8
+~\Lseq~i : int | 0 < i /\ i < 4 | i~\Rseq~
+  // ó <<i : int | 0 < i /\ i < 4 | i>> sin UTF-8
+\end{gracielacode}
+
+También se permite la declaración de variables de tipos colección dentro de los
+Tipos de Datos Abstractos. La notación para esto es la misma que para las
+declaraciones de tipos básicos, cambiando el tipo usado. Así, para definir,
+respectivamente, un conjunto, un multiconjunto, y una secuencia de enteros, se
+usa la siguiente notación:
+
+\begin{gracielacode}
+var x : set of int;
+var y : multiset of int;
+var z : sequence of int;
+\end{gracielacode}
+
+Además de las colecciones, se agregaron al lenguaje los tipos abstractos de la
+teoría de conjuntos \textit{función} y \textit{relación}. En la mayoría de la
+literatura que hace uso de la teoría de conjuntos, estos tipos no son más que
+conjuntos de pares ordenados, con la restricción adicional de que no pueden
+pertenecer a la misma función dos pares con el mismo primer elemento. En el
+lenguaje Graciela, para distinguir visualmente estos tipos de los conjuntos
+sencillos, y entre ellos, se optó por definir las funciones \ingra{func} y
+\ingra{rel}, que toman un conjunto de pares ordenados (\ingra{A}, \ingra{B}),
+donde \ingra{A} y \ingra{B} son tipos básicos posiblemente distintos, y
+devuelven, respectivamente, la función de \ingra{A} en \ingra{B} y la relación
+entre \ingra{A} y \ingra{B} correspondientes al conjunto de pares dado.
+Adicionalmente, en el caso en que el conjunto pasado a \ingra{func} contuviese
+dos pares ordenados con el mismo primer elemento, se daría un error a tiempo de
+ejecución, por incumplirse la definición matemática de \textit{función}. Así, la
+función que duplica los números entre el 1 y el 10 puede escribirse como:
+
+\begin{gracielacode}
+func({ int i | 0 < i /\ i <= 10 | (i, 2*i) })
+\end{gracielacode}
+
+Mientras que la relación entre los números entre el 1.0 y el 10.0 con sus raíces
+cuadradas positiva y negativa puede escribirse como:
+
+\begin{gracielacode}
+rel(
+  { int i | 0 < i /\ i <= 10 |
+    (toFloat(i),  (sqrt(toFloat(i))))
+  } union
+  { int i | 0 < i /\ i <= 10 |
+    (toFloat(i), -(sqrt(toFloat(i))))
+  }
+)
+\end{gracielacode}
+
+Para evaluar una función o relación en un punto dado, es decir, para conocer el
+(o los) valor(es) asociado(s) del codominio a un valor del dominio, se usa la
+misma notación que para la evaluación de las funciones del lenguaje, es decir,
+se escribe la función seguida del valor del dominio en cuestión, entre
+paréntesis. En el caso de las funciones, el resultado es un valor del tipo del
+codominio, o un error a tiempo de ejecución si el valor usado como argumento no
+pertenece al dominio, mientras que para las relaciones, el resultado es siempre
+un conjunto, potencialmente vacío, de elementos del tipo del codominio. Por
+ejemplo,
+
+\begin{gracielacode}
+var f : func int -> char;
+var r : rel int <-> char;
+...
+write (f(3));
+{inv true inv}
+{bound #r - i bound}
+do i < #r -> writeln (((toSequence( r(n) ))[i])
+           ; i := i + 1
+od;
+\end{gracielacode}
+
+De manera similar a las colecciones, se permite la declaración de funciones y
+relaciones entre dos tipos, con la siguiente notación, respectivamente:
+
+\begin{gracielacode}
+var x : function int -> char;
+var y : relation int <-> char;
+\end{gracielacode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TIPOS DE DATOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tipos de Datos}
 Existen dos clasificaciones de los tipos de datos que pueden definirse en el
 lenguaje Graciela, los tipos de datos abstractos o TDA y los tipos de datos
@@ -153,20 +408,20 @@ de definiciones.
 \subsection{Tipos de Datos Abstractos}
 
 Los tipos de datos abstractos pueden declararse con la palabra reservada
-\texttt{abstract} seguida de un identificador y, de forma opcional, una
+\ingra{abstract} seguida de un identificador y, de forma opcional, una
 secuencia de variables de tipo dentro de paréntesis y separadas por coma.
 Podemos separar la estructura interna de un TDA en tres secciones. Primero se
 debe especificar el modelo de representación, en el cual se permite declarar
 contantes y variables de cualquier tipo, incluyendo tipos de la Teoría de
 Conjuntos. A continuación se debe especificar el invariante de representación
-dentro de un bloque contenido por los símbolos \texttt{\{repinv}} y
-\texttt{repinv\}}. Por último, se declaran todos los procedimientos y
+dentro de un bloque contenido por los símbolos
+\ingra|{repinv| y \ingra|repinv}|. Por último, se declaran todos los procedimientos y
 funciones abstractas con sus respectivas precondiciones y poscondiciones.
 
 Dentro de los procedimientos abstractos de un TDA pueden ser declaradas
 variables, especialmente variables de tipo de la Teoría de Conjuntos, con el
 fin de poder usarlas dentro de la precondición y la poscondición. Así, un tipo
-de dato abstracto \texttt{Diccionario} con un procedimiento para agregar un
+de dato abstracto \ingra{Diccionario} con un procedimiento para agregar un
 elemento, puede declararse de la siguiente forma.
 
 \begin{gracielacode}
@@ -178,19 +433,19 @@ abstract Diccionario (T0, T1) begin
   {inv MAX > 0 ∧ #conoc ≤ MAX ∧ conoc == domain(tabla) inv}
 
   proc agregar (inout d : Diccionario(T0,T1), in c : T0, in v : T1)
-  	var tabla' := d.tabla : function T0 -> T1;
-    var conoc' := d.conoc : set of T0;
+  	var tabla~'~ := d.tabla : function T0 -> T1;
+    var conoc~'~ := d.conoc : set of T0;
     {pre c ∉ d.conoc ∧ #d.conoc < d.MAX pre}
-    {post d.conoc == conoc' ∪ {c}
-        ∧ d.tabla == tabla' ∪ func({(c, v)}) post}
+    {post d.conoc == conoc~'~ ∪ {c}
+        ∧ d.tabla == tabla~'~ ∪ func({(c, v)}) post}
 end
 \end{gracielacode}
 
 \subsection{Implementación de Tipos de Datos Abstractos}
 
 Aquellos tipos de datos que pretendan implementar un TDA, deben ser declarados
-con la palabra reservada \texttt{type}, un identificador y sus variables de
-tipo, seguido de la palabra reservada \texttt{implements} y el TDA que se
+con la palabra reservada \ingra{type}, un identificador y sus variables de
+tipo, seguido de la palabra reservada \ingra{implements} y el TDA que se
 desea implementar. La especificación interna, es similar a la de un TDA, con la
 excepción del invariante y relación de acoplamiento.
 
@@ -199,12 +454,12 @@ variables de tipos básicos, arreglos, apuntadores y otros tipos de datos
 definidos por el programador. A continuación, deben ser especificados el
 invariante de representación y el invariante y relación de acoplamiento. El
 invariante de acoplamiento se escribe en un bloque contenido por los símbolos
-\texttt{\{coupinv}} y \texttt{coupinv\}}, mientras que la relación de
+\ingra|{coupinv| y \ingra|coupinv}|, mientras que la relación de
 acoplamiento se escribe dentro de un bloque entre llaves y precedido por la
-palabra reservada \texttt{where}. La relación de acoplamiento debe especificar
+palabra reservada \ingra{where}. La relación de acoplamiento debe especificar
 un mecanismo, a través de asignaciones, con el cual poder materializar todas
 las variables de alto nivel, encontradas en el TDA sin excepción. El bloque
-\texttt{where} es opcional, siempre y cuando el TDA no tenga variables de alto
+\ingra{where} es opcional, siempre y cuando el TDA no tenga variables de alto
 nivel, mas no se permite que quede vacío.
 
 Los procedimientos y funciones dentro de un tipo de dato se definen como
@@ -223,7 +478,7 @@ cualquier lugar del código como uno de los campos de la
 Conjuntos. El único lugar donde se está permitido hacer uso de las variables
 de alto nivel del TDA como campos de la \textit{implementación}, es dentro del
 invariante y la relación de acoplamiento. De esta forma, una posible
-implementación del TDA \texttt{Diccionario} debería verse de la siguiente
+implementación del TDA \ingra{Diccionario} debería verse de la siguiente
 manera.
 
 \begin{gracielacode}
