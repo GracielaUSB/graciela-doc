@@ -6,7 +6,8 @@ El diseño y desarrollo de la extensión al compilador de Graciela fueron llevad
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
 revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
-por el programador, (4) Herramientas para el programador.
+por el programador, (4) Tipos Algebráicos Libres, (5) Herramientas para el
+programador.
 
 Durante el transcurso del proyecto, se escribieron múltiples programas de prueba
 con el fin de evaluar los distintos módulos del compilador. Estos programas de
@@ -56,18 +57,49 @@ prueba pueden conseguirse en el anexo \textbf{NUMERODEANEXO}.
 \section{Revisión del trabajo previo}
 
 En la primera etapa de este proyecto, se estudió el estado del compilador
-elaborado por Araujo y Jiménez y se evaluaron las recomendaciones que sobre la
-semántica de este lenguaje hizo el jurado de este primer proyecto.
+elaborado por Araujo y Jiménez y se evaluaron las recomendaciones hechas por los
+mismos sobre posibles extensiones al lenguaje y al compilador.
 
 Se observó que existían aspectos del compilador que podían ser mejorados, y que
 además estas mejoras facilitarían el desarrollo de los objetivos del proyecto,
 por lo cual se decidió hacer los cambios que se mencionan en esta sección.
 
-% - Reestructuración de la gramática de los programas en Graciela
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Recomendaciones de Araujo y Jiménez en su proyecto de grado}
-%% TODO!
+
+Como parte de su Proyecto de Grado, Araujo y Jiménez dejaron tres
+recomendaciones sobre áreas en las cuales el lenguaje Graciela y su compilador
+podían ser extendidos. Estas recomendaciones eran las siguientes:
+
+\begin{itemize}
+
+  \item Ofrecer al programador la posibilidad de crear estructuras de datos
+  propias, mediante la implementación de Tipos de Datos Abstractos (TDAs).
+
+  \item Incluir la manipulación de apuntadores por parte del programador,
+  ampliando el sistema de tipos del lenguaje Graciela para introducir el tipo
+  \textbf{apuntador}. Esta característica sería valiosa principalmente para los
+  estudiantes del curso Laboratorio de Algoritmos II, por la importancia de los
+  apuntadores en el curso.
+
+  \item Proveer la capacidad de creación de tipos de datos enumerados definidos
+  por el programador, con la posibilidad de integrarlos al sistema de operadores
+  aritméticos y relacionales del lenguaje.
+
+\end{itemize}
+
+Se decidió tomar la primeras de estas recomendaciones, por su importancia para
+los cursos teóricos y prácticos de Algoritmos, ya que una buena parte del
+material estudiado en dichos cursos se trata del manejo correcto de estructuras
+de datos y aserciones sobre sus comportamientos. Además, como gran parte de
+estas estructuras hacen uso de apuntadores por distintas razones, también se
+tomó la segunda de las recomendaciones.
+
+No se decidió implementar la extensión de la tercera recomendación puesto que su
+aporte a los cursos en los que podría usarse el lenguaje Graciela se consideró
+limitado, aunque en definitiva se trata de una extensión valiosa para el
+lenguaje en general y se mantiene la recomendación para futuros
+implementadores\todo{???} del lenguaje y su compilador.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
@@ -916,6 +948,21 @@ siguiente instrucción.
 %% Tipos Algebráicos Libres %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tipos Algebráicos Libres}
+
+Una de las posibles extensiones planteadas para el compilador durante el
+transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
+Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
+Algebráicos Libres, de modo que se realizó la correspondiente investigación
+teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
+\todo{???}.
+
+Se consiguió que para implementar esta característica exitosamente, era
+necesario
+
+
+Por lo tanto, debido a la dificultad de implementar esta funcionalidad de un
+modo efectivo,
+
 
 1. parte muy menor de la materia de algoritmos 2
 2. dificil de integrar con el lenguaje actual
