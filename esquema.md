@@ -21,6 +21,8 @@
 
   - Teoría de conjuntos [moises]
 
+  - Tipos Algebráicos Libres [moises]
+
   - Tipos de datos abstractos [both]
 
 
@@ -50,7 +52,6 @@
         - Cambios en proc (sin : antes de los parámetros)
             - {pre} y {post} están juntas, {bound} opcional para procedimientos
               recursivos
-            - se elminó el modo de parámetros "ref", equivalente a in-out -- MONASCAL?
 
     - Apuntadores
         - malloc
@@ -76,7 +77,7 @@
 
 # Tercera Parte                  
 - Resultados                     (#)
-  - cambios en gramatica [moises-]
+  - cambios en gramatica [moises+]
   - recuperación de errores [moises-]
   - mejoras para los arreglos (multidimension, inbound check) [moises+]
   - funciones y procedimientos (cotas) [moises+]

@@ -10,22 +10,23 @@ los usos de estas nuevas características del lenguaje. Adicionalmente, se
 mejoraron algunas características ya presentes en el lenguaje y en el compilador
 para mejorar la experiencia del programador novel.
 
-\todo{hablar más (?)}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GRAMÁTICA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cambios en la gramática}
 
 Para dar más claridad a los programas escritos en Graciela, se decidió que el
-bloque principal debe estar precedido por la palabra clave \ingra{main}.  Por
+bloque principal debe estar precedido por la palabra clave \ingra{main}. Por
 otro lado, en la definición de procedimientos y funciones, se movió la
 poscondición junto con la precondición, de modo que aparecen antes del cuerpo de
 la subrutina, eliminándose así la necesidad de usar las palabras clave
-\ingra{begin} y \ingra{end} para delimitar el cuerpo de la subrutina. En los
-procedimientos, también se eliminó el  símbolo \ingra{:} entre el identificador
-del procedimiento y el conjunto de parámetros delimitado por paréntesis, por
-carecer de valor semántico \ingra{revisar}.
+\ingra{begin} y \ingra{end} para delimitar el cuerpo de la subrutina. En las
+subrutinas, también se eliminó el  símbolo \ingra{:} entre el identificador de
+la subrutina y el conjunto de parámetros delimitado por paréntesis, por carecer
+de valor semántico, pues no se trata de una declaración de tipos para las
+subrutinas. Adicionalmente, se simplificó el símbolo utilizado para las
+aserciones que se utilizan dentro de bloques de código imperativo, pasando de
+\ingra|{a ~\textit{exp}~ a}| a \ingra|{~\textit{exp}~}|.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RECUPERACIÓN DE ERRORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -284,7 +285,7 @@ de un nivel, es decir, no se permiten colecciones de colecciones sino únicament
 de elementos de los tipos básicos (\ingra{int}, \ingra{char}, \ingra{float},
 \ingra{boolean}) o de pares ordenados de tipos básicos. Los conjuntos son
 representados con los símbolos \ingra|{| y \ingra|}|, los multiconjuntos con
-\Lbag{} y \Rbag{} si se usan caracteres UTF-8, o \ingra|{{| y \ingra|}}| si no, y
+\Lbag{} y \Rbag{} si se usan caracteres UTF-8, o \ingra|{:| y \ingra|:}| si no, y
 las colecciones con \Lseq{} y \Rseq{} si se usan caracteres UTF-8, o \ingra|<<| y
 \ingra|>>| si no.
 
@@ -296,7 +297,7 @@ la colección vacía. Así, el conjunto, multiconjunto y secuencia con los núme
 
 \begin{gracielacode}
 {1, 2, 3}
-~\Lbag~1, 2, 3~\Rbag~ // ó {{1, 2, 3}} sin UTF-8
+~\Lbag~1, 2, 3~\Rbag~ // ó {:1, 2, 3:} sin UTF-8
 ~\Lseq~1, 2, 3~\Rseq~ // ó <<1, 2, 3>> sin UTF-8
 \end{gracielacode}
 
@@ -314,7 +315,7 @@ escribirse, respectivamente, como
 \begin{gracielacode}
 {i : int | 0 < i /\ i < 4 | i}
 ~\Lbag~i : int | 0 < i /\ i < 4 | i~\Rbag~
-  // ó {{i : int | 0 < i /\ i < 4 | i}} sin UTF-8
+  // ó {:i : int | 0 < i /\ i < 4 | i:} sin UTF-8
 ~\Lseq~i : int | 0 < i /\ i < 4 | i~\Rseq~
   // ó <<i : int | 0 < i /\ i < 4 | i>> sin UTF-8
 \end{gracielacode}
@@ -376,15 +377,8 @@ un conjunto, potencialmente vacío, de elementos del tipo del codominio. Por
 ejemplo,
 
 \begin{gracielacode}
-var f : func int -> char;
-var r : rel int <-> char;
-...
-write (f(3));
-{inv true inv}
-{bound #r - i bound}
-do i < #r -> writeln (((toSequence( r(n) ))[i])
-           ; i := i + 1
-od;
+{ func ({ (2, 4), (3, 6), (5, 10) }) (3) == 6 };
+{ rel  ({ (2, 3), (1, 1), (1, -1) }) (1) == {1, -1} };
 \end{gracielacode}
 
 De manera similar a las colecciones, se permite la declaración de funciones y
