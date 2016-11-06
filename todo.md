@@ -13,6 +13,8 @@
 
 - Variable generadora
 
+- Segmentar marco tecnológico
+
 # Graciela, AFTER THE DAMN BOOK
 - Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
   tengan una mala inicialización
