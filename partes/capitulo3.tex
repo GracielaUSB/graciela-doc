@@ -6,7 +6,8 @@ El diseño y desarrollo de la extensión al compilador de Graciela fueron llevad
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
 revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
-por el programador, (4) Herramientas para el programador.
+por el programador, (4) Tipos Algebráicos Libres, (5) Herramientas para el
+programador.
 
 Durante el transcurso del proyecto, se escribieron múltiples programas de prueba
 con el fin de evaluar los distintos módulos del compilador. Estos programas de
@@ -56,18 +57,49 @@ prueba pueden conseguirse en el anexo \textbf{NUMERODEANEXO}.
 \section{Revisión del trabajo previo}
 
 En la primera etapa de este proyecto, se estudió el estado del compilador
-elaborado por Araujo y Jiménez y se evaluaron las recomendaciones que sobre la
-semántica de este lenguaje hizo el jurado de este primer proyecto.
+elaborado por Araujo y Jiménez y se evaluaron las recomendaciones hechas por los
+mismos sobre posibles extensiones al lenguaje y al compilador.
 
 Se observó que existían aspectos del compilador que podían ser mejorados, y que
 además estas mejoras facilitarían el desarrollo de los objetivos del proyecto,
 por lo cual se decidió hacer los cambios que se mencionan en esta sección.
 
-% - Reestructuración de la gramática de los programas en Graciela
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Recomendaciones del Jurado del proyecto de grado de Araujo y Jiménez}
-%% TODO!
+\subsection{Recomendaciones de Araujo y Jiménez en su proyecto de grado}
+
+Como parte de su Proyecto de Grado, Araujo y Jiménez dejaron tres
+recomendaciones sobre áreas en las cuales el lenguaje Graciela y su compilador
+podían ser extendidos. Estas recomendaciones eran las siguientes:
+
+\begin{itemize}
+
+  \item Ofrecer al programador la posibilidad de crear estructuras de datos
+  propias, mediante la implementación de Tipos de Datos Abstractos (TDAs).
+
+  \item Incluir la manipulación de apuntadores por parte del programador,
+  ampliando el sistema de tipos del lenguaje Graciela para introducir el tipo
+  \textbf{apuntador}. Esta característica sería valiosa principalmente para los
+  estudiantes del curso Laboratorio de Algoritmos II, por la importancia de los
+  apuntadores en el curso.
+
+  \item Proveer la capacidad de creación de tipos de datos enumerados definidos
+  por el programador, con la posibilidad de integrarlos al sistema de operadores
+  aritméticos y relacionales del lenguaje.
+
+\end{itemize}
+
+Se decidió tomar la primeras de estas recomendaciones, por su importancia para
+los cursos teóricos y prácticos de Algoritmos, ya que una buena parte del
+material estudiado en dichos cursos se trata del manejo correcto de estructuras
+de datos y aserciones sobre sus comportamientos. Además, como gran parte de
+estas estructuras hacen uso de apuntadores por distintas razones, también se
+tomó la segunda de las recomendaciones.
+
+No se decidió implementar la extensión de la tercera recomendación puesto que su
+aporte a los cursos en los que podría usarse el lenguaje Graciela se consideró
+limitado, aunque en definitiva se trata de una extensión valiosa para el
+lenguaje en general y se mantiene la recomendación para futuros
+implementadores\todo{???} del lenguaje y su compilador.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
@@ -137,9 +169,9 @@ dicho analizador falla. Por ejemplo, para agregar recuperación de errores a las
 instrucciones, separadas por punto y coma, se usó código como el siguiente:
 
 \begin{haskellcode}
-  withRecovery recover instruction
-    where
-      recover err = void anyToken `manyTill` match TokSemicolon >> tell err
+withRecovery recover instruction
+  where
+    recover err = void anyToken `manyTill` match TokSemicolon >> tell err
 \end{haskellcode}
 
 Así, con ligeros cambios según el contexto del analizador, fue posible agregar
@@ -168,14 +200,14 @@ del programador novel.
 
 También se consideró que sería cómodo para el programador poder hablar de
 arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
-errores apropiados, a tiempo de compilación, al usar un arreglo de \texttt{n}
-dimensiones con un número de índices distinto de \texttt{n}. Por ejemplo,
+errores apropiados, a tiempo de compilación, al usar un arreglo de \ingra{n}
+dimensiones con un número de índices distinto de \ingra{n}. Por ejemplo,
 intentar compilar el siguiente fragmento de código,
 
 \begin{gracielacode}
-  |[ var arr : array [5, 10] of int
-  ;  writeln(arr[3])
-  ]|
+|[ var arr : array [5, 10] of int
+;  writeln(arr[3])
+]|
 \end{gracielacode}
 
 emitiría un mensaje de error acerca del uso de un índice de dimensión 1 para
@@ -189,9 +221,9 @@ cuando esto se hace, sugiriendo en cambio utilizar arreglos multidimensionales.
 
 Para implementar estos cambios, fue necesario cambiar la representación interna
 de los arreglos. Originalmente, funcionaban como los arreglos del lenguaje C; es
-decir, declarar un arreglo \texttt{x} de tamaño \texttt{tam} de elementos de
-tipo \texttt{T}, era equivalente a reservar un espacio en la pila de tamaño
-$\texttt{sizeof(T)} * \texttt{tam}$ y asociarle al identificador \texttt{x} el
+decir, declarar un arreglo \ingra{x} de tamaño \ingra{tam} de elementos de
+tipo \ingra{T}, era equivalente a reservar un espacio en la pila de tamaño
+$\texttt{sizeof(T)} * \texttt{tam}$ y asociarle al identificador \ingra{x} el
 apuntador al primer elemento. Los arreglos multidimensionales se escribían como
 arreglos de arreglos, e internamente ocupaban un espacio contiguo de memoria.
 Como se deseaba almacenar los tamaños de los arreglos junto con sus elementos,
@@ -200,14 +232,14 @@ conformantes, es decir, una estructura cuya primera entrada es la cantidad de
 elementos y cuya segunda entrada es el bloque de memoria donde se almacenan los
 elementos.
 
-Específicamente, para arreglos de \texttt{n} dimensiones, se generan estructuras
-<<cabecera>> de \texttt{n+1} campos, donde los primeros \texttt{n}, de tipo
+Específicamente, para arreglos de \ingra{n} dimensiones, se generan estructuras
+<<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo
 entero de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el
 último corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
 es un arreglo estático, o en la memoria dinámica si se trata de un apuntador a
-un arreglo inicializado con la instrucción \texttt{new(*)}.
+un arreglo inicializado con la instrucción \ingra{new(*)}.
 
 Cuando todas las dimensiones del arreglo son conocidas a tiempo de compilación,
 los tamaños de cada dimensión son almacenados estáticamente en la <<cabecera>> y
@@ -228,28 +260,28 @@ capacidad para usar arreglos como parámetros de los modos in, inout y out,
 además del modo ref ya provisto en la especificación original. Adicionalmente,
 se decidió permitir el pase de arreglos de tamaño variable como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
-parámetros anteriores de la subrutina, pasados en modo \texttt{const} en el caso
+parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
 de los procedimientos. Por ejemplo, la firma del siguiente procedimiento sería
 aceptada por el compilador:
 
 \begin{gracielacode}
-  proc sub(const size : int, inout arr : array [size, size * 2] of int)
+proc sub(const size : int, inout arr : array [size, size * 2] of int)
 \end{gracielacode}
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
-de \texttt{sub} podría ser llamado con argumentos que no concuerden, por
+de \ingra{sub} podría ser llamado con argumentos que no concuerden, por
 ejemplo,
 
 \begin{gracielacode}
-  |[ var arr : array [5, 5]
-  ;  sub (5, arr)
-  ]|
+|[ var arr : array [5, 5]
+;  sub (5, arr)
+]|
 \end{gracielacode}
 
-En este caso, el procedimiento \texttt{sub} espera un arreglo rectangular de
-tamaño \texttt{[size, (size * 2)]}, y como recibe \texttt{size = 5}, espera que
-el tamaño del arreglo sea \texttt{[5, 10]}. Sin embargo, recibe un arreglo de
-tamaño \texttt{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa
+En este caso, el procedimiento \ingra{sub} espera un arreglo rectangular de
+tamaño \ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que
+el tamaño del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de
+tamaño \ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa
 llamada. Esta verificación no puede hacerse a tiempo de compilación en el caso
 general, puesto que sería necesario \todo{consultar esto con Monascal}.
 
@@ -258,8 +290,8 @@ general, puesto que sería necesario \todo{consultar esto con Monascal}.
 
 Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
 para que fueran más similaras a sus equivalentes en GCL. Simplemente, se
-eliminaron los lexemas \texttt{begin} y \texttt{end}, antes usados para
-delimitar el procedimiento, y el lexema \texttt{:} entre el identificador de la
+eliminaron los lexemas \ingra{begin} y \ingra{end}, antes usados para
+delimitar el procedimiento, y el lexema \ingra{:} entre el identificador de la
 subrutina y su lista de parámetros, y se movió la poscondición junto a la
 precondición, antes del cuerpo de la subrutina.
 
@@ -270,7 +302,7 @@ una llamada recursiva de una subrutina sin cota. En el caso contrario, el de una
 subrutina con cota pero sin recursión, ésta simplemente es ignorada. A pesar de
 que esto no estaba dentro de los objetivos de este proyecto, se consideró de
 suma importancia, puesto que la recursión sin cotas es equivalente a la
-iteración sin cotas, prohibida en el caso de la instrucción \texttt{do .. od}.
+iteración sin cotas, prohibida en el caso de la instrucción \ingra{do .. od}.
 
 El código intermedio LLVM generado para una subrutina recursiva, necesariamente
 con cota, además de incluir el cuerpo especificado por el programador, incluye
@@ -286,14 +318,14 @@ parámetro implícito. Si no hubo decremento en la cota, también se da un error
 el programa aborta. En caso contrario, se ejecuta el cuerpo de la subrutina.
 
 Por último, cabe mencionar que se cambió la semántica del modo de parámetros
-\texttt{in}, de forma que los parámetros declarados con este modo pueden ser
+\ingra{in}, de forma que los parámetros declarados con este modo pueden ser
 reasignados dentro del cuerpo del procedimiento sin afectar el valor del
 argumento usado en el punto de llamada. Originalmente, los parámetros de modo
-\texttt{in} no podían ser reasignados, pero se consideró que sería conveniente
+\ingra{in} no podían ser reasignados, pero se consideró que sería conveniente
 poder reasignarlos para ofrecer la posibilidad de usar parámetros por su valor
 pero aprovechando su espacio en memoria. El comportamiento asociado
-anteriormente al modo \texttt{in} ahora corresponde al modo de parámetros
-\texttt{const}.
+anteriormente al modo \ingra{in} ahora corresponde al modo de parámetros
+\ingra{const}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre cuantificaciones}
@@ -302,47 +334,47 @@ Durante el análisis del compilador original, se conoció que las cuantificacion
 presentaban limitaciones en la expresividad de sus rangos. El analizador
 sintáctico de esta parte del lenguaje esperaba, específicamente, dos
 comparaciones aritméticas, separadas por un operador de conjunción
-(\texttt{/\textbackslash{}}), seguidas por un lexema <<barra vertical>>
-(\texttt{|}). Esto impedía expresar condiciones lógicas distintas de
+(\ingra{/\}), seguidas por un lexema <<barra vertical>>
+(\ingra{|}). Esto impedía expresar condiciones lógicas distintas de
 comparaciones aritméticas, como predicados definidos por el programador, o
 incluso condiciones con más de dos comparaciones aritméticas.
 
 Para solucionar esto, se agregó un estado al analizador sintáctico de las
-expresiones, usando el \emph{Monad Transformer} \texttt{StateT} sobre el
-\emph{Monad} \texttt{Parsec}. En este estado, se guarda información sobre la
-pila de variables \emph{dummy} presentes en un momento dado (la pila vacía en el
+expresiones, usando el \emph{Monad Transformer} \ingra{StateT} sobre el
+\emph{Monad} \ingra{Parsec}. En este estado, se guarda información sobre la
+pila de variables generadora presentes en un momento dado (la pila vacía en el
 caso de las expresiones sin cuantificaciones). Además, se permitió que el
 analizador sintáctico de las expresiones devolviera, además de la expresión
-conseguida, el rango asociado a ella. Por ejemplo, con la variable \emph{dummy}
-\texttt{x}, la expresión \texttt{x >= 5} tiene asociado el rango $[5, \infty)$.
+conseguida, el rango asociado a ella. Por ejemplo, con la variable generadora
+\ingra{x}, la expresión \ingra{x >= 5} tiene asociado el rango $[5, \infty)$.
 
 Cuando el analizador sintáctico se encuentra en una cuantificación, agrega la
-variable \emph{dummy} correspondiente a la pila del estado, e intenta construir
+variable generadora correspondiente a la pila del estado, e intenta construir
 un rango. Los únicos operadores que construyen rangos son la igualdad
-(\texttt{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
-(\texttt{>}, \texttt{>=}, \texttt{<}, \texttt{<=}), que construyen rangos
+(\ingra{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
+(\ingra{>}, \ingra{>=}, \ingra{<}, \ingra{<=}), que construyen rangos
 <<aritméticos>>; y el operador <<pertenece>> de la Teoría de Conjuntos ($\in$)
 \todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
 adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
-constante booleana \texttt{false} produce el rango <<vacío>>.
+constante booleana \ingra{false} produce el rango <<vacío>>.
 
-Además, el operador de conjunción (\texttt{/\textbackslash{}}) devuelve, si es
+Además, el operador de conjunción (\ingra{/\}) devuelve, si es
 posible, el rango que resulta de intersectar los rangos asociados a cada uno de
 sus operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
 consideran los rangos generados por el operador de disjunción
-(\texttt{\textbackslash{}/}), por lo cual si se desea que un rango sea procesado
+(\ingra{\/}), por lo cual si se desea que un rango sea procesado
 como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
 expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
 el uso de teoremas lógicos, convirtiendo una cuantificación en la disjunción de
-varias, o usando el operador de unión de conjuntos ($\cup$).
+varias, o usando el operador de unión de conjuntos (\Union).
 
-Finalmente, si se ha construido un rango válido, este se registra en
-el ASA correspondiente a la cuantificación. Si el rango es <<aritmético>>, se
-exige que existan límites superior e inferior, emitiéndose el error apropiado en
-caso de faltar uno de los límites. Cabe mencionar que si la variable
-\emph{dummy} es de tipo número de punto flotante, las comparaciones
-aritméticas \emph{no} generarán rangos, puesto que es imposible iterar sobre
-números de este tipo.
+Finalmente, si se ha construido un rango válido, este se registra en el ASA
+correspondiente a la cuantificación. Si el rango es <<aritmético>>, se exige que
+existan límites superior e inferior, emitiéndose el error apropiado en caso de
+faltar uno de los límites. Cabe mencionar que si la variable generadora es de
+tipo número de punto flotante, las comparaciones aritméticas \emph{no} generarán
+rangos, puesto que no existe una manera obvia de iterar sobre números de este
+tipo.
 
 El código intermedio LLVM generado para cada cuantificación dependerá de la
 clase del rango sobre el cual esté definida:
@@ -350,20 +382,20 @@ clase del rango sobre el cual esté definida:
 \begin{description}
 
   \item [Rango <<vacío>>] se genera el valor neutro del cuantificador, o, en el
-caso de los cuantificadores \texttt{max} y \texttt{min}, una llamada al mensaje
+caso de los cuantificadores \ingra{max} y \ingra{min}, una llamada al mensaje
 de error apropiado.
 
   \item [Rango <<unitario>>] se genera el código del cuerpo de la cuantificación
-con la sustitución apropiada de la variable \emph{dummy}.
+con la sustitución apropiada de la variable generadora.
 
   \item [Rango <<aritmético>>] se genera una iteración en la cual la variable
-\emph{dummy} toma todos los valores entre el límite inferior y el superior, y se
+generadora toma todos los valores entre el límite inferior y el superior, y se
 evalúa el cuerpo, acumulando los resultados. Existe la posibilidad de que a
 tiempo de ejecución esto resulte en un rango vacío, y en este caso el
 comportamiento es el esperado, pues la iteración es vacía.
 
   \item [Rango <<conjunto>>] se genera una iteración en la cual la variable
-\emph{dummy} toma todos los valores pertenecientes al conjunto (o multiconjunto,
+generadora toma todos los valores pertenecientes al conjunto (o multiconjunto,
 o secuencia), y se evalúa el cuerpo, acumulando los resultados. En el caso de un
 rango secuencia, el órden de la iteración es el mismo de la secuencia, mientras
 que para conjuntos y multiconjuntos no se garantiza ningún órden en particular.
@@ -381,24 +413,24 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 Los apuntador implementados para el lenguaje graciela pueden apuntar a un
 objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
 sintaxis para declarar un apuntador es parecida a la presente en  el lenguaje
-C, es decir, se escribe el tipo base seguido de tantos asteriscos (\texttt{*})
+C, es decir, se escribe el tipo base seguido de tantos asteriscos (\ingra{*})
 como apuntadores se desee. El operador para acceder a la memoria apuntada por
 un apuntador es igualmente el asterisco, el cual debe colocarse como operador
 prefijo a una expresión de tipo apuntador.
 
 La reserva y liberación de memoria dinámica para un apuntador se realiza con las
-funciones propias del lenguaje \texttt{new} y \texttt{free}, ambas con
+funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
 consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
 a tipos definidos por el programador, que se describen detalladamente en sus
 respectivas secciones. El siguiente fragmento de código ejemplifica la
 declaración y uso de un apuntador a entero.
 
 \begin{gracielacode}
-  |[ var p : int*
-  ;  new(p)
-  ;  *p := 10
-  ;  free(p)
-  ]|
+|[ var p : int *
+;  new(p)
+;  *p := 10
+;  free(p)
+]|
 \end{gracielacode}
 
 \subsection{Generación de código intermedio}
@@ -422,6 +454,29 @@ Para la reserva de memoria dinámica, se utilizó la función estandar de C
 argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
 memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
 
+\subsection{Lógica de Separación}
+
+Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
+se consideró la posibilidad de agregar a este el soporte para expresiones
+propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
+que los programadores pudieran especificar de manera sencilla propiedades acerca
+de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
+implementar los operadores propios de la lógica de separación, $*$, $\mapsto$, y
+$-*$, así como la constante $emp$, es necesario almacenar la información
+correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
+tiempo de ejecución de estructuras internas temporales con este fin.
+
+Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
+separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
+comparar apuntadores con el operador de igualdad, \texttt{==}. Otro factor que
+influyó en esta decisión fue la consideración de que el público para el cual
+está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
+de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
+predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
+carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
+estudios de los cursos en cuestión) resultaría en un gran potencial para
+confusión para el programador, sin agregar mucho valor al lenguaje.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -432,95 +487,79 @@ Para permitir mayor expresividad en las aserciones del lenguaje, específicament
 en aquellas asociadas con los tipos de datos definidos por el programador, como
 invariantes de representación y de acoplamiento, se decidió agregar al lenguaje
 Graciela facilidades para escribir expresiones de la teoría de conjuntos.
+Específicamente, se consideró necesario agregar los tipos conjunto,
+multiconjunto, secuencia, función y relación. En adelante, se usará el término
+\textit{colección} para hablar indistintamente de conjuntos, multiconjuntos y
+secuencias.
 
-Específicamente, se decidió permitir la escritura de expresiones de tipo
-conjunto, multiconjunto, y secuencia (usaremos el término \textit{colección}
-para referirnos a los tres tipos indistintamente). Sólo se permite que estos
-tipos \textit{colección} alberguen objetos de un solo tipo básico, es decir,
-sólo se permiten colecciones de enteros, caracteres, números de punto flotante o
-valores booleanos, o pares de objetos de tipos básicos, y nunca colecciones de
-colecciones, ni colecciones con enteros y caracteres a la vez. Como las
-variables de tipos siempre serán instanciadas en tipos básicos, como se explica
-en \todo{sección sobre variables de tipos}, también se permiten colecciones de
-objetos del tipo de una variable de tipo ligada en el punto donde sea definida
-la colección.
+El primer obstáculo encontrado fue el uso ligero de la notación en la literatura
+para la representación de conjuntos y multiconjuntos. En general, se usa para
+ellos la misma notación, y la distinción entre ambos tipos se hace según el
+contexto. Como es posible que en un programa escrito en Graciela haga uso de
+ambos tipos de colección, la forma más directa de distinguirlos fue usar
+notación distinta para cada uno. Se decidió entonces usar los símbolos \ingra|{|
+y \ingra|}| para los conjuntos y \Lbag{} y \Rbag{} para los multiconjuntos si se
+usan caracteres UTF-8  o \ingra|{:| y \ingra|:}| si no. Similarmente, como no
+existe una notación estándar para las secuencias, se decidió usar los símbolos
+\Lseq{} y \Rseq{} si se usan caracteres UTF-8 o \ingra|<<| y \ingra|>>| si no.
 
-Para distinguir gráficamente los conjuntos y los multiconjuntos, se decidió usar
-los símbolos \texttt{\{} y \texttt{\}} para los primeros y \texttt{\{\{} y
-\texttt{\}\}} para los segundos. Esto se hizo a diferencia de lo usual en
-discusiones teóricas, que es usar el primer par de símbolos para ambos tipos de
-colección, ditinguiendo según el contexto, para permitir identificar la
-colección en cuestión a simple vista. Por otro lado, para representar secuencias
-se decidió usar los símbolos \texttt{<\null<} y \texttt{>\null>}.
-Adicionalmente, si se usan caracteres UTF-8, los multiconjuntos pueden ser
-representados con los símbolos \texttt{\Lbag} y \texttt{\Rbag}, y las secuencias
-con \texttt{\Lseq} y \texttt{\Rseq}.
+En segundo lugar, se observó que debían incluirse dos maneras de definir
+colecciones, por su uso en los cursos teóricos de algorítmica, las definiciones
+por extensión y por comprensión.
 
-Para proveer un nivel de abstracción similar al de la teoría manejada en los
-cursos de algoritmos básicos \todo{revisar esto}, se permite escribir
-colecciones de dos maneras, por extensión y por comprensión. En el primer caso,
-simplemente se nombran los elementos de la colección separados por comas,
-existiendo la posibilidad de no especificar elementos para la colección vacía.
-Así, el conjunto, multiconjunto y secuencia con los números 1, 2 y 3 pueden
-escribirse en Graciela, respectivamente, como
+Para las definiciones por extensión, el análisis sintáctico consiste simplemente
+en reconocer el símbolo de apertura correspondiente a la colección y luego una
+secuencia potencialmente vacía de expresiones de un mismo tipo separadas por
+comas, y finalmente el símbolo de cierre apropiado. El código generado para
+estas colecciones no es más que la adición iterada de cada elemento sobre una
+colección inicialmente vacía.
 
-\begin{gracielacode}
-   {1, 2, 3}
-  {{1, 2, 3}} // ó ~\Lbag~1, 2, 3~\Rbag~
-  <<1, 2, 3>> // ó ~\Lseq~1, 2, 3~\Rseq~
-\end{gracielacode}
+Para las definiciones por comprensión, se observó la similitud entre esta
+notación y la de las cuantificaciones, y se aprovecharon parcialmente los
+reconocedores de estas últimas. Específicamente, una colección por comprensión
+consta de tres partes separadas por símbolos \ingra{|} entre los símbolos
+correspondientes a la colección. En la primera parte, se define una variable
+auxiliar con su tipo, en la segunda se define un rango para la variable, con las
+mismas consideraciones que para las cuantificaciones, y en la última, el cuerpo,
+aparece la expresión que será agregada a la colección para cada elemento del
+rango. El código generado para este caso es precisamente la iteración sobre el
+rango, donde cada vez se evalúa la expresión del cuerpo y se agrega a una
+colección inicialmente vacía.
 
-En el caso de las colecciones definidas por comprensión, se usa una notación
-bastante similar a la de las cuantificaciones. Esta notación consiste en tres
-partes escritas entre los símbolos correspondientes a la colección deseada y
-separadas por caracteres \texttt{|}. En la primera parte se define una variable
-auxiliar o \textit{dummy} con uno de los tipos permitidos para colecciones. En
-la segunda, el rango, se delimita el rango de la variable auxiliar, con las
-mismas consideraciones que para las cuantificaciones. La tercera parte, el
-cuerpo, es la expresión que será agregada a la colección para cada valor posible
-de la variable auxiliar. Así, las mismas colecciones del ejemplo anterior
-podrían escribirse, respectivamente, como
+Cabe mencionar que sólo se permiten colecciones de un nivel, es decir, no se
+permiten colecciones de colecciones, sino únicamente colecciones de tipos
+básicos (\ingra{int}, \ingra{char}, \ingra{float}, \ingra{boolean}) o de pares
+ordenados de tipos básicos.
 
-\begin{gracielacode}
-   {i : int | 0 < i /\ i < 4 | i}
-  {{i : int | 0 < i /\ i < 4 | i}} // ó ~\Lbag~i : int | 0 < i /\ i < 4 | i~\Rbag~
-  <<i : int | 0 < i /\ i < 4 | i>> // ó ~\Lseq~i : int | 0 < i /\ i < 4 | i~\Rseq~
-\end{gracielacode}
+Para las funciones y relaciones también se encontró un problema al definir una
+notación. En la literatura, ambos tipos son representados como conjuntos de
+pares ordenados, y se distingue entre ellos según el contexto. Para evitar
+conversiones implícitas entre tipos que representan conceptos diferentes, se
+optó por definir las funciones \ingra{func} y \ingra{rel}, que toman un conjunto
+de pares ordenados (\ingra{A}, \ingra{B}), donde \ingra{A} y \ingra{B} son tipos
+básicos posiblemente distintos, y devuelven, respectivamente, la función de
+\ingra{A} en \ingra{B} y la relación entre \ingra{A} y \ingra{B}
+correspondientes al conjunto de pares dado. El código intermedio generado para
+la función \ingra{func} verifica que no existan pares con el mismo primer
+elemento y convierte internamente el conjunto de pares en un \texttt{Map}
+\todo{???} entre los tipos apropiados, mientras que para la función \ingra{rel}
+no es necesario generar código.
 
-Además de permitir el uso de expresiones de tipos \textit{colección}, es
-necesario permitir la declaración de variables con estos tipos. La notación para
-esto es la misma que para las declaraciones de tipos básicos, cambiando el tipo
-usado. Así, para definir, respectivamente, un conjunto, un multiconjunto, y una
-secuencia de enteros, se usa la siguiente notación:
+También se extendió la notación de llamada de funciones para soportar funciones
+y relaciones en su sentido matemático. Para esto, fue necesario convertir los
+paréntesis en un operador posfijo dentro de la gramática de las expresiones, a
+diferencia de su definición en la gramática original como un identificador
+seguido de un paréntesis, puesto que ahora es posible llamar funciones (y
+relaciones) anónimas escritas con \ingra{func} y \ingra{rel} a partir de
+conjuntos. Similarmente, se extendió la notación de indización de arreglos para
+soportar secuencias, dado que también es posible indizar secuencias anónimas
+definidas por extensión o por comprensión.
 
-\begin{gracielacode}
-  var x : set of int;
-  var y : multiset of int;
-  var z : sequence of int;
-\end{gracielacode}
-
-Además de las colecciones, se agregaron al lenguaje los tipos abstractos de la
-teoría de conjuntos \textit{función} y \textit{relación}. En la mayoría de la
-literatura que hace uso de la teoría de conjuntos, estos tipos no son más que
-conjuntos de pares ordenados, con la restricción adicional de que no pueden
-pertenecer a la misma función dos pares con el mismo primer elemento. En el
-lenguaje Graciela, para distinguir visualmente estos tipos de los
-conjuntos sencillos, y entre ellos, se optó por definir las funciones
-\texttt{func} y \texttt{rel}, que toman un conjunto de pares ordenados (A, B),
-donde A y B son tipos básicos posiblemente distintos, y devuelven,
-respectivamente, la función de A en B y la relación entre A y B correspondientes
-al conjunto de pares dado. Adicionalmente, en el caso en que el conjunto pasado
-a \texttt{func} contuviese dos pares ordenados con el mismo primer elemento, se
-daría un error a tiempo de ejecución, por incumplirse la definición matemática
-de \textit{función}.
-
-De manera similar a las colecciones, se permite la declaración de funciones y
-relaciones entre dos tipos, con la siguiente notación, respectivamente:
-
-\begin{gracielacode}
-  var x : function int -> char;
-  var y : relation int <-> char;
-\end{gracielacode}
+Adicionalmente, fue necesario permitir la declaración de variables de tipos
+colección, función y relación, pero únicamente dentro de Tipos de Datos
+Abstractos, por lo cual se agregó al analizador sintáctico para declaraciones la
+capacidad de reconocer estos tipos y de dar mensajes de error apropiados cuando
+se intente usarlos fuera de Tipos de Datos Abstractos.
 
 Finalmente, se agregaron los operadores usuales de la teoría de conjuntos. Se
 hace una exposición de ellos en el apéndice NUMERODEAPENDICE.
@@ -560,16 +599,20 @@ GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
 alto nivel como el invariante de representación y las precondiciones y
 poscondiciones de los procedimientos y funciones que definen su interfaz.
-
 Estos tipos de datos, definidos dentro del lenguaje de programación con la
-palabra reservada \texttt{abstract}, nunca definen una implementación en
+palabra reservada \ingra{abstract}, nunca definen una implementación en
 particular, sino que se limitan, precisamente, a definir los comportamientos que
-debería cumplir cualquier estructura de datos que pretenda implementarlos. Para
-aprovechar la definición de un tipo de dato abstracto, es necesario definir un
-nuevo tipo de dato que, usando únicamente, \todo{estructuras de bajo nivel????}
-y un invariante de acoplamiento que precise la correspondencia entre estas
+debería cumplir cualquier estructura de datos que pretenda implementarlos.
+
+Para aprovechar la definición de un tipo de dato abstracto, es necesario definir
+un nuevo tipo de dato que, usando únicamente estructuras de bajo nivel y un
+invariante de acoplamiento que precise la correspondencia entre estas
 estructuras de bajo nivel y las de alto nivel del tipo de dato abstracto, logre
-cumplir las restricciones y comportamientos de este último.
+cumplir las restricciones y comportamientos de este último. En adelante, nos
+referiremos a estos tipos de datos, los cuales siempre deben implementar un TDA,
+como \textit{implementaciones}. Dentro del lenguaje, estos son definidos usando
+la palabra reservada \ingra{type} y el TDA implementado se especifica usando la
+palabra reservada \ingra{implements}.
 
 Sin embargo, en el caso general, no es posible verificar, a tiempo de
 compilación, que una implementación de un tipo de dato, junto con sus
@@ -578,223 +621,301 @@ del tipo de dato abstracto que se supone implementa. Por lo tanto, se decidió
 dejar algunas de estas verificaciones para tiempo de ejecución.
 
 \subsection{Modelo de representación}
+
 Dentro de un tipo de datos se pueden declarar variables y constantes, a los
 cuales puede darse un valor inicial en caso de ser de un tipo básico o
-apuntador. Estas declaraciones corresponden al modelo de representación
-del tipo de dato. Si se trata de un tipo de dato abstracto, se pueden declarar
-variables con un tipo de alto nivel, es decir, tipos de la Teoría de Conjuntos.
+apuntador. Estas declaraciones corresponden al modelo de representación del tipo
+de dato. Si se trata de un TDA, se pueden declarar variables con un tipo de alto
+nivel, es decir, tipos de la Teoría de Conjuntos.
+
+A nivel del código generado, se consideró la posibilidad de mantener estas
+variables actualizadas según se ejecuten los distintos procedimientos del TDA,
+con cada instrucción produciendo, posiblemente, varias actualizaciones sobre
+estas estructuras, en general difíciles de predecir. Inclusive, el código que
+manipulara directamente la \textit{implementación} del TDA, fuera de sus
+procedimientos, debería ser capaz de actualizar estas estructuras, ya que de lo
+contrario se producirían inconsistencias. Así, se optó por no se almacenar de
+manera persistente las variables del TDA de tipos de la teoría de conjuntos,
+sino por materializarlas, haciendo uso de la relación de acoplamiento, sólo
+cuando son necesarias para evaluar las distintas aserciones del TDA, por
+ejemplo, al momento de evaluar las precondiciones y poscondiciones de un
+procedimiento abstracto.
 
 \subsection{Invariante de representación}
+
 El invariante de representación define las características y restricciones que
 deben ser satisfechas por el modelo de representación de un tipo de dato, sea un
 TDA o una implementación de un TDA. El invariante de representación se indica
-como una expresión booleana contenida entre el par de lexemas
-\texttt{\{repinv} y \texttt{repinv\}}. Es importante destacar que, en caso de
-ser una implementación, pueden utilizarse variables y constantes del TDA
-dentro del invariante de representación, siempre y cuando estos no sean de un
-tipo de la Teoría de Conjuntos.
+como una expresión booleana contenida entre el par de símbolos \ingra|{repinv|
+y \ingra|repinv}|. Es importante destacar que, en el caso de las
+implementaciones, las variables y constantes del TDA implementado pueden ser
+utilizadas dentro del invariante de representación, siempre y cuando no sean de
+tipos de la Teoría de Conjuntos.
 
 \subsection{Relación de acoplamiento}
 
-Cuando se implementa un tipo de dato abstracto, se debe establecer una una
-expresión lógica que especifique la relación entre las estructuras de bajo
-nivel usadas en la implementación, con las de alto nivel que se encuentran en
-el TDA, es decir, se debe definir una correspondencia entre los dos modelos de
-representación. Sin embargo, debido a que en el caso general no es posible
-analizar cualquier expresiones lógicas que determine una relación de
-acoplamiento, se tomarón en cuentas las siguientes consideraciones.
+En la literatura, para establecer la relación entre las estructuras de bajo
+nivel usadas en la implementación, con las de alto nivel que se encuentran en el
+TDA, es decir, se debe definir una correspondencia entre los dos modelos de
+representación en la forma de una expresión lógica arbitraria. Como se explica
+en la sección anterior sobre el modelo de representación, se decidió que las
+estructuras de tipos de la teoría de conjuntos sólo fueran materializadas al
+momento de verificar aserciones. Por lo tanto, es necesario contar con
+instrucciones para materializarlas. Sin embargo, las expresiones lógicas
+arbitrarias no proveen una manera directa para generar dichas instrucciones,
+puesto que la lógica declarativa únicamente especifica propiedades, y deducir
+valores a partir de estas propiedades, en el caso general, resulta imposible,
+puesto que más de un valor podría satisfacer dicho conjunto de propiedades. Se
+notó, a pesar de esto, que la mayoría de las relaciones de acoplamiento
+encontradas en la literatura tenían una estructura particular: consistían de
+igualdades con un sólo término a la izquierda, unidas por conjunciones. En las
+demás,  se notó que podían ser reescritas para cumplirla, o al menos como una
+conjunción donde al menos un conjuntor la cumple.
 
-En primer lugar, se agrego sintaxis para poder definir el mecanismo a través
-del cual se llevará a cabo la relación entre ambas estructuras. Este mecanismo
-se especifica como una serie asignaciónes a las estructuras de alto nivel,
-dentro de un bloque precedido por la palabra reservada \texttt{where}. Para
-dichas asignaciones, se puede hacer uso de la sintaxis incorporada al lenguaje
-para construir expresiones de la Teoría de Conjuntos.
-
-En segundo lugar, debido que representar la relación de acoplamiento como
-simples asignaciones hace que el lenguaje pierda expresividad, se decidió
-incorporar sintaxis que permitiera agregar restricciones a dicha relación, en
-la forma de una expresión booleana contenida por los lexemas
-\texttt{\{coupinv} y \texttt{coupinv\}}.
-
-
-
-% - Qué significa que un TDC implemente un TDA, relación de refinamiento
-% - Invariantes de acoplamiento
-% - WHERE
+Debido a estas consideraciones, se decidió separar la escritura de la relación
+de acoplamiento en dos partes: una serie de asignaciones que definen las
+estructuras de la teoría de conjuntos, en las cuales se puede hacer uso de la
+sintaxis incorporada al lenguaje para la construcción de expresiones de este
+tipo, ubicadas dentro de un bloque  precedido por la palabra reservada
+\ingra{where}, a la cual nos referiremos en adelante como \textit{la}
+<<relación de acoplamiento>>, y una expresión lógica con las restricciones
+usuales de estas expresiones para especificar el resto de las propiedades del
+acoplamiento, escrita entre los símbolos \ingra|{coupinv| y
+\ingra|coupinv}|, a la cual nos referiremos en adelante como el <<invariante
+de acoplamiento>>.
 
 \subsection{Variables de tipo}
-Para que el lenguaje Graciela cuente con la expresividad de GCL, es necesario
-poder especificar tipos de datos estructurados que no dependan de un tipo
-concreto. Para ello se dotó al lenguaje con la capacidad de poder declarar
-tipos genéricos que permitan definir aserciones y comportamientos igualmente
+
+En el lenguaje GCL es posible especificar tipos de datos estructurados que no
+dependen de tipos concretos para sus operaciones. Por ejemplo, se puede definir
+el tipo \textit{Lista} sin  especificar, en la definición, si se trata de listas
+de enteros o de números de punto flotante. Como se desea que el lenguaje
+Graciela cuente con la misma expresividad de GCL, es necesario poder hacer esto.
+Para ello se dotó al lenguaje con la capacidad de permitir la declaración de
+tipos genéricos que permiten definir aserciones y comportamientos igualmente
 genéricos.
 
 Estos tipos genéricos, o variables de tipo, se pueden declarar junto con la
-definicion de un tipo de dato y usarse en la especificación interna de éste.
-Las variables de tipos solo pueden ser correspondidas con un tipo básico, es
-decir, tipo entero, flotante, caracter o booleano. Para usar una variable de
-de un tipo de dato definido por el usuario que tenga asociado una o mas variables
-de tipo, se debe especificar dicha correspondencia a la hora de definir la
-variable en cuestion. Ejemplo de esto, serian las siguientes lineas de codigo.
- 
+definición de un tipo de dato y usarse en la especificación interna de éste. Las
+variables de tipos solo pueden ser sustituidas por un tipo básico, es decir,
+tipo entero, flotante, caracter o booleano \todo{apuntadores???}. Al momento de
+declarar una variable de un tipo de dato definido por el programador con
+variables de tipo asociadas, se deben  especificar los tipos básicos que
+correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en las
+siguientes líneas de código.
+
 \begin{gracielacode}
-  abstract ConjuntoA (T) begin
-    var a : T;
-  end
+abstract ConjuntoA (T) begin
+  var a : T;
+  ...
+end
 
-  type Conjunto (N) implements ConjuntoA(N) begin
-    var b : N;
-  end
+type Conjunto (N) implements ConjuntoA (N) begin
+  var b : N;
+  ...
+end
 
-  main
-   |[ var c : Conjunto(int)
-    ; skip 
-   ]|
-
+main
+ |[ var c : Conjunto (int)
+    ...
+ ]|
 \end{gracielacode}
 
-En este caso, se definió un tipo de dato abstracto \texttt{ConjuntoA} y una
-implementación \texttt{Conjunto}, ambas asociadas a una variable de
-tipo, \texttt{T} y \texttt{N} respectivamente. Como se puede apreciar, el tipo
-\texttt{Conjunto} implementa al TDA \texttt{ConjuntoA} con la
-variable de tipo \texttt{N}, por lo que cada ocurrencia de \texttt{T} dentro
-de la especificación de \texttt{ConjuntoA}, sera sustituida por la variable de
-tipo \texttt{N}.
+En este caso, se definió un tipo de dato abstracto \ingra{ConjuntoA} y una
+implementación \ingra{Conjunto}, ambas haciendo uso de variables de tipo,
+\ingra{T} y \ingra{N} respectivamente. Como se puede apreciar, el tipo
+\ingra{Conjunto} implementa el TDA \ingra{ConjuntoA} con la variable de tipo
+\ingra{N} sustituyendo a la variable de tipo \ingra{T}, por lo que cada
+ocurrencia de \ingra{T} dentro de la especificación de \ingra{ConjuntoA}, será
+sustituida por la variable de tipo \ingra{N}.
 
-Por otro lado, cuando se declara la variable \texttt{c}, es necesario indicar
-un tipo concreto, en este caso \texttt{int}, para el tipo \texttt{Conjunto}. De esta
-forma cualquier ocurrencia de \texttt{N}, dentro de la especificación de
-\texttt{Conjunto} y \texttt{ConjuntoA}, es sustituido por el tipo \texttt{int}.
-
-
-
-% - Variables de tipo
+Por otro lado, cuando se declara la variable \ingra{c}, es necesario indicar un
+tipo concreto, en este caso \ingra{int}, para el tipo \ingra{Conjunto}. De
+esta forma cualquier ocurrencia de \ingra{N} (incluyendo las ocurrencias de
+\ingra{T} en \ingra{ConjuntoA} sustituidas en el paso anterior), dentro de la
+especificación de \ingra{Conjunto}, es sustituida por el tipo \ingra{int}.
 
 \subsection{Procedimientos y funciones}
+
 Como se mencionó previamente, los tipos de datos abstractos definen una
 interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
 cada una con sus respectivas precondiciones y poscondiciones.
 
-Para definir una implementación de un tipo abstracto, se deben definir la
+Para definir una implementación de un tipo abstracto, se debe definir la
 implementación de todos los procedimientos y funciones que se encuentran en la
-interfaz del TDA, junto con un nuevo par de precondiciones y poscondiciones.
-Sin embargo, pueden agregarse nuevos procedimientos y funciones adicionales.
+interfaz del TDA, junto con un nuevo par de precondiciones y poscondiciones que
+podrán referirse únicamente a las estructuras propias de la implementación.
+Adicionalmente, una implementación puede agregar procedimientos y funciones que
+no estén presentes en el TDA implementado.
 
 Cabe mencionar las siguientes consideraciones:
 
 \begin{itemize}
 
-  \item Si un procedimiento posee algun uso de una variable de tipo, es
-  necesario que al menos uno de sus parametros sea del tipo de dato dentro del
-  cual se definio dicho procedimiento.
+  \item Si una subrutina hace uso de una variable de tipo, es necesario que al
+  menos uno de sus parámetros sea del tipo de dato dentro del cual se define
+  dicha subrutina.
 
-  \item Dentro de un tipo de dato, cada procedimiento debe tener un nombre único.
-  Sin embargo, ese nombre puede ser reutilizado en otro tipo de dato, siempre
-  y cuando uno de sus parametros sea del tipo de dato en cuentión. Al momento
-  de evualuar cual procedimiento se debe escoger, se toma el primer
+  \item Dentro de un tipo de dato, cada subrutina debe tener un nombre único.
+  Sin embargo, ese nombre puede ser reutilizado en otro tipo de dato, siempre y
+  cuando uno de sus parámetros sea del tipo de dato en cuestión. Al momento de
+  decidir cuál subrutina se debe escoger, el compilador toma el primer
   argumento, de izquierda a derecha, cuyo tipo sea un tipo de dato definido por
-  el usuario, como el desempate. En caso de haber más de un procedimiento que
-  no cumpla esta condición, se toma como un caso ambiguo y se emite un error.
+  el usuario, para escoger la subrutina apropiada. En caso de haber más de una
+  subrutina que cumpla esta condición, se toma como un caso ambiguo y se emite
+  un error a tiempo de compilación.
 
 \end{itemize}
 
-Estas consideraciones aplican igualmente para funciones.
-
-% - Procedimientos y Funciones de/sobre un TAD
-
 \subsection{Generación de código intermedio}
-Durante el analisis sintáctico, se registran todos los usos de un tipo de dato
-definido por el usuario, y los diferentes tipos concretos que se les asigno en
-cada uso. De esta forma, para un tipo \texttt{Diccionario(T0,T1)}, se toma nota de
-cuales usos se le dieron y con cuales tipos basicos. Si los usos fueron
-\texttt{Diccionario(int, char)} y \texttt{Diccionario(int, float)}, al llegar a la fase de
-generación de codigo intermedio, se generan dos estructuras de bajo nivel
-llamadas con el nombre del tipo en cuentión seguido de las iniciales de los
-tipos basicos utilizados separados por guiones, es decir,
-\texttt{Diccionario-i-c} y \texttt{Diccionario-i-f}, ambas conteniendo los
-campos de la implementación y del TDA. Cabe destacar, que nunca se generan
-estructuras en el codigo intermedio para los TDA.
 
-Es necesario destacar que los arreglos, al estar divididos en una cabezera y
-un cuerpo, solo la cabezera es incluida dentro de la estructura. El cuerpo es
-reservado aparte en la pila en caso de ser una variable estatica, o en memoria
-dinamica en caso de tratarse de un apuntador.
+Durante el análisis sintáctico, se registran todos los usos de un tipo de dato
+definido por el programador, y los diferentes tipos concretos que se les asigna
+en cada uso. De esta forma, para un tipo \ingra{Diccionario(T0,T1)}, se guarda
+la información sobre sus apariciones en declaraciones y los tipos básicos usados
+en cada una. Si los usos fueron \ingra{Diccionario(int, char)} y
+\ingra{Diccionario(int, float)}, al llegar a la fase de generación de código
+intermedio, se generan dos estructuras de bajo nivel con el nombre del tipo en
+cuentión seguido de las iniciales de los tipos básicos utilizados separados por
+guiones, es decir, \texttt{Diccionario-i-c} y \texttt{Diccionario-i-f}, ambas
+conteniendo los campos de la implementación y del TDA. Cabe destacar que nunca
+se generan estructuras en el código intermedio para los TDA.
+
+Es necesario destacar sobre los arreglos, que al estar separados en una cabecera
+y un cuerpo, solo la cabecera es incluida dentro de la estructura. El cuerpo es
+almacenado en una parte separada de la memoria, en la pila en caso de ser una
+variable estatica, o en memoria dinámica en caso de tratarse de un apuntador.
 
 \subsubsection{Invariantes de representación y de acoplamiento}
-Por cada estructura generada para cada tipo de dato, se generan
-automaticamente tres subrutinas. Dos rutinas para el invariante de
-representación del TDA y de la implementación respectivamente, y una para la
-relación de acoplamiento. Estas rutinas seran llamadas repetidamente dentro de
-las verificaciones de cada procedimiento y funcion dentro del tipo de dato.
+
+Por cada estructura generada para cada tipo de dato, se generan automáticamente
+tres subrutinas, a saber, una para el invariante de representación del TDA,  una
+para el invariante de representación de la implementación, y una para la
+relación de acoplamiento. Estas rutinas serán llamadas repetidamente dentro de
+las verificaciones de cada procedimiento y función dentro del tipo de dato. De
+esta manera, se evita repetir en el código intermedio generado las instrucciones
+asociadas a invariantes de representación y relaciones de acoplamiento.
 
 \subsubsection{Procedimientos y funciones}
-Para los procedimientos y funciones debemos considerar dos casos. Si el
-procedimiento no hace uso alguno de una variable de tipo, se genera una unica
-rutina en codigo intermedio. Por otro lado, si hizo uso de una variable de
-tipo, se generan tantas rutinas en codigo intermedio como estructuras del tipo
-de dato en cuestión se hayan generado. De esta forma, para el procedimiento \texttt{agregar} del tipo \texttt{Diccionario(int,char)}, se declaran dos rutinas en codigo intermedio llamadas
-\texttt{agregar-Conjuto-i} y \texttt{agregar-Conjunto-f}.
+
+Para los procedimientos y funciones debemos considerar dos casos. Si la
+subrutina no hace uso alguno de variables de tipo, se genera una única rutina en
+código intermedio. En el caso contrario, se generan tantas rutinas en código
+intermedio como estructuras del tipo de dato en cuestión se hayan generado. De
+esta forma, suponiendo que el procedimiento \ingra{agregar} del tipo
+\ingra{Conjunto(X)} tiene un parámetro de tipo \ingra{Conjunto(X)}, y que en
+el código principal del programa se declararon variables de los tipos
+\ingra{Conjunto(int)} y \ingra{Conjunto(char)}, serán generadas en el código
+intermedio dos subrutinas llamadas \texttt{agregar-Conjunto-i} y
+\texttt{agregar-Conjunto-c}.
 
 Con respecto a la verificación de las precondiciones, poscondiciones e
 invariantes, se tomaron las siguientes consideraciones.
 
-\begin{itemize}
+\begin{enumerate}
 
-  \item Antes de iniciar con el cuerpo del procedimiento, se
-  evalua la precondición de la implementación. En caso de ser falsa, se 
-  emite una advertencia a tiempo de ejecución y no se hacen mas verificaciones.
+  \item Antes de iniciar el cuerpo del procedimiento, se evalúa la precondición
+  de la implementación. En caso de ser falsa, se emite una advertencia a tiempo
+  de ejecución y no se hacen más verificaciones.
 
-  \item Si la precondicion se cumple, se utiliza relación de acoplamiento y se
-  evalua de su correspondiente invariante. En caso de que éste último sea
+  \item Si la precondición se cumple, se utiliza la relación de acoplamiento
+  apropiada para materializar las estructuras de los TDAs correspondientes a
+  parámetros de tipos definidos por el programdor, y se verifica cada invariante
+  de acoplamiento. En caso de que alguno de estos sea falso, se emite un error a
+  tiempo de ejecución.
+
+  \item Para cada parámetro de tipo definido por el programador, se verifica
+  el invariante de representación de la \textit{implementación} correspondiente.
+  Si alguno de estos es falso, se emite un error a tiempo de ejecución.
+
+  \item En el caso de los procedimientos que implementan procedimientos del TDA,
+  en este punto se evalúa la precondición de este último. Si esta es falsa, se
+  emite un error a tiempo de ejecución, aclarando que el procedimiento no
+  implementa el procedimiento correspondiente del TDA. Si no existe un procedimiento
+  correspondiente en el TDA, es decir, si se trata bien de un procedimiento
+  definido únicamente en la \textit{implementación} del tipo, o bien de un
+  procedimiento definido en el espacio global de definiciones, esta verificación
+  es omitida.
+
+  \item Para cada parámetro de un tipo definido por el programador, se verifica
+  el invariante de representación del TDA correspondiente. Si alguno de estos es
   falso, se emite un error a tiempo de ejecución.
 
-  \item Se procede a evaluar la precondición del TDA y en caso de ser falsa, 
-  se emite un error a tiempo de ejecución, aclarando que el procedimiento no
-  implementa al abstracto.
+  \item En este punto, si todas las verificaciones anteriores han sido exitosas,
+  se procede a ejecutar el cuerpo del procedimiento.
 
-  \item Luego, para cada argumento cuyo tipo sea un tipo de dato, se verifica
-  su invariante de representacion e invariante de representacion del TDA
-  correspondiente. Si ambas invariantes se cumplen, se procede a ejecutar el
-  cuerpo del procedimiento.
+  \item Finalizado el cuerpo del procedimiento, se aplica nuevamente la relación
+  de acoplamiento de cada parámetro de tipo definido por el programador, y se
+  verifica cada invariante de acoplamiento. En caso de que alguno de estos sea
+  falso, se emite un error a tiempo de ejecución.
 
-  \item Antes de finalizar el procedimiento, se realiza nuevamente la relacion
-  de acoplamiento y el invariante de representación del tipo que implementa y
-  el invariante de representación del TDA, en este mismo orden.
+  \item Para cada parámetro de tipo definido por el programador, se verifica el
+  invariante de representación del TDA correspondiente. Si alguno de estos es
+  falso, se emite un error a tiempo de ejecución.
 
-  \item Se evalua la precondicion del TDA y en caso de ser falsa se emite un
-  error a tiempo de ejecución aclarando que el procedimiento no implementa el
-  abstracto.
+  \item \label{posttda} En el caso de los procedimientos que implementan procedimientos del TDA,
+  en este punto se evalúa la poscondición de este último. Si esta es falsa, se
+  espera a la verificación de la poscondición de la implementación para emitir
+  el error apropiado. Si es verdadera, continúan las demás verificaciones de
+  esta lista. Si no existe un procedimiento correspondiente en el TDA, es decir,
+  si se trata bien de un procedimiento definido únicamente en la
+  \textit{implementación} del tipo, o bien de un procedimiento definido en el
+  espacio global de definiciones, esta verificación es omitida.
 
-  \item Por ultimo se evalua la poscondición dela implementación y en caso de
-  ser falsa, se emite un error a tiempo de ejecución.
+  \item Para cada parámetro de tipo definido por el programador, se verifica el
+  invariante de representación de la \textit{implementación} correspondiente. Si
+  alguno de estos es falso, se emite un error a tiempo de ejecución.
 
-\end{itemize}
+  \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
+  este punto, el curso del programa dependerá de los valores que hayan tomado
+  esta última y la poscondición del TDA, como puede verse en la tabla
+  \ref{table:posconds}. Si la verificación del punto \ref{posttda} fue omitida,
+  sólo se toma en cuenta la columna izquierda de la tabla.
 
-Estas consideraciones aplican para las funciones, excepto que los invariantes
-no se verifican por segunda vez al salir de la funcion. Esto debido que son
-funciones puras y por lo tanto, no realizan cambios en las variables
-involucradas.
+  \begin{table}[]
+  \centering
+  \begin{tabular}{ll|l|l|}
+  \cline{3-4}
+  \multicolumn{2}{l}{\multirow{2}{*}{}} & \multicolumn{2}{l|}{\textbf{Poscondición del TDA}} \\ \cline{3-4}
+  \multicolumn{2}{l}{} & Se cumple & No se cumple \\ \hline
+  \multicolumn{1}{|l|}{\multirow{2}{*}{\belowbaseline[0ex]{\rotatebox[origin=c]{90}{\parbox[c]{1cm}{\centering\textbf{Poscondición \\ de la \\ implementación}}}}}} & Se cumple & Éxito, la ejecución continúa normalmente & Se emite el error "Este procedimiento no implementa el TDA" \\ \cline{2-4}
+  \multicolumn{1}{|l|}{} & No se cumple & Se emite el error "No se cumple la poscondición" & Se emiten ambos errores. \\ \hline
+  \end{tabular}
+  \caption{Curso de ejecución luego de evaluación de poscondiciones}
+  \label{table:posconds}
+  \end{table}
 
-\subsubsection{Otras rutinas por defecto}
-Para cada estructura creada a partir de tipo de dato definido por el usuario,
-se generan automaticamente un contructor, un destructor y una rutina para la
-copia de las estructuras. estas rutinas contemplan las siguientes
-cosideraciónes.
+\end{enumerate}
+
+Estas consideraciones aplican para las funciones, con la excepción de los
+invariantes, que no se verifican por segunda vez al salir de la función. Esto se
+debe a que son funciones puras y por lo tanto, no realizan cambios en las
+variables involucradas.
+
+\subsubsection{Otras rutinas creadas implícitamente}
+
+Para cada estructura creada a partir de un tipo de dato definido por el programador,
+se generan automáticamente un constructor, un destructor y una rutina para la
+copia de las estructuras. Las siguientes cosideraciones son contempladas para
+estas rutinas:
 
 \begin{itemize}
 
-  \item El constructor es llamada cuando se declara una variable del tipo en cuestión, o despues de haber reservado memoria para un apuntador del mismo tipo.
-  Esta rutina se encarga de asignar a todos los campos de la estructura, el
-  valor inicial en caso de tener alguno y llamar a los contructores de las estructuras internas.
+  \item El constructor es llamado cuando se declara una variable del tipo en
+  cuestión, o después de haber reservado memoria para un apuntador del mismo
+  tipo. Esta rutina se encarga de asignar a cada campo de la estructura el valor
+  inicial que corresponda, y llamar recursivamente a los constructores de las
+  estructuras internas, si las hubiera.
 
   \item La rutina de copia se utiliza para copiar la estructura cuando se
-  intenta pasar como argumento In o InOut a un procedimiento. La copia llega a
-  un nivel superficial cuando de apuntadores se trata.
+  intenta pasar como argumento In o InOut a un procedimiento. La copia se hace
+  de manera superficial cuando se trata de apuntadores; es decir, se copia la
+  dirección contenida en el apuntador y no la estructura apuntada.
 
   \item Antes de liberar un apuntador hacia una estructura, se llama al
   destructor, el cual se encarga de liberar la memoria reservada por el cuerpo
-  de los arreglos. Esta rutina se encarga de llamar a los destructores de las estructuras internas.
+  de la estructura, luego de llamar recursivamente a los destructores de las
+  estructuras internas.
 
 \end{itemize}
 
@@ -802,13 +923,118 @@ cosideraciónes.
 % Variables de tipo
 % - Invariantes de representación, acoplamiento
 %     - Invariante de acoplamiento "compilable"
-% - Procedimientos y Funciones de/sobre un TAD
+% - Procedimientos y Funciones de/sobre un TDA
 % - Funciones predefinidas (inicializador y destructor)
 
 \subsection{Verificación de tipos}
-\blindtext[1]
-% - breve discusión de =:= y <> de tipos, también de funciones con argumentos
-%   con variables de tipo
+
+Para poder integrar los tipos de datos definidos por el programador al sistema
+de tipos del compilador de Graciela, fue necesario extender el verificador de
+tipos. Esto se hizo definiendo un monoide sobre el conjunto de los tipos de
+Graciela, con el elemento neutro <<cualquier tipo>>, representado como
+\texttt{ANY} y el operador binario \texttt{<>}, definido como la función que
+devuelve el más específico de sus operandos si son compatibles, o <<tipo
+indefinido>>, representado como \texttt{UNDEF} si no lo son. Así, por ejemplo,
+el resultado de \texttt{ANY <>{} int} es \texttt{int}, mientras que el resultado
+de \texttt{int <>{} char} es \texttt{UNDEF}. Este operador se definió de manera
+recursiva, de modo que el resultado de \texttt{set of a <>{} set of b} será
+\texttt{set of (a <>{} b)}. También se definió el operador binario \texttt{=:=}
+sobre los tipos de Graciela y con resultado booleano a partir del operador
+\texttt{<>}, definido como \texttt{False} si el resultado de \texttt{<>} es
+\texttt{UNDEF} y \texttt{True} en caso contrario.
+
+Los tipos de Graciela se representan dentro del compilador como un
+tipo de Haskell con constructores para los tipos básicos, apuntadores, arreglos,
+variables de tipos, y tipos de datos definidos por el programador.
+Adicionalmente, se definieron constructores auxiliares de este tipo de Haskell
+para representar los conceptos de <<cualquier tipo>> y <<tipo indefinido>>,
+además de <<uno de los tipos en una lista dada>>, los cuales fueron útiles para
+la verificación de tipos para funciones polimórficas propias del lenguaje,
+incluyendo los operadores como funciones de uno o dos argumentos.
+
+En el caso de las variables de tipos, fue necesario extender las verificaciones
+hechas para las llamadas a funciones y procedimientos para que, una vez
+encontrado un parámetro de un tipo definido por el programador, se tomaran en
+cuenta las variables de tipo con las que fue definido. Por ejemplo, en el caso
+de un procedimiento como \ingra{agregar (c : Conjunto(T), e : T)}, en el punto
+de llamada \ingra{agregar(s, 3)}, donde \ingra{s} es de tipo
+\ingra{Conjunto(int)}, primero se consigue la variable \ingra{s}. En este
+momento, se puede asociar la variable de tipo \ingra{T} de la definición del
+procedimiento \ingra{agregar} con el tipo \ingra{int}. Luego, cuando se
+identifica el argumento \ingra{3}, se compara su tipo con el del parámetro
+\ingra{e}, \ingra{T}, y como es una variable de tipo, se usa el tipo que fue
+asociado a esta, \ingra{int}. Como coincide con el tipo de la expresión
+\ingra{3}, esta llamada pasa la verificación de tipos y se verifica la
+siguiente instrucción.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tipos Algebráicos Libres %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tipos Algebráicos Libres}
+
+Una de las posibles extensiones planteadas para el compilador durante el
+transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
+Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
+Algebráicos Libres (TALs), de modo que se realizó la correspondiente investigación
+teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
+\todo{???}.
+
+Se consiguió que para implementar esta característica exitosamente, era
+necesario extender el compilador para reconocer definiciones de tipos
+algebráicos y almacenar la información relacionada a ellos, distinguiendo entre
+constructores e identificadores de tipos, para luego usarlos en el
+reconocimiento y análisis de expresiones que hagan uso de ellos. Para reconocer
+las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje y
+del compilador, pero para analizar sus usos se consiguen problemas en el caso de
+tipos algebráicos libres con tipos paramétricos. Por ejemplo, dada la definición
+
+$$ \textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) $$
+
+si el compilador encuentra un uso de el constructor $Lvac$ como el siguiente,
+
+$$ \texttt{a ==}\  Lvac\ () $$
+
+el tipo del constructor debe ser el mismo de la variable \texttt{a}, es decir,
+el sistema de tipos debe ser capaz de propagar información entre las
+expresiones, o, en otras palabras, debe ser capaz de efectuar unificación de
+tipos entre las expresiones de un programa.
+
+Sin embargo, no basta con permitir su uso en expresiones. Una de las
+características más útiles de los TALs es la posibilidad de usar el predicado
+\textbf{is} y las instrucciones \textbf{match} y \textbf{matches}. El predicado
+\textbf{is} se usa en expresiones condicionales para determinar el constructor
+de una expresión cualquiera, mientras que la instrucción \textbf{match} se usa
+para extraer los argumentos de dicho constructor (acción denominada
+\textit{pattern matching} en inglés, <<búsqueda de patrones>>), y la instrucción
+\textbf{matches} consiste en una composición de las dos anteriores, tal que se
+extraen los argumentos del constructor apropiado dentro de una expresión
+condicional. Se consideró que el predicado \textbf{is} puede implementarse de
+manera sencilla, pero ambas instrucciones deben ser implementadas cuidadosamente
+a fin de cumplir con sus definiciones, especialmente en casos excepcionales como
+$e\ \textbf{matches}\ c\ (a,\ a)$ y $e\ \textbf{matches}\ c\ (e,\ f)$.
+
+En cuanto al código intermedio generado para expresiones de tipos algebráicos
+libres, se vio que la manera general de representarlas es como estructuras que
+residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone un
+conflicto con uno de los objetivos de este proyecto, proveer al programador las
+herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
+claro cuales deben ser los efectos de la interacción de expresiones de tipos
+algebráicos libres con expresiones de tipos de datos estructurados, por ejemplo,
+el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
+
+Por lo tanto, debido a la dificultad de implementar esta extensión para el
+lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
+incluirla en el ámbito del presente proyecto de grado. Cabe destacar que, los
+tipos algebráicos libres representan tan solo una fracción de lo estudiado en el
+curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
+mucho menor a la dedicada a los TADs, por lo cual en cualquier caso no sería una
+extensión de vital importancia para el lenguaje Graciela y su compilador.
+Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
+que implementan los Tipos Algebráicos Libres de manera exitosa, de manera muy
+similar a la usada en la teoría del curso mencionado, y podrían ser utilizados
+en los laboratorios correspondientes a esta área.
+
+\todo{dejar esta extensión como recomendación?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

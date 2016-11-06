@@ -334,7 +334,8 @@
 }
 \newcommand\acknowledgements[1]{
 \btypeout{Agradecimientos}
-\addtotoc{Agradecimientos}
+% \addtotoc{Agradecimientos}        -- ¿Debe aparecer en el índice?
+% \addtocontents{toc}{\vspace{1em}}
 \thispagestyle{plain}
 {\huge{\textbf{Agradecimientos}} \par}
 {\normalsize #1}
