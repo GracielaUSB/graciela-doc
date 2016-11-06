@@ -21,7 +21,7 @@
 
   - Teoría de conjuntos [moises]
 
-  - Tipos Algebráicos Libres [moises]
+  - Tipos Algebráicos Libres [moises+]
 
   - Tipos de datos abstractos [both]
 

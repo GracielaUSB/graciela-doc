@@ -952,24 +952,66 @@ siguiente instrucción.
 Una de las posibles extensiones planteadas para el compilador durante el
 transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
 Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
-Algebráicos Libres, de modo que se realizó la correspondiente investigación
+Algebráicos Libres (TALs), de modo que se realizó la correspondiente investigación
 teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
 \todo{???}.
 
 Se consiguió que para implementar esta característica exitosamente, era
-necesario
+necesario extender el compilador para reconocer definiciones de tipos
+algebráicos y almacenar la información relacionada a ellos, distinguiendo entre
+constructores e identificadores de tipos, para luego usarlos en el
+reconocimiento y análisis de expresiones que hagan uso de ellos. Para reconocer
+las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje y
+del compilador, pero para analizar sus usos se consiguen problemas en el caso de
+tipos algebráicos libres con tipos paramétricos. Por ejemplo, dada la definición
 
+$$ \textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) $$
 
-Por lo tanto, debido a la dificultad de implementar esta funcionalidad de un
-modo efectivo,
+si el compilador encuentra un uso de el constructor $Lvac$ como el siguiente,
 
+$$ \texttt{a ==}\  Lvac\ () $$
 
-1. parte muy menor de la materia de algoritmos 2
-2. dificil de integrar con el lenguaje actual
-3. paradigma distinto, más funcional que imperativo
-4. patter matching es *dificil*
-5. mejores alternativas para su enseñanza *cough*Haskell*cough*
-6. son material para un proyecto de grado en sí mismo
+el tipo del constructor debe ser el mismo de la variable \texttt{a}, es decir,
+el sistema de tipos debe ser capaz de propagar información entre las
+expresiones, o, en otras palabras, debe ser capaz de efectuar unificación de
+tipos entre las expresiones de un programa.
+
+Sin embargo, no basta con permitir su uso en expresiones. Una de las
+características más útiles de los TALs es la posibilidad de usar el predicado
+\textbf{is} y las instrucciones \textbf{match} y \textbf{matches}. El predicado
+\textbf{is} se usa en expresiones condicionales para determinar el constructor
+de una expresión cualquiera, mientras que la instrucción \textbf{match} se usa
+para extraer los argumentos de dicho constructor (acción denominada
+\textit{pattern matching} en inglés, <<búsqueda de patrones>>), y la instrucción
+\textbf{matches} consiste en una composición de las dos anteriores, tal que se
+extraen los argumentos del constructor apropiado dentro de una expresión
+condicional. Se consideró que el predicado \textbf{is} puede implementarse de
+manera sencilla, pero ambas instrucciones deben ser implementadas cuidadosamente
+a fin de cumplir con sus definiciones, especialmente en casos excepcionales como
+$e\ \textbf{matches}\ c\ (a,\ a)$ y $e\ \textbf{matches}\ c\ (e,\ f)$.
+
+En cuanto al código intermedio generado para expresiones de tipos algebráicos
+libres, se vio que la manera general de representarlas es como estructuras que
+residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone un
+conflicto con uno de los objetivos de este proyecto, proveer al programador las
+herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
+claro cuales deben ser los efectos de la interacción de expresiones de tipos
+algebráicos libres con expresiones de tipos de datos estructurados, por ejemplo,
+el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
+
+Por lo tanto, debido a la dificultad de implementar esta extensión para el
+lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
+incluirla en el ámbito del presente proyecto de grado. Cabe destacar que, los
+tipos algebráicos libres representan tan solo una fracción de lo estudiado en el
+curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
+mucho menor a la dedicada a los TADs, por lo cual en cualquier caso no sería una
+extensión de vital importancia para el lenguaje Graciela y su compilador.
+Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
+que implementan los Tipos Algebráicos Libres de manera exitosa, de manera muy
+similar a la usada en la teoría del curso mencionado, y podrían ser utilizados
+en los laboratorios correspondientes a esta área.
+
+\todo{dejar esta extensión como recomendación?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
