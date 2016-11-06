@@ -222,13 +222,14 @@ por lo cual se consideró apropiado agregarlo al lenguaje inspirado por su GCL.
 
 Los apuntadores se declaran como cualquier otra variable dentro del lenguaje
 Graciela. El tipo de un apuntador se especifica colocando el tipo que se desea
-apuntar, seguido de un asterisco (\ingra{*}). Se pueden declarar apuntadores
-a tipos básicos, arreglos, tipos definidos por el programador y a otros
+apuntar, seguido de un asterisco (\ingra{*}). Se pueden declarar apuntadores a
+tipos básicos, arreglos, tipos definidos por el programador y a otros
 apuntadores. De igual forma se pueden especificar parámetros para funciones y
 procedimientos con apuntadores. Cabe acotar que para declarar apuntadores a
-tipos cuya sintaxis pueda generar ambigüedad, se pueden colocar entre paréntesis
-antes de colocar el asterisco. Ejemplo de éste caso seria poder declarar un apuntador a
-un arreglo de enteros y un arreglo de apuntadores a entero.
+tipos cuya sintaxis pueda generar ambigüedad, se permite colocar entre
+paréntesis el tipo apuntado, seguido por el asterisco. Ejemplo de éste caso
+sería poder declarar un apuntador a un arreglo de enteros, en contraposición a
+un arreglo de apuntadores a enteros.
 
 \begin{gracielacode}
 var ptrToArray : (array[10] of int)*

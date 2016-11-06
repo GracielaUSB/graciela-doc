@@ -454,6 +454,29 @@ Para la reserva de memoria dinámica, se utilizó la función estandar de C
 argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
 memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
 
+\subsection{Lógica de Separación}
+
+Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
+se consideró la posibilidad de agregar a este el soporte para expresiones
+propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
+que los programadores pudieran especificar de manera sencilla propiedades acerca
+de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
+implementar los operadores propios de la lógica de separación, $*$, $\mapsto$, y
+$\magicwand$, así como la constante $emp$, es necesario almacenar la información
+correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
+tiempo de ejecución de estructuras internas temporales con este fin.
+
+Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
+separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
+comparar apuntadores con el operador de igualdad, \texttt{==}. Otro factor que
+influyó en esta decisión fue la consideración de que el público para el cual
+está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
+de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
+predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
+carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
+estudios de los cursos en cuestión) resultaría en un gran potencial para
+confusión, sin agregar mucho valor al lenguaje.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
