@@ -111,7 +111,7 @@ los tipos permitidos anteriormente,  \ingra{int}, \ingra{char} o
 adición de los tipos colección, explicados más adelante, ahora es posible
 definir iteraciones sobre números de punto flotante, usando el operador de
 pertenencia (\Elem) sobre una colección, mientras que se permiten las variables
-de tipo debido a que éstas siempre serán instanciadas a\todo{en?} alguno de los
+de tipo debido a que éstas siempre serán instanciadas en alguno de los
 tipos \ingra{int}, \ingra{char}, \ingra{boolean} o \ingra{float}).
 
 En segundo lugar, ahora el compilador admite expresiones booleanas más generales
@@ -478,7 +478,7 @@ invariante y la relación de acoplamiento. De esta forma, una posible
 implementación del TDA \ingra{Diccionario} debería verse de la siguiente
 manera.
 
-\begin{gracielacode}
+\begin{widegracielacode}
 type Dicc (T0, T1) implements Diccionario (T0, T1) begin
   var clave : array [MAX] of T0;
   var valor : array [MAX] of T1;
@@ -511,7 +511,19 @@ type Dicc (T0, T1) implements Diccionario (T0, T1) begin
      ...
     ]|
 end
-\end{gracielacode}
+\end{widegracielacode}
 
 Cabe mencionar que no se pueden declarar variables de un TDA fuera del mismo y
 pueden existir multiples implementaciones para un TDA.
+
+\section{Herramientas para el programador}
+\subsection{Facilidad de instalación y uso para programadores noveles}
+\todo{APT + Homebrew}
+\blindtext[1]
+
+\subsection{Mejoras al ambiente de programación}
+\todo{Editores}
+\blindtext[1]
+
+\subsection{Análisis de rendimiento}
+\blindtext[1]

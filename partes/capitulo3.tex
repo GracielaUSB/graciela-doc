@@ -44,7 +44,7 @@ prueba pueden conseguirse en el anexo \textbf{NUMERODEANEXO}.
 % anterior,
 %  se extendió el manual de usuario para presentar las nuevas funcionalidades del
 % lenguaje,
-%  se investigaron formas para permitir que usuarios noveles instalen el compilador
+%  se investigaron formas para permitir que programadores noveles instalen el compilador
 % sin mayor dificultad
 %  se estudiaron las herramientas necesarias para incorporar facilidades de
 % depuración (\emph{debugging}) y análisis de rendimiento (\emph{profiling}) al
@@ -171,7 +171,8 @@ instrucciones, separadas por punto y coma, se usó código como el siguiente:
 \begin{haskellcode}
 withRecovery recover instruction
   where
-    recover err = void anyToken `manyTill` match TokSemicolon >> tell err
+    recover err = void anyToken `manyTill` match TokSemicolon
+               >> tell err
 \end{haskellcode}
 
 Así, con ligeros cambios según el contexto del analizador, fue posible agregar
@@ -258,7 +259,7 @@ La última consideración sobre los arreglos está asociada con su uso como
 parámetros de subrutinas (procedimientos y funciones). Se agregó al lenguaje la
 capacidad para usar arreglos como parámetros de los modos in, inout y out,
 además del modo ref ya provisto en la especificación original. Adicionalmente,
-se decidió permitir el pase de arreglos de tamaño variable como parámetros
+se decidió permitir el pase de arreglos de tamaño arbitrario como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
 parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
 de los procedimientos. Por ejemplo, la firma del siguiente procedimiento sería
@@ -404,78 +405,6 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 
 \end{description}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Manejo de apuntadores}
-
-\subsection{Consideraciones}
-Los apuntador implementados para el lenguaje graciela pueden apuntar a un
-objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
-sintaxis para declarar un apuntador es parecida a la presente en  el lenguaje
-C, es decir, se escribe el tipo base seguido de tantos asteriscos (\ingra{*})
-como apuntadores se desee. El operador para acceder a la memoria apuntada por
-un apuntador es igualmente el asterisco, el cual debe colocarse como operador
-prefijo a una expresión de tipo apuntador.
-
-La reserva y liberación de memoria dinámica para un apuntador se realiza con las
-funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
-consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
-a tipos definidos por el programador, que se describen detalladamente en sus
-respectivas secciones. El siguiente fragmento de código ejemplifica la
-declaración y uso de un apuntador a entero.
-
-\begin{gracielacode}
-|[ var p : int *
-;  new(p)
-;  *p := 10
-;  free(p)
-]|
-\end{gracielacode}
-
-\subsection{Generación de código intermedio}
-
-LLVM ofrece un soporte completo para el manejo de apuntadores, lo que facilitó
-enormemente la tarea de implementar la generación de código intermedio para el
-manejo de apuntadores. Sin embargo, carece de instrucciones para la reserva y
-liberación de memoria dinámica, razón por la cual hubo la necesidad de colocar
-funciones en la biblioteca externa que recibieran como argumento al apuntador en
-cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de
-realizar dichas operaciones.
-
-En el momento en que se crea un apuntador, éste se inicializa con un valor nulo,
-evitando así poder acceder a una dirección basura. En caso de tratar acceder a
-la memoria apuntada por un apuntador que contenga la dirección nula, se emite un
-error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que
-sea el sistema operativo quien emita el error.
-
-Para la reserva de memoria dinámica, se utilizó la función estandar de C
-\texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
-argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
-memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
-
-\subsection{Lógica de Separación}
-
-Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
-se consideró la posibilidad de agregar a este el soporte para expresiones
-propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
-que los programadores pudieran especificar de manera sencilla propiedades acerca
-de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
-implementar los operadores propios de la lógica de separación, $*$, $\mapsto$, y
-$-*$, así como la constante $emp$, es necesario almacenar la información
-correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
-tiempo de ejecución de estructuras internas temporales con este fin.
-
-Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
-separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
-comparar apuntadores con el operador de igualdad, \texttt{==}. Otro factor que
-influyó en esta decisión fue la consideración de que el público para el cual
-está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
-de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
-predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
-carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
-estudios de los cursos en cuestión) resultaría en un gran potencial para
-confusión para el programador, sin agregar mucho valor al lenguaje.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -578,15 +507,88 @@ incumplido una aserción, o por haber alcanzado un condicional sin guardas
 verdaderas, este manejador de memoria se encarga de liberar toda la memoria
 reservada para estas estructuras.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MANEJO DE APUNTADORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Manejo de apuntadores}
+
+\subsection{Consideraciones}
+Los apuntador implementados para el lenguaje graciela pueden apuntar a un
+objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
+sintaxis para declarar un apuntador es parecida a la presente en  el lenguaje
+C, es decir, se escribe el tipo base seguido de tantos asteriscos (\ingra{*})
+como apuntadores se desee. El operador para acceder a la memoria apuntada por
+un apuntador es igualmente el asterisco, el cual debe colocarse como operador
+prefijo a una expresión de tipo apuntador.
+
+La reserva y liberación de memoria dinámica para un apuntador se realiza con las
+funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
+consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
+a tipos definidos por el programador, que se describen detalladamente en sus
+respectivas secciones. El siguiente fragmento de código ejemplifica la
+declaración y uso de un apuntador a entero.
+
+\begin{gracielacode}
+|[ var p : int *
+;  new(p)
+;  *p := 10
+;  free(p)
+]|
+\end{gracielacode}
+
+\subsection{Generación de código intermedio}
+
+LLVM ofrece un soporte completo para el manejo de apuntadores, lo que facilitó
+enormemente la tarea de implementar la generación de código intermedio para el
+manejo de apuntadores. Sin embargo, carece de instrucciones para la reserva y
+liberación de memoria dinámica, razón por la cual hubo la necesidad de colocar
+funciones en la biblioteca externa que recibieran como argumento al apuntador en
+cuestión, y que a su vez llamaran rutinas del lenguaje C que se ocupasen de
+realizar dichas operaciones.
+
+En el momento en que se crea un apuntador, éste se inicializa con un valor nulo,
+evitando así poder acceder a una dirección basura. En caso de tratar acceder a
+la memoria apuntada por un apuntador que contenga la dirección nula, se emite un
+error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que
+sea el sistema operativo quien emita el error.
+
+Para la reserva de memoria dinámica, se utilizó la función estandar de C
+\texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
+argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
+memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
+
+\subsection{Lógica de Separación}
+
+Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
+se consideró la posibilidad de agregar a este el soporte para expresiones
+propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
+que los programadores pudieran especificar de manera sencilla propiedades acerca
+de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
+implementar los operadores propios de la lógica de separación, $*$ (conjunción
+separadora), $\mapsto$ (\todo{cómo se llama esto?}), y $-*$ (implicación
+separadora), así como la constante $emp$, es necesario almacenar la información
+correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
+tiempo de ejecución de estructuras internas temporales con este fin.
+
+Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
+separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
+comparar apuntadores con el operador de igualdad, \ingra{==}. Otro factor que
+influyó en esta decisión fue la consideración de que el público para el cual
+está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
+de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
+predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
+carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
+estudios de los cursos en cuestión) resultaría en un gran potencial para
+confusión para el programador, sin agregar mucho valor al lenguaje.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tipos de datos definidos por el programador}
 
-%  - breve discusión de Carroll Morgan --> Marco Teórico
 %  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA -> SOBRE TODO EL WHERE
-
-% ¿Qué es un tipo de dato (abstracto/concreto)?
 
 \subsection{Consideraciones}
 % - Consideraciones
@@ -701,10 +703,10 @@ variables de tipos solo pueden ser sustituidas por un tipo básico, es decir,
 tipo entero, flotante, caracter o booleano \todo{apuntadores???}. Al momento de
 declarar una variable de un tipo de dato definido por el programador con
 variables de tipo asociadas, se deben  especificar los tipos básicos que
-correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en las
-siguientes líneas de código.
+correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
+fragmento de código \ref{lst:insttvar}.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Ejemplo de instanciación de variables de tipo, label=lst:insttvar]
 abstract ConjuntoA (T) begin
   var a : T;
   ...
@@ -1005,7 +1007,7 @@ características más útiles de los TALs es la posibilidad de usar el predicado
 \textbf{is} se usa en expresiones condicionales para determinar el constructor
 de una expresión cualquiera, mientras que la instrucción \textbf{match} se usa
 para extraer los argumentos de dicho constructor (acción denominada
-\textit{pattern matching} en inglés, <<búsqueda de patrones>>), y la instrucción
+\textit{pattern matching} en inglés, o <<búsqueda de patrones>>), y la instrucción
 \textbf{matches} consiste en una composición de las dos anteriores, tal que se
 extraen los argumentos del constructor apropiado dentro de una expresión
 condicional. Se consideró que el predicado \textbf{is} puede implementarse de
@@ -1024,15 +1026,15 @@ el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
 
 Por lo tanto, debido a la dificultad de implementar esta extensión para el
 lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
-incluirla en el ámbito del presente proyecto de grado. Cabe destacar que, los
-tipos algebráicos libres representan tan solo una fracción de lo estudiado en el
+incluirla en el ámbito del presente proyecto de grado. Cabe destacar que los
+tipos algebráicos libres representan tan sólo una fracción de lo estudiado en el
 curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
-mucho menor a la dedicada a los TADs, por lo cual en cualquier caso no sería una
-extensión de vital importancia para el lenguaje Graciela y su compilador.
+mucho menor a la dedicada a los TADs, por lo cual, en cualquier caso, no sería
+una extensión de vital importancia para el lenguaje Graciela y su compilador.
 Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
-que implementan los Tipos Algebráicos Libres de manera exitosa, de manera muy
-similar a la usada en la teoría del curso mencionado, y podrían ser utilizados
-en los laboratorios correspondientes a esta área.
+que implementan los Tipos Algebráicos Libres de manera exitosa y muy similar a
+la usada en la teoría del curso mencionado, y podrían ser utilizados en los
+laboratorios correspondientes a esta área.
 
 \todo{dejar esta extensión como recomendación?}
 
@@ -1043,7 +1045,12 @@ en los laboratorios correspondientes a esta área.
 % \subsection{Colección de programas}
 % \blindtext[1]
 % % Referencia a los anexos
-\subsection{Facilidad de instalación para usuarios noveles}
+\subsection{Facilidad de instalación y uso para programadores noveles}
+\todo{APT + Homebrew}
+\blindtext[1]
+
+\subsection{Mejoras al ambiente de programación}
+\todo{Editores}
 \blindtext[1]
 
 \subsection{Depuración y análisis de rendimiento}

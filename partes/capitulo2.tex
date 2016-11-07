@@ -2,7 +2,20 @@
 \label{capitulo2}
 \lhead{Capítulo 2. \emph{Marco Tecnológico}}
 
-\section{Haskell}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LENGUAJES DE PROGRAMACIÓN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Lenguajes de Programación}
+
+Para la implementación de los distintos componentes del presente proyecto de
+grado, se utilizaron los lenguajes Haskell, C y C++. El primero se usó para
+escribir las distintas fases del compilador, mientras que los otros dos se
+utilizaron para desarrollar las bibliotecas externas para los programas
+compilados.
+
+\subsection{Haskell}
 Haskell es un lenguaje de programación funcional puro compilado, de proposito
 general, que se basa en el \textit{cálculo lambda}. Al ser un lenguaje
 funcional puro, todo programa se escribe haciendo uso de expresiones
@@ -40,6 +53,27 @@ proyecto, bibliotecas que proporcionan facilidades para construir reconocedores
 recursivos descendentes y para generación de código intermedio LLVM, las
 cuales seran menciadas en detalles en las siguientes secciones.
 
+
+\subsection{C, C++}
+\textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
+el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
+estáticos y debilmente tipificados, pero ofrecen ventajas para realizar
+operaciones a muy bajo nivel, como el manejo y acceso manual de la memoria.
+
+Ambos lenguajes poseen mecanismo para declarar estructuras de datos basicos,
+funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un
+lenguaje orientado a objetos, entran conceptos como cleses, herencia de clases
+y encapsulamiento. Tambien, a diferencia del lenguaje \textit{C}, \textit{C++}
+posee una biblioteca estandar mas extensa, en la cual se ofrecen estructuras
+de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
+ordenamiento o busqueda sobre dichas estructuras.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA ANÁLISIS LÉXICO Y SINTÁCTICO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para Análisis Léxico y Sintáctico}
+
 \subsection{Parsec}
 \textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
 construcción de un reconocedor recursivo descendente. Esta biblioteca provee
@@ -56,7 +90,6 @@ implementar haciendo uso la función \texttt{try}, la cual reestablece el
 estado original del flujo de entrada, en caso de que un reconocedor falle,
 habiendo o no consumido de la entrada.
 
-
 \subsection{Megaparsec}
 La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés)
 de la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
@@ -64,53 +97,88 @@ funcionalidades que ésta ultima, agrega otras funcionalidades de especial
 importancia para la elaboración de un analizador sintáctico, como el soporte
 para la recuperación de errores.
 
+\todo{extender esto}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA LA GENERACIÓN DE CÓDIGO INTERMEDIO %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para la Generación de Código Intermedio}
+
+\subsection{LLVM}
+
 \subsection{llvm-general y llvm-general-pure}
-Las bibliotecas \texttt{llvm-general} y \texttt{llvm-general-pure} ofrecen una
-muy interfaz sencilla y completa con las libreria externas de LLVM para la
-generación de código intermedio. Por un lado, \textit{llvm-general-pure}
-brinda una serie de estructuras de datos que se corresponden con las
-definiciones, instrucciones y expresiones del código intermedio de LLVM. A su
-vez, \textit{llvm-general} da las facilidades para poder traducir, haciendo
-uso de las estructuras encontradas en \textit{llvm-general-pure}, el arbol
-sintáctico generado por el analizador sintáctico, a un nuevo arbol sintáctico
-con el que posteriormente se genera automáticamente un archivo con la
-representación intermedia de LLVM del programa.
 
-\section{LLVM}
-
-
+Las bibliotecas \texttt{llvm-general} y \texttt{llvm-general-pure} para el
+lenguaje Haskell ofrecen una interfaz muy sencilla y completa con las
+bibliotecas externas de LLVM para la generación de código intermedio. Por un
+lado, \textit{llvm-general-pure} brinda una serie de estructuras de datos que se
+corresponden con las definiciones, instrucciones y expresiones del código
+intermedio de LLVM. A su vez, \textit{llvm-general} da las facilidades para
+poder traducir, haciendo uso de las estructuras encontradas en
+\textit{llvm-general-pure}, el árbol sintáctico generado por el analizador
+sintáctico, a un nuevo árbol sintáctico a partir del cual posteriormente se
+genera automáticamente un archivo con la representación intermedia de LLVM del
+programa.
 
 
-\section{Valgrind}
-\textit{Valgrind} es una herramienta de software, que ayuda a la depuraración y
-detección errores relacionados a una mala gestión de la memoria de un
-proceso, como accesos indebidos o la fuga de memoria dinámica. Tambien ofrece
-herramienta para realizar un perfilaje detallado de la ejecución de un
-programa y para detectar errores en procesos multihilo.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA LA DEPURACIÓN DEL MANEJO DE MEMORIA %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para la Depuración del Manejo de Memoria}
 
-\section{C, C++}
-\textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
-el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
-estáticos y debilmente tipificados, pero ofrecen ventajas para realizar
-operaciones a muy bajo nivel, como el manejo y acceso manual de la memoria.
+Para este fin se utilizó \textit{Valgrind}. \textit{Valgrind} es una herramienta
+de software, que ayuda a la depuraración y detección errores relacionados a una
+mala gestión de la memoria de un proceso, como accesos indebidos o la fuga de
+memoria dinámica. Tambien permite realizar un perfilaje detallado de la
+ejecución de un programa y detectar errores en procesos multihilo.
 
-Ambos lenguajes poseen mecanismo para declarar estructuras de datos basicos,
-funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un
-lenguaje orientado a objetos, entran conceptos como cleses, herencia de clases
-y encapsulamiento. Tambien, a diferencia del lenguaje \textit{C}, \textit{C++}
-posee una biblioteca estandar mas extensa, en la cual se ofrecen estructuras
-de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
-ordenamiento o busqueda sobre dichas estructuras.
-
-\section{git}
+En este proyecto, se utilizó \textit{Valgrind} con la intención de detectar
+posibles fugas de memoria en el código de las librerías externas de Graciela,
+particularmente en el caso de las estructuras de tipos de la teoría de
+conjuntos, y en el código generado para las nuevas instrucciones \ingra{new} y
+\ingra{free} de apuntadores. Adicionalmente, se usó para revisar los accesos a
+memoria relacionados con los arreglos, debido a la forma en la que fueron
+implementados.
 
 
-\section{Vi}
-Es un editor de texto presente en todos los sistemas operativos derivados de Unix,
-que  permite mover, copiar, eliminar o insertar caracteres con mucha
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% AMBIENTES DE PROGRAMACIÓN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ambientes de programación}
+
+Como objetivo adicional \todo{ask novich}, se estudió la posibilidad de
+incorporar herramientas para mejorar la experiencia del programador en Graciela.
+Específicamente, se indagó acerca de los editores de texto para programación más
+comúnmente usados entre los estudiantes de la carrera de Ingeniería de la
+Computación y sobre cómo agregarles características como un resaltador
+sintáctico y la inserción automática de fragmentos de código.
+
+\subsection{Vi}
+
+Es un editor de texto presente en todos los sistemas operativos derivados de
+Unix, que  permite mover, copiar, eliminar o insertar caracteres con mucha
 versatilidad. Cuenta con una versión mejorada llamada \textit{Vim}
 
-\section{Sublime Text y Package Control}
+\subsection{Sublime Text}
 
-\section{Homebrew}
+\subsection{Atom}
+
+\subsection{Gedit}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DISTRIBUCIÓN DE SOFTWARE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Distribución de software}
+
+Para facilitar la distribución e instalación de los componentes de Graciela, se
+estudiaron los mecanismos de distribución de software más comunes para las
+plataformas en las cuales se ofrece el compilador, con la intención de que sea
+sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
+última versión disponible.
+
+\subsection{APT}
+
+\subsection{Homebrew}
+
 Manejador de paquetes para el sistema operativo macOS.

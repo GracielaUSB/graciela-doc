@@ -58,7 +58,9 @@
 \usepackage[shortcuts]{extdash}
 \usepackage{relsize}
 \usepackage{etoolbox}
-
+\usepackage[justification=centering]{caption}
+\usepackage{xcolor}
+\usepackage{caption}
 
 % Paquetes locales
 % Puedes agregar paquetes locales (archivos .sty) en un subdirectorio % 'paquetes'.
@@ -175,7 +177,7 @@
     numbers=none,
     stepnumber=1,
     showstringspaces=false,
-    breaklines=true,
+    breaklines=false,
     frame=top,
     comment=[l]{//},
     morecomment=[s]{/*}{*/},
@@ -193,7 +195,7 @@
     basicstyle=\ttfamily\footnotesize,
     commentstyle={\color{gray}},        % style for comments
     captionpos=t,                       % caption position: top
-    frame=l,                            % frame: [l]eft [r]ight [t]op [b]ottom
+    frame={l,r,t,b},                    % frame: [l]eft [r]ight [t]op [b]ottom
     frameround=ffff,                    % roundness: TR, BR, BL, TL
     framerule=0.75pt,                   % thickness of the frame
     framesep=0.5cm,                     % separation from frame to code
@@ -201,7 +203,10 @@
     columns=flexible,                   % flexible character width
     keepspaces=true,                    % keep all spaces
     % margins
-    aboveskip=1cm, xleftmargin=1.25cm, xrightmargin=1.25cm,
+    float,
+    floatplacement=h,
+    caption=NO TENGO CAPTION,
+    aboveskip=1cm, xleftmargin=1cm, xrightmargin=1cm,
     % listings does not support UTF-8
     literate= {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
               {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
@@ -231,7 +236,21 @@
         escapechar=\~,
         #1                  % settings for the lst environment
     }
-}{}
+  }{
+  }
+
+\lstnewenvironment{widegracielacode}[1][]{
+    \linespread{1}
+    \lstset{
+        language=graciela,
+        style=code,
+        escapechar=\~,
+        xleftmargin=0cm,
+        xrightmargin=0cm,
+        #1                  % settings for the lst environment
+    }
+  }{
+  }
 
 % http://tex.stackexchange.com/q/43526
 % fix the apparently deliberate but undocumented behaviour of disabling escapes other than mathescape in TextStyle (used by \lstinline)
@@ -257,6 +276,21 @@
         #1                  % settings for the lst environment
     }
 }{}
+
+\renewcommand{\lstlistingname}{Fragmento de Código}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}
+  {\centering #1#2#3}
+\captionsetup[lstlisting]{format=listing}
+
+% Enumeración continua trans-lingual
+% \let\oldmainmatter\mainmatter
+% \renewcommand{\mainmatter}{%
+%   \edef\temppagenumber{\arabic{page}}
+%   \oldmainmatter
+%   \setcounter{page}{\temppagenumber}
+% }
 
 % Macros
 \newcommand{\projectTitle}{Graciela}
@@ -302,8 +336,8 @@
   ]{Fira Code}
 \newfontfamily{\monofallbackfont}{DejaVu Sans Mono}
 \DeclareTextFontCommand{\textmonofallback}{\monofallbackfont\textscale{0.95}}
-\newcommand{\qop} {\color{cyan process}{\textit{qop}}}
-\newcommand{\op}  {\color{cyan process}{\textit{op}} }
+\newcommand{\qop} {\color{cyan process}{\textmonofallback{\large ★}}}
+\newcommand{\op}  {\color{cyan process}{\textmonofallback{⊕ }}}
 \newcommand{\Lbag}{\textmonofallback{⟅}}
 \newcommand{\Rbag}{\textmonofallback{⟆}}
 \newcommand{\Lseq}{\textmonofallback{⟨}}
@@ -378,6 +412,8 @@
 
 % El resumen debe ser de una sola página
 % \addtotoc{Resumen} -- ¿Debe aparecer en el índice?
+
+\setcounter{page}{4}
 \abstract{
 % \addtocontents{toc}{\vspace{1em}}
 
@@ -407,11 +443,16 @@
 % algoritmos. Si alguno de estos no se utiliza, comentar o eliminar las líneas
 % pertinentes.
 \lhead{\emph{Índice de Figuras}}
+\renewcommand*\listfigurename{Índice de Figuras}
 \listoffigures
 
 \lhead{\emph{Índice de Tablas}}
 \renewcommand*\listtablename{Índice de Tablas}
 \listoftables
+
+\lhead{\emph{Índice de Fragmentos de Código}}
+\renewcommand{\lstlistlistingname}{Índice de Fragmentos de Código}
+\lstlistoflistings
 
 %\lhead{\emph{Índice de Algoritmos}}
 %\renewcommand*\listalgorithmname{Índice de algoritmos}

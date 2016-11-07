@@ -264,8 +264,7 @@
 }\end{spacing}
 }
 \renewcommand\listoffigures{
-\btypeout{Índice de Figuras}
-\addtotoc{Índice de Figuras}
+\btypeout{Índice de Higuras}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -283,7 +282,6 @@
 }
 \renewcommand\listoftables{
 \btypeout{Lista de Tablas}
-\addtotoc{Lista de Tablas}
 \begin{spacing}{1}{
     \setlength{\parskip}{1pt}
     \if@twocolumn
@@ -292,8 +290,8 @@
       \@restonecolfalse
     \fi
     \chapter*{\listtablename
-      \@mkboth{
-          \MakeUppercase\listtablename}{\MakeUppercase\listtablename}}
+      \@mkboth{\MakeUppercase\listtablename}
+              {\MakeUppercase\listtablename}}
     \@starttoc{lot}
     \if@restonecol\twocolumn\fi
     \cleardoublepage
@@ -303,7 +301,6 @@
 \usepackage{longtable}
 \newcommand\listofsymbols[2]{
 \btypeout{\listsymbolname}
-\addtotoc{\listsymbolname}
     \chapter*{\listsymbolname
       \@mkboth{
           \MakeUppercase\listsymbolname}{\MakeUppercase\listsymbolname}}
