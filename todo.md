@@ -1,17 +1,47 @@
 # Graciela-Doc
-- Recomendaciones jurado anterior
-
-- Teoría de conjuntos
-
-- Tipos de Datos
-
 - Herramientas para el programador
 
-- FIXME: consideraciones sobre procedimientos
+- FIXME: consideraciones sobre procedimientos -> Monascal
 
-- Hablar de TALs y explicar por qué se decidió no agregarlos al lenguaje
+- GENERAL
+    - Captionear fragmentos de código y wrappearlos manualmente
 
-- Variable generadora
+- Introducción
+    - Planteamiento del problema
+    - Justificación
+    - Antecedentes
+    - Organización del trabajo
+
+- Marco Teórico
+    - Programación formal y tripletas de Hoare
+    - Teoría de conjuntos
+    - TDA, TDC -> breve discusión de Carroll Morgan
+    - TAL
+    - Lógica de Separación
+
+- Marco Tecnológico
+    - Parsec (extender)
+    - Megaparsec (extender)
+    - LLVM
+    - Editores
+    - APT/Homebrew
+
+- Resultados
+    - Cositas para los niños
+
+- Conclusiones
+
+- REFERENCIAS y Bibliografía
+
+- Apéndices (menor prioridad)
+    - Gramática
+    - Operadores de conjuntos
+    - Instrucciones nuevas
+    - Funciones predefinidas nuevas
+    - Modos de parámetros
+    - Algoritmos y ejemplos
+    - Instrucciones de instalación y uso
+
 
 # Graciela, AFTER THE DAMN BOOK
 - Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
