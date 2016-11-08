@@ -231,7 +231,7 @@ paréntesis el tipo apuntado, seguido por el asterisco. Ejemplo de éste caso
 sería poder declarar un apuntador a un arreglo de enteros, en contraposición a
 un arreglo de apuntadores a enteros.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Ejemplo de arreglo de apuntadores y apuntar a arreglo, label=lst:arrPtr]
 var ptrToArray : (array[10] of int)*
 var arrayOfPtr :  array[10] of int *
 \end{gracielacode}
@@ -257,10 +257,10 @@ se le es dada como argumento.
 Para poder acceder al contenido de un apuntador, se debe usar el operador
 prefijo de desreferencia (\ingra{*}). No se permite desreferenciar un
 apuntador cuyo valor sea la dirección nula, y caso de realizarlo, se emite un
-error durante la ejecución. De este modo, el siguiente código debe ejecutarse
-cumpliendo todas las aserciones.
+error durante la ejecución. De este modo, el fragmento código
+\ref{lst:pointer} debe ejecutarse cumpliendo todas las aserciones.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Ejemplo del funcionamiento de apuntadores, label=lst:pointer]
 |[ var p1, p2 : int*; { p1 == null ~\Land~ p2 == null }
  ; new(p1)            { p1 != null ~\Land~ *p1 == 0 }
  ; new(p2)            { p2 != null ~\Land~ *p2 == 0 }
@@ -417,9 +417,10 @@ Dentro de los procedimientos abstractos de un TDA pueden ser declaradas
 variables, especialmente variables de tipo de la Teoría de Conjuntos, con el
 fin de poder usarlas dentro de la precondición y la poscondición. Así, un tipo
 de dato abstracto \ingra{Diccionario} con un procedimiento para agregar un
-elemento, puede declararse de la siguiente forma.
+elemento, puede declararse forma en la que se muestra en el fragmento de código 
+\ref{lst:tadDicc}.
 
-\begin{gracielacode}
+\begin{widegracielacode}[caption=TAD Diccionario, label=lst:tadDicc]
 abstract Diccionario (T0, T1) begin
   const MAX := 100 : int;
   var   conoc      : set of T0;
@@ -434,9 +435,9 @@ abstract Diccionario (T0, T1) begin
     {pre c ~\Notelem~ d.conoc ~\Land~ #d.conoc < d.MAX pre}
 
     {post  d.conoc == conoc~'~ union {c}
-        ~\Land~ d.tabla == tabla~'~ union func({(c, v)}) post}
+         ~\Land~ d.tabla == tabla~'~ union func({(c, v)}) post}
 end
-\end{gracielacode}
+\end{widegracielacode}
 
 \subsection{Implementación de Tipos de Datos Abstractos}
 
@@ -475,10 +476,10 @@ cualquier lugar del código como uno de los campos de la
 Conjuntos. El único lugar donde se está permitido hacer uso de las variables
 de alto nivel del TDA como campos de la \textit{implementación}, es dentro del
 invariante y la relación de acoplamiento. De esta forma, una posible
-implementación del TDA \ingra{Diccionario} debería verse de la siguiente
-manera.
+implementación del TDA \ingra{Diccionario} debería verse de la como se muestra
+en el fragmento de código \ref{lst:dicc}
 
-\begin{widegracielacode}
+\begin{widegracielacode}[caption=Ejemplo de una posible implementación del TAD Diccionario, label=lst:dicc]
 type Dicc (T0, T1) implements Diccionario (T0, T1) begin
   var clave : array [MAX] of T0;
   var valor : array [MAX] of T1;
@@ -506,7 +507,9 @@ type Dicc (T0, T1) implements Diccionario (T0, T1) begin
 
     {post d.tam == 1 + tam~'~ ~\Land~ d.clave[tam~'~] == c ~\Land~ d.valor[tam~'~] == v
         ~\Land~ (% ~\Forall~ i : int | 0 ≤ i ~\Land~ i < tam~'~ | d.clave[i] == clave~'~[i]
-                                         ~\Land~ d.valor[i] == valor~'~[i] %) post}
+                                          ~\Land~ d.valor[i] == valor~'~[i] %) 
+    post}
+
     |[
      ...
     ]|

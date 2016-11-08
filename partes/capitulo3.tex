@@ -526,10 +526,10 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
 consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
 a tipos definidos por el programador, que se describen detalladamente en sus
-respectivas secciones. El siguiente fragmento de código ejemplifica la
+respectivas secciones. El fragmento de código \ref{lst:point} ejemplifica la
 declaración y uso de un apuntador a entero.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Ejemplo de apuntadores, label=lst:point]
 |[ var p : int *
 ;  new(p)
 ;  *p := 10
@@ -1055,3 +1055,4 @@ laboratorios correspondientes a esta área.
 
 \subsection{Depuración y análisis de rendimiento}
 \blindtext[1]
+
