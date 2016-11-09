@@ -33,7 +33,7 @@
 \hypersetup{urlcolor=blue, colorlinks=false}
 
 % Para más símbolos matemáticos
-\usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{fontspec}
@@ -442,13 +442,13 @@
 % Estos índices solamente se usan si el libro contiene figuras, tablas y
 % algoritmos. Si alguno de estos no se utiliza, comentar o eliminar las líneas
 % pertinentes.
-\lhead{\emph{Índice de Figuras}}
-\renewcommand*\listfigurename{Índice de Figuras}
-\listoffigures
-
-\lhead{\emph{Índice de Tablas}}
-\renewcommand*\listtablename{Índice de Tablas}
-\listoftables
+% \lhead{\emph{Índice de Figuras}}
+% \renewcommand*\listfigurename{Índice de Figuras}
+% \listoffigures
+%
+% \lhead{\emph{Índice de Tablas}}
+% \renewcommand*\listtablename{Índice de Tablas}
+% \listoftables
 
 \lhead{\emph{Índice de Fragmentos de Código}}
 \renewcommand{\lstlistlistingname}{Índice de Fragmentos de Código}
@@ -517,9 +517,9 @@
 \addcontentsline{toc}{chapter}{Bibliografía}
 
 % Apéndices
-\appendix
-\input{./partes/apendiceA}
-\input{./partes/apendiceB}
+% \appendix
+% \input{./partes/apendiceA}
+% \input{./partes/apendiceB}
 \addtocontents{toc}{\vspace{2em}}
 
 \backmatter

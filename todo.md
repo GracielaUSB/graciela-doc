@@ -5,31 +5,25 @@
     - Captionear fragmentos de código y wrappearlos manualmente [cada quien]
 
 - Introducción
-<<<<<<< HEAD
-    - Planteamiento del problema [moises]
-    - Justificación [moises]
-    - Antecedentes [carlos] ✔️ 
-    - Organización del trabajo [carlos] ✔️
-=======
     - Planteamiento del problema [moises+]
     - Justificación [moises+]
-    - Antecedentes [carlos] v
-    - Organización del trabajo [carlos] v
->>>>>>> origin/devel
+    - Antecedentes [carlos] ✔️
+    - Organización del trabajo [carlos] ✔️
 
 - Marco Teórico
     - Programación formal y tripletas de Hoare [moises]
     - Teoría de conjuntos [carlos] ✔️
     - TDA, TDC [carlos]
-    - TAL [moises]
+    - TAL [moises+]
     - Lógica de Separación [carlos] ✔️
 
 - Marco Tecnológico
     - Parsec (extender) [moises+]
     - Megaparsec (extender) [moises+]
     - LLVM [moises+]
-    - Editores [carlos]
-    - APT/Homebrew [cada quien]
+    - Editores [carlos] ✔️
+    - APT [moises] <-- <!-- TODO -->
+    - Homebrew [carlos] ✔️
 
 - Resultados
     - Cositas para los niños [moises]
@@ -44,8 +38,8 @@
     - Instrucciones nuevas
     - Funciones predefinidas nuevas
     - Modos de parámetros
-    - Algoritmos y ejemplos
     - Instrucciones de instalación y uso
+    - Algoritmos y ejemplos
 
 
 # Graciela, AFTER THE DAMN BOOK
