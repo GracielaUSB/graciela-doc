@@ -35,7 +35,7 @@ de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
  se permite la repetición de los mismos. A diferencia del conjunto y el
  multiconjunto, el orden de los elementos si tiene importancia. Formalmente,
  una secuencia puede ser definida como una función entre los números naturales
- y los elementos en sí de la colección. 
+ y los elementos en sí de la colección.
 
  \litem{Función} Las funciones son una relación entre un conjunto de entrada (dominio) y
  un conjunto de salida (codominio), con la restricción de que cada elemento
@@ -74,7 +74,6 @@ ejemplo verificar que una estructura es un árbol binario.
   tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp \label{eq:treesl}\\
              &\boldsymbol{else}\ \exists xy.\ E\mapsto[l:\ x,\ r:\ y]\ ∗\ tree(x)\ ∗\ tree(y) \nonumber
 \end{align}
- 
 
 Un árbol binario se caracteriza por el hecho de que cada nodo debe estar en un
 espacio de memoria distinto a los demás, lo que asegura que no existan ciclos.
@@ -92,11 +91,8 @@ respectivamente, y no es mas que una abreviación de $(E\mapsto x) * (E+1\mapsto
 
 Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
 \vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o heap
-y P es una aserción que se realizar sobre s y h. También se cuenta con el operador 
+y P es una aserción que se realizar sobre s y h. También se cuenta con el operador
 \textit{implicación separadora} $P-*\ Q$ que se entiende como, si para un heap dado
 se cumple P, entonces al extender este primer heap con otro heap disjunto se
 debe cumplir Q, y de manera formal, $s,h \vDash P-*\ Q$ se cumple si para todo h'
 disjunto de h $s,h' \vDash P$ y $s,h\Union h' \vDash Q$.
-
-
-
