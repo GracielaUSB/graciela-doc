@@ -7,15 +7,15 @@
 - Introducción
     - Planteamiento del problema [moises]
     - Justificación [moises]
-    - Antecedentes [carlos] v 
-    - Organización del trabajo [carlos] v
+    - Antecedentes [carlos] ✔️ 
+    - Organización del trabajo [carlos] ✔️
 
 - Marco Teórico
     - Programación formal y tripletas de Hoare [moises]
-    - Teoría de conjuntos [carlos]
+    - Teoría de conjuntos [carlos] ✔️
     - TDA, TDC [carlos]
     - TAL [moises]
-    - Lógica de Separación [carlos]
+    - Lógica de Separación [carlos] ✔️
 
 - Marco Tecnológico
     - Parsec (extender) [moises]
