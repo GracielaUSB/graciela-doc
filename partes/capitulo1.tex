@@ -59,16 +59,16 @@ de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
 
 \section{Lógica de Separación}
 
-La Lógica de Separación fue desarrollada por John Raynolds, Hongseok Yang y
-Samin Ishtiaq \todo{referencia a sus papers}como una extensión de la lógica de
-Hoare que permite razonar sobre el acceso a datos en la memoria de una
-computadora y como estos pueden mutar. Tal como lo explica Peter O'Hearn en
-\todo{ref al paper}, la Lógica de Separación se basa en la \textit{conjunción
-separadora} $P * Q$, que significa que P y Q apuntan a porciones de memorias
-disjuntas. De esta forma se pueden escribir predicados que permitan realizar
-verificaciones sobre estructuras que hacen uso de apuntadores, como por
-ejemplo verificar que una estructura es un árbol binario.
-
+La Lógica de Separación fue desarrollada por John Reynolds, Hongseok Yang y
+Samin Ishtiaq \cite{seplogpaper1}\cite{seplogpaper2}\cite{seplogpaper3} como una
+extensión de la lógica de Hoare que permite razonar sobre el acceso a datos en
+la memoria de una computadora y como estos pueden mutar. Tal como lo explica
+Peter O'Hearn en ~\cite{separation-logic}, la Lógica de Separación se basa en
+la \textit{conjunción separadora} $P * Q$, que significa que P y Q apuntan a
+porciones de memorias disjuntas. De esta forma se pueden escribir predicados
+que permitan realizar verificaciones sobre estructuras que hacen uso de
+apuntadores, como por ejemplo verificar que una estructura es un árbol
+binario.
 
 \begin{align}
   tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp \label{eq:treesl}\\
