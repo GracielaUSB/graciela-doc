@@ -75,29 +75,39 @@ ordenamiento o busqueda sobre dichas estructuras.
 \section{Herramientas para Análisis Léxico y Sintáctico}
 
 \subsection{Parsec}
-\textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
-construcción de un reconocedor recursivo descendente. Esta biblioteca provee
-de una estructuras monádica, con las que se pueden generar reconocedores
-sintácticos básicos y combinarlos para formar reconocedores cada vez más
-complejos. Debido a la naturaleza monádica de los computos que se realizan, se
-puede hacer uso de funciones y operadores, como por ejemplo, \texttt{many} o
-\texttt{<|>}, los cuales permiten ejecutar cero o mas veces un reconocedor, o
-ejercutar un segundo reconocedor en caso de que el primero falle,
-respectivamente.
 
-Si bien no se ofrece soporte para recuperación de errores, se puede
-implementar haciendo uso la función \texttt{try}, la cual reestablece el
-estado original del flujo de entrada, en caso de que un reconocedor falle,
-habiendo o no consumido de la entrada.
+\textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
+construcción de analizadores sintáctivos recursivos descendentes. Esta
+biblioteca provee estructuras monádica con las que se pueden generar
+reconocedores sintácticos básicos y combinarlos para formar reconocedores cada
+vez más complejos.  Esta biblioteca provee combinadores como \texttt{many} y
+\texttt{<|>} los cuales permiten, respectivamente, ejecutar cero o mas veces un
+reconocedor, o ejecutar un segundo reconocedor en caso de que el primero falle.
+
+Si bien esta biblioteca no ofrece soporte para recuperación de errores durante
+el análisis sintáctico, éste puede implementarse haciendo uso de la función
+\texttt{try}, la cual reestablece el estado original del flujo de entrada en
+caso de fallar el reconocedor pasado como argumento. Esto debe hacerse de manera
+cuidadosa, puesto que
+\todo{http://blog.ezyang.com/2014/05/parsec-try-a-or-b-considered-harmful/} si
+el reconocedor en cuestión es complejo, la información analizada antes del punto
+donde ocurrió el error se pierde. Lo recomendable es usar un conjunto pequeño de
+lexemas, conocido en inglés como \textit{lookahead}, para decidir el camino que
+debe tomar el analizador sintáctico en un punto donde existen multiples
+opciones.
 
 \subsection{Megaparsec}
-La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés)
-de la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
-funcionalidades que ésta ultima, agrega otras funcionalidades de especial
-importancia para la elaboración de un analizador sintáctico, como el soporte
-para la recuperación de errores.
 
-\todo{extender esto}
+La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés) de
+la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
+funcionalidades que ésta ultima, agrega otras funcionalidades de especial
+importancia para la elaboración de un analizador sintáctico, en particular el
+soporte para la recuperación de errores, a través del combinador
+\texttt{withRecovery}. Adicionalmente, en esta biblioteca, el \textit{Monad}
+para el análisis sintáctico forma parte de diversas instancias de Haskell, de
+modo que se pueden usar transformadores de \textit{Monads} sobre el analizador
+sintáctico, lo cual permite manejar estados específicos para cada parte del
+lenguaje a analizar con facilidad.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +116,24 @@ para la recuperación de errores.
 \section{Herramientas para la Generación de Código Intermedio}
 
 \subsection{LLVM}
+
+El proyecto LLVM (originalmente las siglas de \textit{Low Level Virtual
+Machine}, o Máquina Virtual de Bajo Nivel, pero ahora se trata de un nombre
+propio) es una <<colección modular y reutilizable de tecnologías de compiladores
+y cadenas de herramientas>>. Estas herramientas pueden ser usadas según sea
+conveniente para construir y desarrollar compiladores de manera sencilla,
+aprovechando una infraestructura sólida, con la capacidad de generar código
+nativo para una gran variedad de plataformas. La manera más común de usar LLVM
+para escribir un compilador es escribiendo el \textit{Front-End} para el
+lenguaje que se desea compilar de modo que genere código intermedio
+(\textit{IR}) de LLVM. Luego de esto, basta usar el \textit{Back-End} de LLVM
+para convertir esta representación intermedia en código nativo para la
+plataforma destino deseada.
+
+Adicionalmente, el \textit{Back-End} de LLVM puede aplicar una gran variedad de
+optimizaciones al código intermedio que recibe, mientras que las tecnologías de
+cadenas de herramientas permiten desarrollar depuradores y perfiladores para los
+lenguajes que aprovechan su \textit{Back-End}.
 
 \subsection{llvm-general y llvm-general-pure}
 
@@ -152,19 +180,33 @@ incorporar herramientas para mejorar la experiencia del programador en Graciela.
 Específicamente, se indagó acerca de los editores de texto para programación más
 comúnmente usados entre los estudiantes de la carrera de Ingeniería de la
 Computación y sobre cómo agregarles características como un resaltador
-sintáctico y la inserción automática de fragmentos de código.
+sintáctico y la inserción automática de plantillas de código.
 
-\subsection{Vi}
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Sublime Text}]
 
-Es un editor de texto presente en todos los sistemas operativos derivados de
-Unix, que  permite mover, copiar, eliminar o insertar caracteres con mucha
-versatilidad. Cuenta con una versión mejorada llamada \textit{Vim}
+  \item [Vi / Vim] está presente en todos los sistemas operativos derivados de
+  Unix. Permite mover, copiar, eliminar o insertar caracteres con mucha
+  versatilidad. Tiene como ventaja su simplicidad y contar con una importante
+  cantidad de paquetes que permiten personalizarlo a gusto del usuario. Es
+  gratuito y de código abierto.
 
-\subsection{Sublime Text}
+  \item [Sublime Text] es un editor de texto de ambiente gráfico escrito en el
+  lenguaje C++ y con soporte para \textit{plug-ins} escritos en el lenguaje
+  Python y distribuidos a través del manejador de paquetes diseñado
+  exclusivamente para este editor \textit{Package Control}. Su código es cerrado
+  y se debe adquirir una licencia para su uso prolongado, pero se ofrece una
+  versión de prueba gratuita.
 
-\subsection{Atom}
+  \item [Atom] es un editor de texto escrito en el lenguaje JavaScript. El
+  editor puede personalizarse a gusto del usuario pero tiene la desventaja de
+  ser mas lento en comparación con otros editores compilados como Vim o Sublime
+  Text. Incluye un manejador de paquetes similar al de Sublime Text. Es gratuito
+  y de código abierto.
 
-\subsection{Gedit}
+  \item [Gedit] viene con el entorno de escritorio GNOME y también puede ser
+  personalizado por el usuario. Es gratuito y de código abierto.
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DISTRIBUCIÓN DE SOFTWARE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,4 +223,7 @@ sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
 
 \subsection{Homebrew}
 
-Manejador de paquetes para el sistema operativo macOS.
+Manejador de paquetes para el sistema operativo macOS. Entre las razones por
+la cual se eligió este manejador de paquetes, fue su simplicidad de uso, tanto
+para quien desea instalar una pieza de software, como para quien crea y
+distribuye el paquete, comparación de las demás opciones disponibles.
