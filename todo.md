@@ -7,8 +7,8 @@
 - Introducción
     - Planteamiento del problema [moises+]
     - Justificación [moises+]
-    - Antecedentes [carlos]
-    - Organización del trabajo [carlos]
+    - Antecedentes [carlos] v
+    - Organización del trabajo [carlos] v
 
 - Marco Teórico
     - Programación formal y tripletas de Hoare [moises]

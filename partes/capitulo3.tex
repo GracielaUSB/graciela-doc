@@ -6,7 +6,7 @@ El diseño y desarrollo de la extensión al compilador de Graciela fueron llevad
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
 revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
-por el programador, (4) Tipos Algebráicos Libres, (5) Herramientas para el
+por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
 programador.
 
 Durante el transcurso del proyecto, se escribieron múltiples programas de prueba
@@ -121,7 +121,7 @@ Así, se decidió separar el código fuente del compilador en cuatro áreas:
 
   \item Análisis sintáctico para convertir un archivo de código Graciela en un
   ASA, verificando simultáneamente su corrección. Almacenado en el directorio
-  \texttt{Parser}, por el término en inglés para análizador sintáctico.
+  \texttt{Parser}, por el término en inglés para analizador sintáctico.
 
   \item Generación de código intermedio LLVM para programas escritos
   correctamente en Graciela que ya han sido convertidos en un ASA. Almacenado en el
@@ -216,7 +216,7 @@ leer de un arreglo de 2 dimensiones. En la versión original del compilador, la
 situación equivalente produciría un error acerca de intentar imprimir un objeto
 de tipo arreglo de entero, que no expresa el verdadero problema del caso.
 
-Para evitarle confusión a los programadores, se eliminó la posibiliad de
+Para evitarle confusión a los programadores, se eliminó la posibilidad de
 declarar arreglos de arreglos, y se emite un error a tiempo de compilación
 cuando esto se hace, sugiriendo en cambio utilizar arreglos multidimensionales.
 
@@ -398,8 +398,8 @@ comportamiento es el esperado, pues la iteración es vacía.
   \item [Rango <<conjunto>>] se genera una iteración en la cual la variable
 generadora toma todos los valores pertenecientes al conjunto (o multiconjunto,
 o secuencia), y se evalúa el cuerpo, acumulando los resultados. En el caso de un
-rango secuencia, el órden de la iteración es el mismo de la secuencia, mientras
-que para conjuntos y multiconjuntos no se garantiza ningún órden en particular.
+rango secuencia, el orden de la iteración es el mismo de la secuencia, mientras
+que para conjuntos y multiconjuntos no se garantiza ningún orden en particular.
 De nuevo, es posible que un rango de esta clase resulte en un rango vacío a
 tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 
@@ -514,7 +514,7 @@ reservada para estas estructuras.
 \section{Manejo de apuntadores}
 
 \subsection{Consideraciones}
-Los apuntador implementados para el lenguaje graciela pueden apuntar a un
+Los apuntador implementados para el lenguaje Graciela pueden apuntar a un
 objeto cualquier tipo básico, arreglo o tipo definido por el programador. La
 sintaxis para declarar un apuntador es parecida a la presente en  el lenguaje
 C, es decir, se escribe el tipo base seguido de tantos asteriscos (\ingra{*})
@@ -526,10 +526,10 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
 consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
 a tipos definidos por el programador, que se describen detalladamente en sus
-respectivas secciones. El siguiente fragmento de código ejemplifica la
+respectivas secciones. El fragmento de código \ref{lst:point} ejemplifica la
 declaración y uso de un apuntador a entero.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Ejemplo de apuntadores, label=lst:point]
 |[ var p : int *
 ;  new(p)
 ;  *p := 10
@@ -553,10 +553,10 @@ la memoria apuntada por un apuntador que contenga la dirección nula, se emite u
 error a tiempo de ejecución que indica el lugar de dicho acceso, impidiendo que
 sea el sistema operativo quien emita el error.
 
-Para la reserva de memoria dinámica, se utilizó la función estandar de C
+Para la reserva de memoria dinámica, se utilizó la función estándar de C
 \texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
 argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
-memoria dinámica se realiza llamando a la función estandar de C \texttt{free}.
+memoria dinámica se realiza llamando a la función estándar de C \texttt{free}.
 
 \subsection{Lógica de Separación}
 
@@ -778,7 +778,7 @@ la información sobre sus apariciones en declaraciones y los tipos básicos usad
 en cada una. Si los usos fueron \ingra{Diccionario(int, char)} y
 \ingra{Diccionario(int, float)}, al llegar a la fase de generación de código
 intermedio, se generan dos estructuras de bajo nivel con el nombre del tipo en
-cuentión seguido de las iniciales de los tipos básicos utilizados separados por
+cuestión seguido de las iniciales de los tipos básicos utilizados separados por
 guiones, es decir, \texttt{Diccionario-i-c} y \texttt{Diccionario-i-f}, ambas
 conteniendo los campos de la implementación y del TDA. Cabe destacar que nunca
 se generan estructuras en el código intermedio para los TDA.
@@ -786,7 +786,7 @@ se generan estructuras en el código intermedio para los TDA.
 Es necesario destacar sobre los arreglos, que al estar separados en una cabecera
 y un cuerpo, solo la cabecera es incluida dentro de la estructura. El cuerpo es
 almacenado en una parte separada de la memoria, en la pila en caso de ser una
-variable estatica, o en memoria dinámica en caso de tratarse de un apuntador.
+variable estática, o en memoria dinámica en caso de tratarse de un apuntador.
 
 \subsubsection{Invariantes de representación y de acoplamiento}
 
@@ -822,7 +822,7 @@ invariantes, se tomaron las siguientes consideraciones.
 
   \item Si la precondición se cumple, se utiliza la relación de acoplamiento
   apropiada para materializar las estructuras de los TDAs correspondientes a
-  parámetros de tipos definidos por el programdor, y se verifica cada invariante
+  parámetros de tipos definidos por el programador, y se verifica cada invariante
   de acoplamiento. En caso de que alguno de estos sea falso, se emite un error a
   tiempo de ejecución.
 
@@ -898,7 +898,7 @@ variables involucradas.
 
 Para cada estructura creada a partir de un tipo de dato definido por el programador,
 se generan automáticamente un constructor, un destructor y una rutina para la
-copia de las estructuras. Las siguientes cosideraciones son contempladas para
+copia de las estructuras. Las siguientes consideraciones son contempladas para
 estas rutinas:
 
 \begin{itemize}
@@ -970,25 +970,25 @@ asociado a esta, \ingra{int}. Como coincide con el tipo de la expresión
 siguiente instrucción.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Tipos Algebráicos Libres %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tipos Algebraicos Libres %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Tipos Algebráicos Libres}
+\section{Tipos Algebraicos Libres}
 
 Una de las posibles extensiones planteadas para el compilador durante el
 transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
 Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
-Algebráicos Libres (TALs), de modo que se realizó la correspondiente investigación
+Algebraicos Libres (TALs), de modo que se realizó la correspondiente investigación
 teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
 \todo{???}.
 
 Se consiguió que para implementar esta característica exitosamente, era
 necesario extender el compilador para reconocer definiciones de tipos
-algebráicos y almacenar la información relacionada a ellos, distinguiendo entre
+algebraicos y almacenar la información relacionada a ellos, distinguiendo entre
 constructores e identificadores de tipos, para luego usarlos en el
 reconocimiento y análisis de expresiones que hagan uso de ellos. Para reconocer
 las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje y
 del compilador, pero para analizar sus usos se consiguen problemas en el caso de
-tipos algebráicos libres con tipos paramétricos. Por ejemplo, dada la definición
+tipos algebraicos libres con tipos paramétricos. Por ejemplo, dada la definición
 
 $$ \textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) $$
 
@@ -1015,24 +1015,24 @@ manera sencilla, pero ambas instrucciones deben ser implementadas cuidadosamente
 a fin de cumplir con sus definiciones, especialmente en casos excepcionales como
 $e\ \textbf{matches}\ c\ (a,\ a)$ y $e\ \textbf{matches}\ c\ (e,\ f)$.
 
-En cuanto al código intermedio generado para expresiones de tipos algebráicos
+En cuanto al código intermedio generado para expresiones de tipos algebraicos
 libres, se vio que la manera general de representarlas es como estructuras que
 residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone un
 conflicto con uno de los objetivos de este proyecto, proveer al programador las
 herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
 claro cuales deben ser los efectos de la interacción de expresiones de tipos
-algebráicos libres con expresiones de tipos de datos estructurados, por ejemplo,
+algebraicos libres con expresiones de tipos de datos estructurados, por ejemplo,
 el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
 
 Por lo tanto, debido a la dificultad de implementar esta extensión para el
 lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
 incluirla en el ámbito del presente proyecto de grado. Cabe destacar que los
-tipos algebráicos libres representan tan sólo una fracción de lo estudiado en el
+tipos algebraicos libres representan tan sólo una fracción de lo estudiado en el
 curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
 mucho menor a la dedicada a los TADs, por lo cual, en cualquier caso, no sería
 una extensión de vital importancia para el lenguaje Graciela y su compilador.
 Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
-que implementan los Tipos Algebráicos Libres de manera exitosa y muy similar a
+que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a
 la usada en la teoría del curso mencionado, y podrían ser utilizados en los
 laboratorios correspondientes a esta área.
 
@@ -1055,3 +1055,5 @@ laboratorios correspondientes a esta área.
 
 \subsection{Depuración y análisis de rendimiento}
 \blindtext[1]
+
+

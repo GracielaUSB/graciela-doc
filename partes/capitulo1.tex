@@ -6,8 +6,94 @@
 
 \section{Teoría de conjuntos}
 
+La Teoría de Conjuntos es la rama de la matemática que se encarga del estudio
+de colecciones bien formados de objetos, que pueden o no ser de naturaleza
+matemática. Esta Teoría surge de la idea original de conjuntos de Georg
+Cantor, quien los definió como una colección, finita o infinita, de objetos
+definidos y distinguibles, y a su vez los conjuntos pueden ser
+considerados en si mismo como un objeto.
+
+A partir de las ideas de Cantor, se comenzó un proceso de axiomatización de la
+matemática, con el cual se construyeron en base a los conjuntos, otros objetos
+matemáticos como los números, las funciones y otras estructuras. De
+de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
+
+\begin{enumerate}[label=\emph{}]
+ \litem{Conjunto} Los conjuntos son colecciones, en la cual todos sus
+ elementos debes ser distintos entre sí y cuenta con operadores binarios como
+ la unión, la intersección y la resta entre conjuntos, así como el operador
+ complemento, con el que se obtiene un nuevo conjunto que contiene todos los
+ elementos, con respecto a un universo, que el conjunto original no poseía.
+
+ \litem{Multiconjunto} Los multiconjuntos son colecciones, donde cada elemento
+ tiene una multiplicidad asociada, es decir, puede contener dos o mas elementos
+ que sean idénticos entre sí. También cuenta con operadores las binarias de unión,
+ intersección y resta de multicunjuntos, así como con la suma de
+ multiconjuntos.
+
+ \litem{Secuencia} Las secuencias son colecciones de objetos enumerados, en las cuales
+ se permite la repetición de los mismos. A diferencia del conjunto y el
+ multiconjunto, el orden de los elementos si tiene importancia. Formalmente,
+ una secuencia puede ser definida como una función entre los números naturales
+ y los elementos en sí de la colección.
+
+ \litem{Función} Las funciones son una relación entre un conjunto de entrada (dominio) y
+ un conjunto de salida (codominio), con la restricción de que cada elemento
+ del dominio se corresponde con un único elemento del codominio, construyendo
+ así un mecanismo que permite transformar cualquier elemento del dominio a uno
+ del codominio. De igual forma, las funciones pueden modelarse formalmente
+ como un conjunto de pares, donde el primer elemento del par pertenece al
+ dominio y el segundo al codominio, siguiendo con la restricción de que no
+ hayan dos pares cuyo primer elemento sea igual.
+
+ \litem{Relación} Una relación es similar a una función, pero sin la
+ restricción de que cada elemento del dominio se corresponda con un solo
+ elemento del codominio, si no mas bien, cada elemento se corresponde a un
+ conjunto de elementos del codominio.
+
+\end{enumerate}
+
 \section{Tipos de datos abstractos}
 
-\section{Tipos Algebráicos Libres}
+\section{Tipos Algebraicos Libres}
 
 \section{Lógica de Separación}
+
+La Lógica de Separación fue desarrollada por John Raynolds, Hongseok Yang y
+Samin Ishtiaq \todo{referencia a sus papers}como una extensión de la lógica de
+Hoare que permite razonar sobre el acceso a datos en la memoria de una
+computadora y como estos pueden mutar. Tal como lo explica Peter O'Hearn en
+\todo{ref al paper}, la Lógica de Separación se basa en la \textit{conjunción
+separadora} P * Q, que significa que P y Q apuntan a porciones de memorias
+disjuntas. De esta forma se pueden escribir predicados que permitan realizar
+verificaciones sobre estructuras que hacen uso de apuntadores, como por
+ejemplo verificar que una estructura es un árbol binario.
+
+
+\begin{align*}%\label{eq:treesl}
+  tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp\\
+             &\boldsymbol{else}\ \exists xy.\ E\mapsto[l:\ x,\ r:\ y]\ ∗\ tree(x)\ ∗\ tree(y)
+\end{align*}
+
+
+Un árbol binario se caracteriza por el hecho de que cada nodo debe estar en un
+espacio de memoria distinto a los demás, lo que asegura que no existan ciclos.
+En el ejemplo anterior \todo{ref?}, asumiendo que el predicado \textbf{isatom?} puede realizar
+la distinción entre si es un valor atómico (entero, caracter, ...) o una
+referencia a memoria, se procede a verificar si la estructura E es un átomo.
+En caso positivo se devuelve el valor \textbf{emp}, el cual representa al heap
+vacío, es decir, el heap en donde no existen celdas reservadas. Si por el
+contrario E no es un átomo, entonces se verifica para cada hijo que sea un
+árbol binario, cubriendo así el caso recursivo. El operador \todo{nombre?}
+$E\mapsto x$ significa que E apunta al fragmento de memoria x. En este caso se
+hace uso de este operador de la forma $E\mapsto [l: x, r: y]$ que significa que
+los hijos izquierdo y derecho se ubican en los fragmentos de memorias $x$ y $y$
+respectivamente, y no es mas que una abreviación de $(E\mapsto x) * (E+1\mapsto x)$.
+
+Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
+\vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o heap
+y P es una aserción que se realizar sobre s y h. También se cuenta con el operador
+\textit{implicación separadora} $P-*\ Q$ que se entiende como, si para un heap dado
+se cumple P, entonces al extender este primer heap con otro heap disjunto se
+debe cumplir Q, y de manera formal, $s,h \vDash P-*\ Q$ se cumple si para todo h'
+disjunto de h $s,h' \vDash P$ y $s,h\Union h' \vDash Q$.
