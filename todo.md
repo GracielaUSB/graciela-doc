@@ -5,8 +5,8 @@
     - Captionear fragmentos de código y wrappearlos manualmente [cada quien]
 
 - Introducción
-    - Planteamiento del problema [moises]
-    - Justificación [moises]
+    - Planteamiento del problema [moises+]
+    - Justificación [moises+]
     - Antecedentes [carlos]
     - Organización del trabajo [carlos]
 
@@ -18,9 +18,9 @@
     - Lógica de Separación [carlos]
 
 - Marco Tecnológico
-    - Parsec (extender) [moises]
-    - Megaparsec (extender) [moises]
-    - LLVM [moises]
+    - Parsec (extender) [moises+]
+    - Megaparsec (extender) [moises+]
+    - LLVM [moises+]
     - Editores [carlos]
     - APT/Homebrew [cada quien]
 
