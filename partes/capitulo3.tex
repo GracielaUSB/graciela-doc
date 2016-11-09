@@ -257,8 +257,8 @@ liberando primero el bloque de elementos, y posteriormente la <<cabecera>>.
 
 La última consideración sobre los arreglos está asociada con su uso como
 parámetros de subrutinas (procedimientos y funciones). Se agregó al lenguaje la
-capacidad para usar arreglos como parámetros de los modos in, inout y out,
-además del modo ref ya provisto en la especificación original. Adicionalmente,
+capacidad para usar arreglos como parámetros de los modos In, In-Out y Out,
+además del modo Ref ya provisto en la especificación original. Adicionalmente,
 se decidió permitir el pase de arreglos de tamaño arbitrario como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
 parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
@@ -470,9 +470,9 @@ básicos posiblemente distintos, y devuelven, respectivamente, la función de
 \ingra{A} en \ingra{B} y la relación entre \ingra{A} y \ingra{B}
 correspondientes al conjunto de pares dado. El código intermedio generado para
 la función \ingra{func} verifica que no existan pares con el mismo primer
-elemento y convierte internamente el conjunto de pares en un \texttt{Map}
-\todo{???} entre los tipos apropiados, mientras que para la función \ingra{rel}
-no es necesario generar código.
+elemento y convierte internamente el conjunto de pares en un \texttt{Map} (de la
+biblioteca estándar de C++) entre los tipos apropiados, mientras que para la
+función \ingra{rel} no es necesario generar código.
 
 También se extendió la notación de llamada de funciones para soportar funciones
 y relaciones en su sentido matemático. Para esto, fue necesario convertir los
@@ -773,7 +773,7 @@ Cabe mencionar las siguientes consideraciones:
 
 Durante el análisis sintáctico, se registran todos los usos de un tipo de dato
 definido por el programador, y los diferentes tipos concretos que se les asigna
-en cada uso. De esta forma, para un tipo \ingra{Diccionario(T0,T1)}, se guarda
+en cada uso. De esta forma, para un tipo \ingra{Diccionario(T0, T1)}, se guarda
 la información sobre sus apariciones en declaraciones y los tipos básicos usados
 en cada una. Si los usos fueron \ingra{Diccionario(int, char)} y
 \ingra{Diccionario(int, float)}, al llegar a la fase de generación de código
@@ -910,7 +910,7 @@ estas rutinas:
   estructuras internas, si las hubiera.
 
   \item La rutina de copia se utiliza para copiar la estructura cuando se
-  intenta pasar como argumento In o InOut a un procedimiento. La copia se hace
+  intenta pasar como argumento In o In-Out a un procedimiento. La copia se hace
   de manera superficial cuando se trata de apuntadores; es decir, se copia la
   dirección contenida en el apuntador y no la estructura apuntada.
 
