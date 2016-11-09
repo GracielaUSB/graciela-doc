@@ -4,26 +4,16 @@
 - GENERAL
     - Captionear fragmentos de código y wrappearlos manualmente [cada quien]
 
-- Introducción
-    - Planteamiento del problema [moises+]
-    - Justificación [moises+]
-    - Antecedentes [carlos] ✔️
-    - Organización del trabajo [carlos] ✔️
+- Resumen [moises]
+
+- Acrónimos [cada quien]
 
 - Marco Teórico
     - Programación formal y tripletas de Hoare [moises]
-    - Teoría de conjuntos [carlos] ✔️
     - TDA, TDC [carlos]
-    - TAL [moises+]
-    - Lógica de Separación [carlos] ✔️
 
 - Marco Tecnológico
-    - Parsec (extender) [moises+]
-    - Megaparsec (extender) [moises+]
-    - LLVM [moises+]
-    - Editores [carlos] ✔️
     - APT [moises] <-- <!-- TODO -->
-    - Homebrew [carlos] ✔️
 
 - Resultados
     - Cositas para los niños [moises]
