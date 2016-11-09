@@ -37,8 +37,8 @@
     - Instrucciones nuevas
     - Funciones predefinidas nuevas
     - Modos de parámetros
-    - Algoritmos y ejemplos
     - Instrucciones de instalación y uso
+    - Algoritmos y ejemplos
 
 
 # Graciela, AFTER THE DAMN BOOK

@@ -57,10 +57,69 @@ de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
 
 \section{Tipos Algebraicos Libres}
 
+En la teoría de tipos, un tipo Algebraico libre es una forma particular de tipo
+compuesto que permite definir tipos producto y tipos suma, además de tipos que
+son una combinación de ambos. Los valores de un tipo producto suelen contener
+varios sub-valores de distintos tipos, y el conjunto de valores posibles es el
+producto cartesiano de los conjuntos de cada sub-tipo, de ahí la denominación de
+tipo <<producto>>. Por otro lado, los tipos suma definen varias \textit{clases}
+tales que  los valores de un tipo suma sólo pueden pertenecer a una clase a la
+vez, de modo que el conjunto de valores posibles para un tipo suma es la unión
+de los valores posibles para cada clase, notando que la cardinalidad de este
+conjunto será la suma de los conjuntos de las clases, debido a que son
+disjuntos.
+
+El ejemplo motivador en la mayoría de los cursos que hablan sobre Tipos
+Algebraicos Libres (TALs) es el del árbol binario. Un lenguaje que soporte TALs
+aceptaría una definición como la siguiente.
+
+$$ \textbf{freetype}\ Tree(e)\ = Leaf(e)\ |\ Node(Tree\ e,\ Tree\ e) $$
+
+Este TAL es el tipo suma suma de las clases
+$Leaf(e)$ y $Node(Tree\ (e),\ Tree\ (e))$,
+y esta última es, a su vez, un tipo producto de $(Tree(e))$ y $(Tree(e))$.
+
+Otra característica importante de los TALs, que los hace muy útiles, es la
+posibilidad de verificar a cuál clase pertenece un valor de un tipo producto,
+con el predicado \textbf{is}, y la de extraer los sub-valores de un tipo suma
+con la instrucción \textbf{match}. El primero se puede usar, siguiendo con el
+ejemplo motivador, dentro de un condicional como en el ejemplo \ref{ifis},
+mientras que el segundo, como se muestra en el ejemplo \ref{matching}, se puede
+usar una vez se tiene certeza de que el valor es de una clase en particular.
+
+\begin{alignat}{3}
+&\boldsymbol{if}\ && v\ \boldsymbol{is}\ Leaf && \rightarrow write("leaf") \nonumber \\
+&\boldsymbol{[]}\ && v\ \boldsymbol{is}\ Node && \rightarrow write("node") \label{ifis} \\
+&\boldsymbol{fi} \nonumber
+\end{alignat}
+
+\begin{alignat}{4}
+&\boldsymbol{if}\ && v\ \boldsymbol{is}\ Leaf && \rightarrow &&\ var\ elem : int                   \nonumber \\
+&                 &&                          &&           ; &&\ v\ \boldsymbol{match}\ Leaf(elem) \nonumber \\
+&                 &&                          &&           ; &&\ write (elem)                      \label{matching} \\
+&\boldsymbol{[]}\ && \ldots                                                                        \nonumber \\
+&\boldsymbol{fi}                                                                                   \nonumber
+\end{alignat}
+
+Adicionalmente, es común definir la instrucción \textbf{matches} \todo{ravelo}
+como la aplicación secuenciada del predicado \textbf{is} y la instrucción
+\textbf{match} de la clase apropiada. El ejemplo \ref{matches} muestra esto,
+como una combinación de los ejemplos anteriores, pero sin la necesidad de
+declarar las variables para los sub-valores.
+
+\begin{alignat}{3}
+&\boldsymbol{if}\ && v\ \boldsymbol{matches}\ Leaf(elem)         && \rightarrow write(elem) \nonumber \\
+&\boldsymbol{[]}\ && \ldots                                                        \label{matches} \\
+&\boldsymbol{fi} \nonumber
+\end{alignat}
+
+% \todo{http://foldoc.org/algebraic%20data%20type}
+% \todo{\verb{http://haskell.cs.yale.edu/wp-content/uploads/2011/02/history.pdf}}
+
 \section{Lógica de Separación}
 
 La Lógica de Separación fue desarrollada por John Raynolds, Hongseok Yang y
-Samin Ishtiaq \todo{referencia a sus papers}como una extensión de la lógica de
+Samin Ishtiaq \todo{referencia a sus papers} como una extensión de la lógica de
 Hoare que permite razonar sobre el acceso a datos en la memoria de una
 computadora y como estos pueden mutar. Tal como lo explica Peter O'Hearn en
 \todo{ref al paper}, la Lógica de Separación se basa en la \textit{conjunción
