@@ -426,7 +426,7 @@ abstract Diccionario (T0, T1) begin
   var   conoc      : set of T0;
   var   tabla      : function T0 -> T1;
 
-  {inv MAX > 0 ~\Land~ #conoc ≤ MAX ~\Land~ conoc == domain(tabla) inv}
+  {repinv MAX > 0 ~\Land~ #conoc ≤ MAX ~\Land~ conoc == domain(tabla) repinv}
 
   proc agregar (inout d : Diccionario(T0,T1), in c : T0, in v : T1)
     var conoc~'~ := d.conoc : set of T0;

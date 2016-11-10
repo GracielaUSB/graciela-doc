@@ -55,6 +55,41 @@ de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
 
 \section{Tipos de datos abstractos}
 
+Cuando se programa en un lenguaje de alto nivel, se espera poder abstraer el
+problema que se intenta resolver, de forma que se puedan expresar solos los
+detalles relevantes, como los posibles uso de un programa, y suprimir aquellos
+detalles que no lo son, como la implementación del programa.
+
+Un Tipo de Dato Abstracto o TDA define una clase de objetos abstractos, los
+cuales se caracterizan completamente por las operaciones disponibles que
+pueden aplicarse a estos \cite{liskov}. En otras palabras, un TDA puede ser
+especificado operaciones características del tipo en cuestión y un conjunto de
+valores a los cuales se le aplican dichas operaciones, que definan su
+comportamiento lógico \cite{dalewalker}. De esta forma se desliga la
+especificación formal de la implementación concreta de un tipo, pudiendo
+discriminar entre una implementación u otra, sin afectar su comportamiento.
+
+Comúnmente, la especificación formal de un TAD posee un modelo abstracto de
+representación, que consiste en una colección de estructuras internas de alto
+nivel como conjuntos o relaciones, y sus operaciones se modelan como
+procedimientos y funciones, de los cuales solo se necesitan saber las
+precondiciones, poscondiciones e invariantes que deben cumplirse, expresadas
+en lenguaje natural o en lenguaje matemático.
+
+Una vez que se tiene un TDA que modele de manera adecuada el comportamiento de
+un tipo de dato de interés, se procede a implementar. Para esto se debe
+escoger un nuevo modelo de representación que haga solo haga uso de estructuas
+concretas y re-especificar la aserciones encontradas en el TDA, en terminos de
+este nuevo modelo. Adicionalmente, se debe garantizar la consistencia entre el
+modelos abstracto de representación y el nuevo modelo de representación de la
+implementación haciendo uso de técnicas de refinamiento, es decir,
+especificando formalmente la correspondencia entre ambos modelos. Finalmente
+se implementan todos los procedimientos y funciones correspodientes a las
+operaciones del TAD \cite{ravelo}.
+
+
+
+
 \section{Tipos Algebraicos Libres}
 
 En la teoría de tipos, un tipo Algebraico libre es una forma particular de tipo
@@ -118,7 +153,6 @@ declarar las variables para los sub-valores.
 
 \section{Lógica de Separación}
 
-<<<<<<< HEAD
 La Lógica de Separación fue desarrollada por John Reynolds, Hongseok Yang y
 Samin Ishtiaq \cite{seplogpaper1}\cite{seplogpaper2}\cite{seplogpaper3} como una
 extensión de la lógica de Hoare que permite razonar sobre el acceso a datos en
@@ -129,18 +163,6 @@ porciones de memorias disjuntas. De esta forma se pueden escribir predicados
 que permitan realizar verificaciones sobre estructuras que hacen uso de
 apuntadores, como por ejemplo verificar que una estructura es un árbol
 binario.
-=======
-La Lógica de Separación fue desarrollada por John Raynolds, Hongseok Yang y
-Samin Ishtiaq \todo{referencia a sus papers} como una extensión de la lógica de
-Hoare que permite razonar sobre el acceso a datos en la memoria de una
-computadora y como estos pueden mutar. Tal como lo explica Peter O'Hearn en
-\todo{ref al paper}, la Lógica de Separación se basa en la \textit{conjunción
-separadora} $P * Q$, que significa que P y Q apuntan a porciones de memorias
-disjuntas. De esta forma se pueden escribir predicados que permitan realizar
-verificaciones sobre estructuras que hacen uso de apuntadores, como por
-ejemplo verificar que una estructura es un árbol binario.
-
->>>>>>> origin/devel
 
 \begin{align}
   tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp \label{eq:treesl}\\
