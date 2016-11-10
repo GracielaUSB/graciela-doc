@@ -4,10 +4,29 @@
 
 \section{Semántica Axiomática y tripletas de Hoare}
 
-Según Nipkow y Klein~\cite{concrete, ayj}, una semántica formal de un lenguaje de
-programación es un modelo matemático que permite comprender y razonar
-formalmente sobre el comportamiento de los programas escritos en él. En
-particular, una \textbf{Semántica Axiomática} es aquella que
+Según Araujo y Jiménez~\cite{ayj}, citando a Nipkow y Klein~\cite{concrete}, una
+semántica formal de un lenguaje de programación es un modelo matemático que
+permite comprender y razonar formalmente sobre el comportamiento de los
+programas escritos en él. Se dice que una Semántica es una \textbf{Semántica
+Axiomática} cuando las propiedades de las  distintas construcciones del lenguaje
+son expresadas mediante proposiciones lógicas. La \textbf{Lógica de Hoare} es un
+sistema formal de proposiciones lógicas utilizado para describir  las
+propiedades de una Semántica Axiomática, permitiendo demostrar la correctitud
+parcial de programas. Las fórmulas en la Lógica de Hoare son llamadas
+\textbf{Tripletas de Hoare} y se escriben de la siguiente manera:
+
+$$ \{P\}\ S\ \{Q\} $$
+
+En la tripleta anterior, $S$ es una instrucción, mientras que $P$ y $Q$ son
+llamadas \textbf{Precondición} y \textbf{Poscondición}, respectivamente. El
+significado de esta tripleta es el siguiente: si la precondición $P$ sobre el
+estado de las variables del programa es cierta inmediatamente antes de la
+ejecución de $S$, y $S$ culmina su ejecución, entonces la poscondición $Q$ sobr
+el estado de las variables del programa es cierta al finalizar $S$. Con esta
+aproximación, es posible demostrar la correctitud parcial de los programas, ya
+que la poscondición sólo se cumple cuando el programa termina; mientras que para
+demostrar la correctitud total de un programa, es necesario garantizar que si la
+precondición se cumple, el programa termina.
 
 \section{Teoría de conjuntos}
 
