@@ -905,9 +905,10 @@ estas rutinas:
 
   \item El constructor es llamado cuando se declara una variable del tipo en
   cuestión, o después de haber reservado memoria para un apuntador del mismo
-  tipo. Esta rutina se encarga de asignar a cada campo de la estructura el valor
-  inicial que corresponda, y llamar recursivamente a los constructores de las
-  estructuras internas, si las hubiera.
+  tipo. Esta rutina se encarga de asignar a cada campo de la estructura el
+  valor inicial que corresponda, reservar espacio en memoria para la cabecera
+  y el cuerpo de los campos de tipo arreglo y llamar recursivamente a los
+  constructores de las estructuras internas, si las hubiera.
 
   \item La rutina de copia se utiliza para copiar la estructura cuando se
   intenta pasar como argumento In o In-Out a un procedimiento. La copia se hace
@@ -917,7 +918,8 @@ estas rutinas:
   \item Antes de liberar un apuntador hacia una estructura, se llama al
   destructor, el cual se encarga de liberar la memoria reservada por el cuerpo
   de la estructura, luego de llamar recursivamente a los destructores de las
-  estructuras internas.
+  estructuras internas. El destructor no libera la memoria apuntada por campos
+  de tipo apuntador.
 
 \end{itemize}
 
