@@ -23,7 +23,7 @@
   \if@tempswa \else \PassOptionsToClass{#1}{\baseclass}\fi
 }
 \@checkoptions{11pt}{{10pt}{11pt}{12pt}}
-\PassOptionsToClass{a4paper}{\baseclass}
+\PassOptionsToClass{letterpaper}{\baseclass}
 \ProcessOptions\relax
 \LoadClass{\baseclass}
 \newcommand\bhrule{\typeout{------------------------------------------------------------------------------}}
@@ -52,6 +52,7 @@
 \setlength{\parskip}{2.0ex plus0.5ex minus0.2ex}
 
 \usepackage{paquetes/vmargin}
+\setpapersize{USletter}
 \setmarginsrb           { 1.5in}  % left margin
                         { 0.6in}  % top margin
                         { 1.0in}  % right margin

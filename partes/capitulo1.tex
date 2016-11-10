@@ -6,52 +6,53 @@
 
 \section{Teoría de conjuntos}
 
-La Teoría de Conjuntos es la rama de la matemática que se encarga del estudio
-de colecciones bien formados de objetos, que pueden o no ser de naturaleza
-matemática. Esta Teoría surge de la idea original de conjuntos de Georg
-Cantor, quien los definió como una colección, finita o infinita, de objetos
-definidos y distinguibles, y a su vez los conjuntos pueden ser
-considerados en si mismo como un objeto.
+La Teoría de Conjuntos es la rama de la matemática que se encarga del estudio de
+colecciones bien formados de objetos, que pueden o no ser de naturaleza
+matemática. Esta teoría surge de la idea original de conjuntos de Georg Cantor,
+quien los definió como una colección, finita o infinita, de objetos definidos y
+distinguibles, y a su vez los conjuntos pueden ser considerados en sí mismos
+como objetos.
 
 A partir de las ideas de Cantor, se comenzó un proceso de axiomatización de la
-matemática, con el cual se construyeron en base a los conjuntos, otros objetos
-matemáticos como los números, las funciones y otras estructuras. De
-de la Teoría de Conjuntos podemos destacar las siguientes estructuras:
+matemática, con el cual se construyeron en base a los conjuntos otros objetos
+matemáticos como los números, las funciones y otras estructuras. De la teoría de
+conjuntos podemos destacar las siguientes estructuras:
 
-\begin{enumerate}[label=\emph{}]
- \litem{Conjunto} Los conjuntos son colecciones, en la cual todos sus
- elementos debes ser distintos entre sí y cuenta con operadores binarios como
- la unión, la intersección y la resta entre conjuntos, así como el operador
- complemento, con el que se obtiene un nuevo conjunto que contiene todos los
- elementos, con respecto a un universo, que el conjunto original no poseía.
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Multiconjunto}]
 
- \litem{Multiconjunto} Los multiconjuntos son colecciones, donde cada elemento
- tiene una multiplicidad asociada, es decir, puede contener dos o mas elementos
- que sean idénticos entre sí. También cuenta con operadores las binarias de unión,
- intersección y resta de multicunjuntos, así como con la suma de
- multiconjuntos.
+  \item [Conjunto] Los conjuntos son colecciones tales que todos sus elementos
+  debes ser distintos entre sí. Cuenta con operadores binarios como la unión, la
+  intersección y la resta entre conjuntos, así como el operador complemento, con
+  el que se obtiene un nuevo conjunto que contiene todos los elementos, con
+  respecto a un universo, que el conjunto original no poseía.
 
- \litem{Secuencia} Las secuencias son colecciones de objetos enumerados, en las cuales
- se permite la repetición de los mismos. A diferencia del conjunto y el
- multiconjunto, el orden de los elementos si tiene importancia. Formalmente,
- una secuencia puede ser definida como una función entre los números naturales
- y los elementos en sí de la colección.
+  \item [Multiconjunto] Los multiconjuntos son colecciones en las que cada
+  elemento tiene una multiplicidad asociada, es decir, puede contener dos o mas
+  elementos que sean idénticos entre sí. Cuenta con los operadores  binarios de
+  unión, intersección y resta de multiconjuntos, así como con la suma de
+  multiconjuntos.
 
- \litem{Función} Las funciones son una relación entre un conjunto de entrada (dominio) y
- un conjunto de salida (codominio), con la restricción de que cada elemento
- del dominio se corresponde con un único elemento del codominio, construyendo
- así un mecanismo que permite transformar cualquier elemento del dominio a uno
- del codominio. De igual forma, las funciones pueden modelarse formalmente
- como un conjunto de pares, donde el primer elemento del par pertenece al
- dominio y el segundo al codominio, siguiendo con la restricción de que no
- hayan dos pares cuyo primer elemento sea igual.
+  \item [Secuencia] Las secuencias son colecciones de objetos enumerados, en las
+  cuales se permite la repetición de los mismos. A diferencia del conjunto y el
+  multiconjunto, el orden de los elementos sí tiene importancia. Formalmente,
+  una secuencia puede ser definida como una función entre los números naturales
+  y los elementos de la colección. Cuenta con los operadores de concatenación y
+  subindización.
 
- \litem{Relación} Una relación es similar a una función, pero sin la
- restricción de que cada elemento del dominio se corresponda con un solo
- elemento del codominio, si no mas bien, cada elemento se corresponde a un
- conjunto de elementos del codominio.
+  \item [Relación] Una relación es una asociación entre un conjunto de entrada
+  (dominio) y un conjunto de salida (codominio). Formalmente se modelan como
+  conjuntos de pares, donde el primer elemento de cada par pertenece al dominio
+  y el segundo al codominio.
 
-\end{enumerate}
+  \item [Función] Las funciones son relaciones con la restricción de que cada
+  elemento del dominio se corresponde con un único elemento del codominio,
+  construyendo así un mecanismo que permite transformar cualquier elemento del
+  dominio a uno del codominio. De igual forma, las funciones pueden modelarse
+  formalmente como un conjunto de pares, donde el primer elemento del par
+  pertenece al dominio y el segundo al codominio, pero asegurando que no
+  pertenezcan al conjunto dos pares cuyo primer elemento sea igual.
+
+\end{description}
 
 \section{Tipos de datos abstractos}
 
@@ -108,10 +109,10 @@ El ejemplo motivador en la mayoría de los cursos que hablan sobre Tipos
 Algebraicos Libres (TALs) es el del árbol binario. Un lenguaje que soporte TALs
 aceptaría una definición como la siguiente.
 
-$$ \textbf{freetype}\ Tree(e)\ = Leaf(e)\ |\ Node(Tree\ e,\ Tree\ e) $$
+$$ \textbf{freetype}\ Tree(e)\ = Leaf(e)\ |\ Node(Tree(e),\ Tree(e)) $$
 
 Este TAL es el tipo suma suma de las clases
-$Leaf(e)$ y $Node(Tree\ (e),\ Tree\ (e))$,
+$Leaf(e)$ y $Node(Tree(e),\ Tree(e))$,
 y esta última es, a su vez, un tipo producto de $(Tree(e))$ y $(Tree(e))$.
 
 Otra característica importante de los TALs, que los hace muy útiles, es la
@@ -140,7 +141,7 @@ Adicionalmente, es común definir la instrucción \textbf{matches} \todo{ravelo}
 como la aplicación secuenciada del predicado \textbf{is} y la instrucción
 \textbf{match} de la clase apropiada. El ejemplo \ref{matches} muestra esto,
 como una combinación de los ejemplos anteriores, pero sin la necesidad de
-declarar las variables para los sub-valores.
+declarar explícitamente las variables para los sub-valores.
 
 \begin{alignat}{3}
 &\boldsymbol{if}\ && v\ \boldsymbol{matches}\ Leaf(elem)         && \rightarrow write(elem) \nonumber \\
