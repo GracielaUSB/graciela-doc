@@ -16,7 +16,7 @@ utilizaron para desarrollar las bibliotecas externas para los programas
 compilados.
 
 \subsection{Haskell}
-Haskell es un lenguaje de programación funcional puro compilado, de proposito
+Haskell~\cite{haskell} es un lenguaje de programación funcional puro compilado, de proposito
 general, que se basa en el \textit{cálculo lambda}. Al ser un lenguaje
 funcional puro, todo programa se escribe haciendo uso de expresiones
 matemáticas puras y se asegura que para todo valor que se proporcione como
@@ -55,6 +55,9 @@ cuales seran menciadas en detalles en las siguientes secciones.
 
 
 \subsection{C, C++}
+
+\todo{referencias}
+
 \textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
 el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
 estáticos y debilmente tipificados, pero ofrecen ventajas para realizar
@@ -68,6 +71,7 @@ posee una biblioteca estandar mas extensa, en la cual se ofrecen estructuras
 de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
 ordenamiento o busqueda sobre dichas estructuras.
 
+\todo{stdlib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA ANÁLISIS LÉXICO Y SINTÁCTICO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,8 +81,8 @@ ordenamiento o busqueda sobre dichas estructuras.
 \subsection{Parsec}
 
 \textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
-construcción de analizadores sintáctivos recursivos descendentes. Esta
-biblioteca provee estructuras monádica con las que se pueden generar
+construcción de analizadores sintáctivos recursivos descendentes~\cite{parsec}.
+Esta biblioteca provee estructuras monádica con las que se pueden generar
 reconocedores sintácticos básicos y combinarlos para formar reconocedores cada
 vez más complejos.  Esta biblioteca provee combinadores como \texttt{many} y
 \texttt{<|>} los cuales permiten, respectivamente, ejecutar cero o mas veces un
@@ -98,11 +102,11 @@ opciones.
 
 \subsection{Megaparsec}
 
-La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés) de
-la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
-funcionalidades que ésta ultima, agrega otras funcionalidades de especial
-importancia para la elaboración de un analizador sintáctico, en particular el
-soporte para la recuperación de errores, a través del combinador
+La biblioteca \textit{Megaparsec}~\cite{megaparsec} es un bifurcación
+(\emph{fork}, en inglés) de la biblioteca \textit{Parsec}, la cual ademas de
+ofrecer la mismas funcionalidades que ésta ultima, agrega otras funcionalidades
+de especial importancia para la elaboración de un analizador sintáctico, en
+particular el soporte para la recuperación de errores, a través del combinador
 \texttt{withRecovery}. Adicionalmente, en esta biblioteca, el \textit{Monad}
 para el análisis sintáctico forma parte de diversas instancias de Haskell, de
 modo que se pueden usar transformadores de \textit{Monads} sobre el analizador
@@ -118,7 +122,7 @@ lenguaje a analizar con facilidad.
 \subsection{LLVM}
 
 El proyecto LLVM (originalmente las siglas de \textit{Low Level Virtual
-Machine}, o Máquina Virtual de Bajo Nivel, pero ahora se trata de un nombre
+Machine}, o <<Máquina Virtual de Bajo Nivel>>, pero ahora se trata de un nombre
 propio) es una <<colección modular y reutilizable de tecnologías de compiladores
 y cadenas de herramientas>>. Estas herramientas pueden ser usadas según sea
 conveniente para construir y desarrollar compiladores de manera sencilla,
@@ -137,7 +141,8 @@ lenguajes que aprovechan su \textit{Back-End}.
 
 \subsection{llvm-general y llvm-general-pure}
 
-Las bibliotecas \texttt{llvm-general} y \texttt{llvm-general-pure} para el
+Las bibliotecas \texttt{llvm-general} y
+\texttt{llvm-general-pure}~\cite{llvm-general, llvm-general-pure} para el
 lenguaje Haskell ofrecen una interfaz muy sencilla y completa con las
 bibliotecas externas de LLVM para la generación de código intermedio. Por un
 lado, \textit{llvm-general-pure} brinda una serie de estructuras de datos que se
@@ -220,6 +225,8 @@ sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
 última versión disponible.
 
 \subsection{APT}
+
+\todo{APT}
 
 \subsection{Homebrew}
 

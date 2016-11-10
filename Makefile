@@ -2,7 +2,7 @@
 all:
 	OS=`uname`
 	xelatex tesis.tex
-	bibtex tesis.aux
+	bibtex8 tesis
 	xelatex tesis.tex
 	xelatex tesis.tex
 	if [ `uname` = "Darwin" ]; then open tesis.pdf; else evince tesis.pdf; fi &

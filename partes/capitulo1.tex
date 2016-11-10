@@ -2,7 +2,12 @@
 \label{capitulo1}
 \lhead{Capítulo 1. \emph{Marco Teórico}}
 
-\section{Programación formal y tripletas de Hoare}
+\section{Semántica Axiomática y tripletas de Hoare}
+
+Según Nipkow y Klein~\cite{concrete, ayj}, una semántica formal de un lenguaje de
+programación es un modelo matemático que permite comprender y razonar
+formalmente sobre el comportamiento de los programas escritos en él. En
+particular, una \textbf{Semántica Axiomática} es aquella que
 
 \section{Teoría de conjuntos}
 
@@ -63,10 +68,10 @@ detalles que no lo son, como la implementación del programa.
 
 Un Tipo de Dato Abstracto o TDA define una clase de objetos abstractos, los
 cuales se caracterizan completamente por las operaciones disponibles que
-pueden aplicarse a estos \cite{liskov}. En otras palabras, un TDA puede ser
+pueden aplicarse a estos~\cite{liskov}. En otras palabras, un TDA puede ser
 especificado operaciones características del tipo en cuestión y un conjunto de
 valores a los cuales se le aplican dichas operaciones, que definan su
-comportamiento lógico \cite{dalewalker}. De esta forma se desliga la
+comportamiento lógico~\cite{dalewalker}. De esta forma se desliga la
 especificación formal de la implementación concreta de un tipo, pudiendo
 discriminar entre una implementación u otra, sin afectar su comportamiento.
 
@@ -86,12 +91,14 @@ consistencia entre el modelos abstracto de representación y el modelo de
 representación de la implementación haciendo uso de técnicas de refinamiento,
 especificando formalmente la correspondencia entre ambos modelos. Finalmente
 se implementan todos los procedimientos y funciones correspodientes a las
-operaciones del TAD \cite{ravelo}.
+operaciones del TAD~\cite{ravelo}.
 
 
 
 
 \section{Tipos Algebraicos Libres}
+
+\todo{referencias}
 
 En la teoría de tipos, un tipo Algebraico libre es una forma particular de tipo
 compuesto que permite definir tipos producto y tipos suma, además de tipos que
@@ -155,10 +162,10 @@ declarar explícitamente las variables para los sub-valores.
 \section{Lógica de Separación}
 
 La Lógica de Separación fue desarrollada por John Reynolds, Hongseok Yang y
-Samin Ishtiaq \cite{seplogpaper1}\cite{seplogpaper2}\cite{seplogpaper3} como una
+Samin Ishtiaq~\cite{seplogpaper1,seplogpaper2,seplogpaper3} como una
 extensión de la lógica de Hoare que permite razonar sobre el acceso a datos en
 la memoria de una computadora y como estos pueden mutar. Tal como lo explica
-Peter O'Hearn en ~\cite{separation-logic}, la Lógica de Separación se basa en
+Peter O'Hearn en~\cite{separation-logic}, la Lógica de Separación se basa en
 la \textit{conjunción separadora} $P * Q$, que significa que P y Q apuntan a
 porciones de memorias disjuntas. De esta forma se pueden escribir predicados
 que permitan realizar verificaciones sobre estructuras que hacen uso de
