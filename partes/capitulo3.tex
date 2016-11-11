@@ -1,11 +1,12 @@
 \chapter{Desarrollo}
 \label{capitulo3}
-\lhead{Capítulo 3. \emph{Desarrollo}}
+\setchapter{Capítulo 3. \emph{Desarrollo}}
+
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
-revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
-(1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
+revisión del trabajo previo, el proyecto se orientó en cinco áreas, a saber,
+(1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
 por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
 programador.
 
@@ -74,7 +75,7 @@ podían ser extendidos. Estas recomendaciones eran las siguientes:
 \begin{itemize}
 
   \item Ofrecer al programador la posibilidad de crear estructuras de datos
-  propias, mediante la implementación de Tipos de Datos Abstractos (TDAs).
+  propias, mediante la implementación de Tipos de Dato Abstractos (TDAs).
 
   \item Incluir la manipulación de apuntadores por parte del programador,
   ampliando el sistema de tipos del lenguaje Graciela para introducir el tipo
@@ -82,7 +83,7 @@ podían ser extendidos. Estas recomendaciones eran las siguientes:
   estudiantes del curso Laboratorio de Algoritmos II, por la importancia de los
   apuntadores en el curso.
 
-  \item Proveer la capacidad de creación de tipos de datos enumerados definidos
+  \item Proveer la capacidad de creación de tipos de dato enumerados definidos
   por el programador, con la posibilidad de integrarlos al sistema de operadores
   aritméticos y relacionales del lenguaje.
 
@@ -98,8 +99,8 @@ tomó la segunda de las recomendaciones.
 No se decidió implementar la extensión de la tercera recomendación puesto que su
 aporte a los cursos en los que podría usarse el lenguaje Graciela se consideró
 limitado, aunque en definitiva se trata de una extensión valiosa para el
-lenguaje en general y se mantiene la recomendación para futuros
-implementadores\todo{???} del lenguaje y su compilador.
+lenguaje en general y se mantiene la recomendación para futuros proyectos de
+extensión del lenguaje y su compilador.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
@@ -160,23 +161,23 @@ biblioteca tendría problemas en este aspecto, o al menos resultaría compleja y
 más propensa a defectos de programación.
 
 Así, se investigaron bibliotecas alternativas para análisis sintáctico y se
-consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico
-\todo{explicar en el Marco Tecnológico}, \texttt{Megaparsec} provee el
-combinador \texttt{withRecovery}, que permite agregar recuperación de errores a
-un analizador sintáctico de manera sencilla. Este combinador recibe una función
-de recuperación y un analizador sintáctico base, y ejecuta la primera cuando
-dicho analizador falla. Por ejemplo, para agregar recuperación de errores a las
-instrucciones, separadas por punto y coma, se usó código como el siguiente:
+consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico,
+\texttt{Megaparsec} provee el combinador \texttt{withRecovery}, que permite
+agregar recuperación de errores con la técnica de \textit{Panic Mode} (<<modo
+pánico>>)~\cite{aho2} a un analizador sintáctico de manera sencilla. Este
+combinador recibe una función de recuperación y un analizador sintáctico base, y
+ejecuta la primera cuando dicho analizador falla. Por ejemplo, para agregar
+recuperación de errores a las instrucciones, separadas por punto y coma, se usó
+código como el del fragmento~\ref{lst:withrec}, de modo que, con ligeros cambios
+según el contexto del analizador, fue posible agregar recuperación de errores al
+compilador.
 
-\begin{haskellcode}
+\begin{haskellcode}[caption=Uso de \texttt{withRecovery}, label=lst:withrec]
 withRecovery recover instruction
   where
     recover err = void anyToken `manyTill` match TokSemicolon
                >> tell err
 \end{haskellcode}
-
-Así, con ligeros cambios según el contexto del analizador, fue posible agregar
-recuperación de errores al compilador.
 
 Otra ventaja de la biblioteca \texttt{Megaparsec} sobre \texttt{Parsec} es que
 el \emph{Monad} provisto por la primera, a diferencia del provisto por la
@@ -203,18 +204,17 @@ También se consideró que sería cómodo para el programador poder hablar de
 arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
 errores apropiados, a tiempo de compilación, al usar un arreglo de \ingra{n}
 dimensiones con un número de índices distinto de \ingra{n}. Por ejemplo,
-intentar compilar el siguiente fragmento de código,
+intentar compilar el fragmento de código~\ref{lst:badarr} emitiría un mensaje de
+error acerca del uso de un índice de dimensión 1 para leer de un arreglo de 2
+dimensiones. En la versión original del compilador, la situación equivalente
+produciría un error acerca de intentar imprimir un objeto de tipo arreglo de
+entero, que no expresa el verdadero problema del caso.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Error en dimensiones de arreglo, label=lst:badarr]
 |[ var arr : array [5, 10] of int
-;  writeln(arr[3])
+ ;  writeln(arr[3])
 ]|
 \end{gracielacode}
-
-emitiría un mensaje de error acerca del uso de un índice de dimensión 1 para
-leer de un arreglo de 2 dimensiones. En la versión original del compilador, la
-situación equivalente produciría un error acerca de intentar imprimir un objeto
-de tipo arreglo de entero, que no expresa el verdadero problema del caso.
 
 Para evitarle confusión a los programadores, se eliminó la posibilidad de
 declarar arreglos de arreglos, y se emite un error a tiempo de compilación
@@ -234,9 +234,9 @@ elementos y cuya segunda entrada es el bloque de memoria donde se almacenan los
 elementos.
 
 Específicamente, para arreglos de \ingra{n} dimensiones, se generan estructuras
-<<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo
-entero de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el
-último corresponde a un apuntador a un espacio de memoria contiguo de tamaño
+<<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo entero
+de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el último
+corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
 es un arreglo estático, o en la memoria dinámica si se trata de un apuntador a
@@ -262,35 +262,39 @@ además del modo Ref ya provisto en la especificación original. Adicionalmente,
 se decidió permitir el pase de arreglos de tamaño arbitrario como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
 parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
-de los procedimientos. Por ejemplo, la firma del siguiente procedimiento sería
+de los procedimientos. Por ejemplo, la firma de procedimiento en el fragmento de código~\ref{lst:arrproc} sería
 aceptada por el compilador:
 
-\begin{gracielacode}
-proc sub(const size : int, inout arr : array [size, size * 2] of int)
+\begin{gracielacode}[caption=Firma de procedimiento con parámetro de tipo arreglo, label=lst:arrproc]
+proc sub(
+  const size : int,
+  inout arr : array [size, size * 2] of int
+)
 \end{gracielacode}
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
-de \ingra{sub} podría ser llamado con argumentos que no concuerden, por
-ejemplo,
+de \ingra{sub} podría ser llamado con argumentos que no concuerden, como en el
+fragmento de código~\ref{lst:arrproccall}.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Llamada a procedimiento con argumento de tipo arreglo, label=lst:arrproccall]
 |[ var arr : array [5, 5]
-;  sub (5, arr)
+ ; sub (5, arr)
 ]|
 \end{gracielacode}
 
-En este caso, el procedimiento \ingra{sub} espera un arreglo rectangular de
-tamaño \ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que
-el tamaño del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de
-tamaño \ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa
-llamada. Esta verificación no puede hacerse a tiempo de compilación en el caso
-general, puesto que sería necesario \todo{consultar esto con Monascal}.
+En este caso, el procedimiento \ingra{sub} espera un arreglo de tamaño
+\ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que el tamaño
+del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de tamaño
+\ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa llamada.
+Esta verificación no puede hacerse a tiempo de compilación en el caso general,
+puesto que sería equivalente a predecir todos los posibles cursos de ejecución
+del programa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre funciones y procedimientos}
 
 Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
-para que fueran más similaras a sus equivalentes en GCL. Simplemente, se
+para que fueran más similares a sus equivalentes en GCL. Simplemente, se
 eliminaron los lexemas \ingra{begin} y \ingra{end}, antes usados para
 delimitar el procedimiento, y el lexema \ingra{:} entre el identificador de la
 subrutina y su lista de parámetros, y se movió la poscondición junto a la
@@ -350,23 +354,22 @@ conseguida, el rango asociado a ella. Por ejemplo, con la variable generadora
 \ingra{x}, la expresión \ingra{x >= 5} tiene asociado el rango $[5, \infty)$.
 
 Cuando el analizador sintáctico se encuentra en una cuantificación, agrega la
-variable generadora correspondiente a la pila del estado, e intenta construir
-un rango. Los únicos operadores que construyen rangos son la igualdad
-(\ingra{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
-(\ingra{>}, \ingra{>=}, \ingra{<}, \ingra{<=}), que construyen rangos
-<<aritméticos>>; y el operador <<pertenece>> de la Teoría de Conjuntos ($\in$)
-\todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
-adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
-constante booleana \ingra{false} produce el rango <<vacío>>.
+variable generadora correspondiente a la pila del estado, e intenta construir un
+rango. Los únicos operadores que construyen rangos son la igualdad (\ingra{==}),
+que construye rangos <<unitarios>>; las comparaciones aritméticas (\ingra{>},
+\ingra{>=}, \ingra{<}, \ingra{<=}), que construyen rangos <<aritméticos>>; y el
+operador <<pertenece>> de la Teoría de Conjuntos ($\in$) [ver sección
+\ref{sect:sets}], que produce rangos <<conjunto>>, mientras que la constante
+booleana \ingra{false} produce el rango <<vacío>>.
 
 Además, el operador de conjunción (\ingra{/\}) devuelve, si es
 posible, el rango que resulta de intersectar los rangos asociados a cada uno de
 sus operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
-consideran los rangos generados por el operador de disjunción
+consideran los rangos generados por el operador de disyunción
 (\ingra{\/}), por lo cual si se desea que un rango sea procesado
 como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
 expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
-el uso de teoremas lógicos, convirtiendo una cuantificación en la disjunción de
+el uso de teoremas lógicos, convirtiendo una cuantificación en la disyunción de
 varias, o usando el operador de unión de conjuntos (\Union).
 
 Finalmente, si se ha construido un rango válido, este se registra en el ASA
@@ -409,11 +412,11 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Teoría de conjuntos}
+\section{Teoría de conjuntos}\label{sect:sets}
 \subsection{Consideraciones}
 
 Para permitir mayor expresividad en las aserciones del lenguaje, específicamente
-en aquellas asociadas con los tipos de datos definidos por el programador, como
+en aquellas asociadas con los tipos de dato definidos por el programador, como
 invariantes de representación y de acoplamiento, se decidió agregar al lenguaje
 Graciela facilidades para escribir expresiones de la teoría de conjuntos.
 Específicamente, se consideró necesario agregar los tipos conjunto,
@@ -485,10 +488,10 @@ soportar secuencias, dado que también es posible indizar secuencias anónimas
 definidas por extensión o por comprensión.
 
 Adicionalmente, fue necesario permitir la declaración de variables de tipos
-colección, función y relación, pero únicamente dentro de Tipos de Datos
+colección, función y relación, pero únicamente dentro de Tipos de Dato
 Abstractos, por lo cual se agregó al analizador sintáctico para declaraciones la
 capacidad de reconocer estos tipos y de dar mensajes de error apropiados cuando
-se intente usarlos fuera de Tipos de Datos Abstractos.
+se intente usarlos fuera de Tipos de Dato Abstractos.
 
 Finalmente, se agregaron los operadores usuales de la teoría de conjuntos. Se
 hace una exposición de ellos en el apéndice NUMERODEAPENDICE.
@@ -526,14 +529,14 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
 consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
 a tipos definidos por el programador, que se describen detalladamente en sus
-respectivas secciones. El fragmento de código \ref{lst:point} ejemplifica la
+respectivas secciones. El fragmento de código~\ref{lst:point} ejemplifica la
 declaración y uso de un apuntador a entero.
 
-\begin{gracielacode}[caption=Ejemplo de apuntadores, label=lst:point]
+\begin{gracielacode}[caption=Uso de apuntadores, label=lst:point]
 |[ var p : int *
-;  new(p)
-;  *p := 10
-;  free(p)
+ ;  new(p)
+ ;  *p := 10
+ ;  free(p)
 ]|
 \end{gracielacode}
 
@@ -562,14 +565,14 @@ memoria dinámica se realiza llamando a la función estándar de C \texttt{free}
 
 Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
 se consideró la posibilidad de agregar a este el soporte para expresiones
-propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
-que los programadores pudieran especificar de manera sencilla propiedades acerca
-de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
-implementar los operadores propios de la lógica de separación, $*$ (conjunción
-separadora), $\mapsto$ (\todo{cómo se llama esto?}), y $-*$ (implicación
-separadora), así como la constante $emp$, es necesario almacenar la información
-correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
-tiempo de ejecución de estructuras internas temporales con este fin.
+propias de la lógica de separación, de modo que los programadores pudieran
+especificar de manera sencilla propiedades acerca de estructuras recursivas que
+hicieran uso de apuntadores. Sin embargo, para implementar los operadores
+propios de la lógica de separación, $*$ (conjunción separadora), $\mapsto$
+(deconstrucción de \textit{heap} unitario), y $-*$ (implicación separadora), así
+como la constante $emp$, es necesario almacenar la información correspondiente
+al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a tiempo de
+ejecución de estructuras internas temporales con este fin.
 
 Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
 separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
@@ -578,15 +581,15 @@ influyó en esta decisión fue la consideración de que el público para el cual
 está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
 de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
 predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
-carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
+carga otro sistema formal (uno que no pertenece a los programas de
 estudios de los cursos en cuestión) resultaría en un gran potencial para
 confusión para el programador, sin agregar mucho valor al lenguaje.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TIPOS DE DATO (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Tipos de datos definidos por el programador}
+\section{Tipos de dato definidos por el programador}
 
 %  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA -> SOBRE TODO EL WHERE
 
@@ -595,13 +598,13 @@ confusión para el programador, sin agregar mucho valor al lenguaje.
 
 El objetivo principal de este proyecto es agregar al lenguaje Graciela y a su
 compilador, las características y el soporte necesarios para permitir al
-programador definir tipos de datos estructurados abstractos o TDA. Como se busca
+programador definir tipos de dato estructurados abstractos o TDA. Como se busca
 lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
 GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
 alto nivel como el invariante de representación y las precondiciones y
 poscondiciones de los procedimientos y funciones que definen su interfaz.
-Estos tipos de datos, definidos dentro del lenguaje de programación con la
+Estos tipos de dato, definidos dentro del lenguaje de programación con la
 palabra reservada \ingra{abstract}, nunca definen una implementación en
 particular, sino que se limitan, precisamente, a definir los comportamientos que
 debería cumplir cualquier estructura de datos que pretenda implementarlos.
@@ -611,7 +614,7 @@ un nuevo tipo de dato que, usando únicamente estructuras de bajo nivel y un
 invariante de acoplamiento que precise la correspondencia entre estas
 estructuras de bajo nivel y las de alto nivel del tipo de dato abstracto, logre
 cumplir las restricciones y comportamientos de este último. En adelante, nos
-referiremos a estos tipos de datos, los cuales siempre deben implementar un TDA,
+referiremos a estos tipos de dato, los cuales siempre deben implementar un TDA,
 como \textit{implementaciones}. Dentro del lenguaje, estos son definidos usando
 la palabra reservada \ingra{type} y el TDA implementado se especifica usando la
 palabra reservada \ingra{implements}.
@@ -688,7 +691,7 @@ de acoplamiento>>.
 
 \subsection{Variables de tipo}
 
-En el lenguaje GCL es posible especificar tipos de datos estructurados que no
+En el lenguaje GCL es posible especificar tipos de dato estructurados que no
 dependen de tipos concretos para sus operaciones. Por ejemplo, se puede definir
 el tipo \textit{Lista} sin  especificar, en la definición, si se trata de listas
 de enteros o de números de punto flotante. Como se desea que el lenguaje
@@ -700,13 +703,13 @@ genéricos.
 Estos tipos genéricos, o variables de tipo, se pueden declarar junto con la
 definición de un tipo de dato y usarse en la especificación interna de éste. Las
 variables de tipos solo pueden ser sustituidas por un tipo básico, es decir,
-tipo entero, flotante, caracter o booleano \todo{apuntadores???}. Al momento de
+tipo entero, flotante, carácter o booleano. Al momento de
 declarar una variable de un tipo de dato definido por el programador con
 variables de tipo asociadas, se deben  especificar los tipos básicos que
 correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
-fragmento de código \ref{lst:insttvar}.
+fragmento de código~\ref{lst:insttvar}.
 
-\begin{gracielacode}[caption=Ejemplo de instanciación de variables de tipo, label=lst:insttvar]
+\begin{gracielacode}[caption=Instanciación de variables de tipo, label=lst:insttvar]
 abstract ConjuntoA (T) begin
   var a : T;
   ...
@@ -739,7 +742,7 @@ especificación de \ingra{Conjunto}, es sustituida por el tipo \ingra{int}.
 
 \subsection{Procedimientos y funciones}
 
-Como se mencionó previamente, los tipos de datos abstractos definen una
+Como se mencionó previamente, los tipos de dato abstractos definen una
 interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
 cada una con sus respectivas precondiciones y poscondiciones.
 
@@ -812,7 +815,7 @@ intermedio dos subrutinas llamadas \texttt{agregar-Conjunto-i} y
 \texttt{agregar-Conjunto-c}.
 
 Con respecto a la verificación de las precondiciones, poscondiciones e
-invariantes, se tomaron las siguientes consideraciones.
+invariantes, se genera el código necesario para las siguientes verificaciones:
 
 \begin{enumerate}
 
@@ -855,14 +858,15 @@ invariantes, se tomaron las siguientes consideraciones.
   invariante de representación del TDA correspondiente. Si alguno de estos es
   falso, se emite un error a tiempo de ejecución.
 
-  \item \label{posttda} En el caso de los procedimientos que implementan procedimientos del TDA,
-  en este punto se evalúa la poscondición de este último. Si esta es falsa, se
-  espera a la verificación de la poscondición de la implementación para emitir
-  el error apropiado. Si es verdadera, continúan las demás verificaciones de
-  esta lista. Si no existe un procedimiento correspondiente en el TDA, es decir,
-  si se trata bien de un procedimiento definido únicamente en la
-  \textit{implementación} del tipo, o bien de un procedimiento definido en el
-  espacio global de definiciones, esta verificación es omitida.
+  \item En el caso de los procedimientos que implementan
+  procedimientos del TDA, en este punto se evalúa la poscondición de este
+  último. Si esta es falsa, se espera a la verificación de la poscondición de la
+  implementación para emitir el error apropiado. Si es verdadera, continúan las
+  demás verificaciones de esta lista. Si no existe un procedimiento
+  correspondiente en el TDA, es decir, si se trata bien de un procedimiento
+  definido únicamente en la \textit{implementación} del tipo, o bien de un
+  procedimiento definido en el espacio global de definiciones, esta verificación
+  es omitida.
 
   \item Para cada parámetro de tipo definido por el programador, se verifica el
   invariante de representación de la \textit{implementación} correspondiente. Si
@@ -870,23 +874,16 @@ invariantes, se tomaron las siguientes consideraciones.
 
   \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
   este punto, el curso del programa dependerá de los valores que hayan tomado
-  esta última y la poscondición del TDA, como puede verse en la tabla
-  \ref{table:posconds}. Si la verificación del punto \ref{posttda} fue omitida,
-  sólo se toma en cuenta la columna izquierda de la tabla.
-
-  \begin{table}[]
-  \centering
-  \begin{tabular}{ll|l|l|}
-  \cline{3-4}
-  \multicolumn{2}{l}{\multirow{2}{*}{}} & \multicolumn{2}{l|}{\textbf{Poscondición del TDA}} \\ \cline{3-4}
-  \multicolumn{2}{l}{} & Se cumple & No se cumple \\ \hline
-  \multicolumn{1}{|l|}{\multirow{2}{*}{\belowbaseline[0ex]{\rotatebox[origin=c]{90}{\parbox[c]{1cm}{\centering\textbf{Poscondición \\ de la \\ implementación}}}}}} & Se cumple & Éxito, la ejecución continúa normalmente & Se emite el error "Este procedimiento no implementa el TDA" \\ \cline{2-4}
-  \multicolumn{1}{|l|}{} & No se cumple & Se emite el error "No se cumple la poscondición" & Se emiten ambos errores. \\ \hline
-  \end{tabular}
-  \caption{Curso de ejecución luego de evaluación de poscondiciones}
-  \label{table:posconds}
-  \end{table}
-
+  esta última y la poscondición del TDA. Si no existe un procedimiento
+  correspondiente en el TDA, se toma su valor como verdadero.
+    \begin{itemize}
+      \item Si se cumplieron ambas poscondiciones, la ejecución sigue normalmente
+      \item Si sólo se cumple la poscondición del la implementación, se emite el
+      error <<No se cumple la poscondición>>
+      \item Si sólo se cumple la poscondición del TDA, se emite el error <<Este
+      procedimiento no implementa el TDA>>
+      \item Si ninguna de las dos poscondiciones se cumple, se emiten ambos errores.
+    \end{itemize}
 \end{enumerate}
 
 Estas consideraciones aplican para las funciones, con la excepción de los
@@ -905,9 +902,10 @@ estas rutinas:
 
   \item El constructor es llamado cuando se declara una variable del tipo en
   cuestión, o después de haber reservado memoria para un apuntador del mismo
-  tipo. Esta rutina se encarga de asignar a cada campo de la estructura el valor
-  inicial que corresponda, y llamar recursivamente a los constructores de las
-  estructuras internas, si las hubiera.
+  tipo. Esta rutina se encarga de asignar a cada campo de la estructura el
+  valor inicial que corresponda, reservar espacio en memoria para la cabecera
+  y el cuerpo de los campos de tipo arreglo y llamar recursivamente a los
+  constructores de las estructuras internas, si las hubiera.
 
   \item La rutina de copia se utiliza para copiar la estructura cuando se
   intenta pasar como argumento In o In-Out a un procedimiento. La copia se hace
@@ -917,7 +915,8 @@ estas rutinas:
   \item Antes de liberar un apuntador hacia una estructura, se llama al
   destructor, el cual se encarga de liberar la memoria reservada por el cuerpo
   de la estructura, luego de llamar recursivamente a los destructores de las
-  estructuras internas.
+  estructuras internas. El destructor no libera la memoria apuntada por campos
+  de tipo apuntador.
 
 \end{itemize}
 
@@ -930,7 +929,7 @@ estas rutinas:
 
 \subsection{Verificación de tipos}
 
-Para poder integrar los tipos de datos definidos por el programador al sistema
+Para poder integrar los tipos de dato definidos por el programador al sistema
 de tipos del compilador de Graciela, fue necesario extender el verificador de
 tipos. Esto se hizo definiendo un monoide sobre el conjunto de los tipos de
 Graciela, con el elemento neutro <<cualquier tipo>>, representado como
@@ -947,7 +946,7 @@ sobre los tipos de Graciela y con resultado booleano a partir del operador
 
 Los tipos de Graciela se representan dentro del compilador como un
 tipo de Haskell con constructores para los tipos básicos, apuntadores, arreglos,
-variables de tipos, y tipos de datos definidos por el programador.
+variables de tipos, y tipos de dato definidos por el programador.
 Adicionalmente, se definieron constructores auxiliares de este tipo de Haskell
 para representar los conceptos de <<cualquier tipo>> y <<tipo indefinido>>,
 además de <<uno de los tipos en una lista dada>>, los cuales fueron útiles para
@@ -978,8 +977,7 @@ Una de las posibles extensiones planteadas para el compilador durante el
 transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
 Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
 Algebraicos Libres (TALs), de modo que se realizó la correspondiente investigación
-teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
-\todo{esto debe decirse???}.
+teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado.
 
 Se consiguió que para implementar esta característica exitosamente, era
 necesario extender el compilador para reconocer definiciones de tipos
@@ -1018,11 +1016,11 @@ $e\ \textbf{matches}\ c\ (a,\ a)$ y $e\ \textbf{matches}\ c\ (e,\ f)$.
 
 En cuanto al código intermedio generado para expresiones de tipos algebraicos
 libres, se vio que la manera general de representarlas es como estructuras que
-residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone un
+residen en el \textit{heap}, haciendo uso implícito de apuntadores. Esto supone un
 conflicto con uno de los objetivos de este proyecto, proveer al programador las
 herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
 claro cuales deben ser los efectos de la interacción de expresiones de tipos
-algebraicos libres con expresiones de tipos de datos estructurados, por ejemplo,
+algebraicos libres con expresiones de tipos de dato estructurados, por ejemplo,
 el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
 
 Por lo tanto, debido a la dificultad de implementar esta extensión para el
@@ -1030,29 +1028,27 @@ lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
 incluirla en el ámbito del presente proyecto de grado. Cabe destacar que los
 tipos algebraicos libres representan tan sólo una fracción de lo estudiado en el
 curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
-mucho menor a la dedicada a los TADs, por lo cual, en cualquier caso, no sería
+mucho menor a la dedicada a los TDAs, por lo cual, en cualquier caso, no sería
 una extensión de vital importancia para el lenguaje Graciela y su compilador.
 Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
 que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a
 la usada en la teoría del curso mencionado, y podrían ser utilizados en los
 laboratorios correspondientes a esta área.
 
-\todo{dejar esta extensión como recomendación?}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Herramientas para el programador}
-% \subsection{Colección de programas}
-% \blindtext[1]
-% % Referencia a los anexos
-\subsection{Facilidad de instalación y uso para programadores noveles}
-\todo{APT + Homebrew}
-\blindtext[1]
 
-\subsection{Mejoras al ambiente de programación}
-\todo{Editores}
-\blindtext[1]
+Una vez el compilador alcanzó el desempeño deseado, se investigaron los medios
+necesarios para empaquetarlo y distribuirlo, dirigidos a las plataformas
+soportadas actualmente, los sistemas operativos Linux y macOS. Para Linux, se
+utilizó la herramienta APT, disponible en una alta proporción de las
+distribuciones de Linux puesto que forma parte íntegra de Debian y
+distribuciones derivadas de ella. Para macOS, se decidió utilizar Homebrew, por
+ser una plataforma sencilla de usar.
 
-\subsection{Depuración y análisis de rendimiento}
-\blindtext[1]
+Luego de esto, se estudiaron distintos editores de texto diseñados para la
+programación y sus sistemas de paquetes, para agregarle a cada uno resaltadores
+de sintaxis para el lenguaje Graciela, así como la inserción automática de
+plantillas muy frecuentes del lenguaje.

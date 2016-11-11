@@ -1,17 +1,41 @@
 \chapter{Marco Teórico}
 \label{capitulo1}
-\lhead{Capítulo 1. \emph{Marco Teórico}}
+\setchapter{Capítulo 1. \emph{Marco Teórico}}
 
-\section{Programación formal y tripletas de Hoare}
+\section{Semántica Axiomática y tripletas de Hoare}
+
+Según Araujo y Jiménez~\cite{ayj}, citando a Nipkow y Klein~\cite{concrete}, una
+semántica formal de un lenguaje de programación es un modelo matemático que
+permite comprender y razonar formalmente sobre el comportamiento de los
+programas escritos en él. Se dice que una Semántica es una \textbf{Semántica
+Axiomática} cuando las propiedades de las  distintas construcciones del lenguaje
+son expresadas mediante proposiciones lógicas. La \textbf{Lógica de Hoare} es un
+sistema formal de proposiciones lógicas utilizado para describir  las
+propiedades de una Semántica Axiomática, permitiendo demostrar la corrección
+parcial de programas. Las fórmulas en la Lógica de Hoare son llamadas
+\textbf{Tripletas de Hoare} y se escriben de la siguiente manera:
+
+$$ \{P\}\ S\ \{Q\} $$
+
+En la tripleta anterior, $S$ es una instrucción, mientras que $P$ y $Q$ son
+llamadas \textbf{Precondición} y \textbf{Poscondición}, respectivamente. El
+significado de esta tripleta es el siguiente: si la precondición $P$ sobre el
+estado de las variables del programa es cierta inmediatamente antes de la
+ejecución de $S$, y $S$ culmina su ejecución, entonces la poscondición $Q$ sobre
+el estado de las variables del programa es cierta al finalizar $S$. Con esta
+aproximación, es posible demostrar la corrección parcial de los programas, ya
+que la poscondición sólo se cumple cuando el programa termina; mientras que para
+demostrar la corrección total de un programa, es necesario garantizar que si la
+precondición se cumple, el programa termina.
 
 \section{Teoría de conjuntos}
 
-La Teoría de Conjuntos es la rama de la matemática que se encarga del estudio de
-colecciones bien formados de objetos, que pueden o no ser de naturaleza
-matemática. Esta teoría surge de la idea original de conjuntos de Georg Cantor,
-quien los definió como una colección, finita o infinita, de objetos definidos y
-distinguibles, y a su vez los conjuntos pueden ser considerados en sí mismos
-como objetos.
+La Teoría de Conjuntos~\cite{gries} es la rama de la matemática que se encarga
+del estudio de colecciones bien formados de objetos, que pueden o no ser de
+naturaleza matemática. Esta teoría surge de la idea original de conjuntos de
+Georg Cantor, quien los definió como una colección, finita o infinita, de
+objetos definidos y distinguibles, y a su vez los conjuntos pueden ser
+considerados en sí mismos como objetos.
 
 A partir de las ideas de Cantor, se comenzó un proceso de axiomatización de la
 matemática, con el cual se construyeron en base a los conjuntos otros objetos
@@ -54,21 +78,74 @@ conjuntos podemos destacar las siguientes estructuras:
 
 \end{description}
 
-\section{Tipos de datos abstractos}
+\section{Tipos de dato abstractos}
+
+Cuando se programa en un lenguaje de alto nivel, se espera poder abstraer el
+problema que se intenta resolver, de forma que se puedan expresar solos los
+detalles relevantes, como los posibles uso de un programa, y suprimir aquellos
+detalles que no lo son, como la implementación del programa.
+
+Un Tipo de Dato Abstracto o TDA define una clase de objetos abstractos, los
+cuales se caracterizan completamente por las operaciones disponibles que pueden
+aplicarse a estos~\cite{liskov}. En otras palabras, un TDA puede ser
+especificado a través de operaciones características del tipo en cuestión y un
+conjunto de valores a los cuales se le aplican dichas operaciones, que definen
+su comportamiento lógico~\cite{dalewalker}. De esta forma se desliga la
+especificación formal de la implementación concreta de un tipo, pudiendo
+discriminar entre una implementación u otra, sin afectar su comportamiento.
+
+Comúnmente, la especificación formal de un TDA posee un modelo abstracto de
+representación, que consiste en una colección de estructuras internas de alto
+nivel como conjuntos o relaciones, y sus operaciones se modelan como
+procedimientos y funciones, de los cuales solo se necesitan saber las
+precondiciones, poscondiciones e invariantes que deben cumplirse, expresadas
+en lenguaje natural o en lenguaje matemático.
+
+Una vez que se dispone de un TDA que modele de manera adecuada el
+comportamiento de un tipo de dato de interés, se procede a implementarlo. Para
+esto se debe escoger un nuevo modelo de representación que solo haga uso de
+estructuras concretas y re-especificar la aserciones encontradas en el TDA, en
+términos de este nuevo modelo. Adicionalmente, se debe garantizar la
+consistencia entre el modelos abstracto de representación y el modelo de
+representación de la implementación haciendo uso de técnicas de refinamiento,
+especificando formalmente la correspondencia entre ambos modelos. Finalmente
+se implementan todos los procedimientos y funciones correspondientes a las
+operaciones del TDA~\cite{ravelo}.
+
+Una propiedad importante de los TDAs es que sus procedimientos jamás deben
+alterar sus invariantes, pues de lo contrario, el objeto afectado por el
+procedimiento ya no pertenecería al modelo abstracto. Esta propiedad puede
+representarse como una familia de tripletas de Hoare (figura
+\ref{eqn:tdatriple}), donde $p$ es un procedimiento definido como
+$\textbf{proc}\ p (Y)$, $Y$ es una lista de parámetros que posiblemente incluye
+variables de un TDA, e $Inv(x)$ es el predicado que condensa todos los
+invariantes del valor $x$ si $x$ es de un TDA.
+
+\begin{equation} \label{eqn:tdatriple}
+\begin{gathered}
+% \frac{
+  \{ P[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}\\
+  p\ (X)\\
+  \{ Q[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}
+% }{
+% }
+\end{gathered}
+\end{equation}
+
 
 \section{Tipos Algebraicos Libres}
 
-En la teoría de tipos, un tipo Algebraico libre es una forma particular de tipo
-compuesto que permite definir tipos producto y tipos suma, además de tipos que
-son una combinación de ambos. Los valores de un tipo producto suelen contener
-varios sub-valores de distintos tipos, y el conjunto de valores posibles es el
-producto cartesiano de los conjuntos de cada sub-tipo, de ahí la denominación de
-tipo <<producto>>. Por otro lado, los tipos suma definen varias \textit{clases}
-tales que  los valores de un tipo suma sólo pueden pertenecer a una clase a la
-vez, de modo que el conjunto de valores posibles para un tipo suma es la unión
-de los valores posibles para cada clase, notando que la cardinalidad de este
-conjunto será la suma de los conjuntos de las clases, debido a que son
-disjuntos.
+En la teoría de tipos, un tipo algebraico libre~\cite{ravelotal, foldoc,
+lazywithclass} es una forma particular de tipo compuesto que permite definir
+tipos producto y tipos suma, además de tipos que son una combinación de ambos.
+Los valores de un tipo producto suelen contener varios sub-valores de distintos
+tipos, y el conjunto de valores posibles es el producto cartesiano de los
+conjuntos de cada sub-tipo, de ahí la denominación de tipo <<producto>>. Por
+otro lado, los tipos suma definen varias \textit{clases} tales que  los valores
+de un tipo suma sólo pueden pertenecer a una clase a la vez, de modo que el
+conjunto de valores posibles para un tipo suma es la unión de los valores
+posibles para cada clase, notando que la cardinalidad de este conjunto será la
+suma de los conjuntos de las clases, debido a que son disjuntos.
 
 El ejemplo motivador en la mayoría de los cursos que hablan sobre Tipos
 Algebraicos Libres (TALs) es el del árbol binario. Un lenguaje que soporte TALs
@@ -84,8 +161,8 @@ Otra característica importante de los TALs, que los hace muy útiles, es la
 posibilidad de verificar a cuál clase pertenece un valor de un tipo producto,
 con el predicado \textbf{is}, y la de extraer los sub-valores de un tipo suma
 con la instrucción \textbf{match}. El primero se puede usar, siguiendo con el
-ejemplo motivador, dentro de un condicional como en el ejemplo \ref{ifis},
-mientras que el segundo, como se muestra en el ejemplo \ref{matching}, se puede
+ejemplo motivador, dentro de un condicional como en el ejemplo~\ref{ifis},
+mientras que el segundo, como se muestra en el ejemplo~\ref{matching}, se puede
 usar una vez se tiene certeza de que el valor es de una clase en particular.
 
 \begin{alignat}{3}
@@ -102,9 +179,9 @@ usar una vez se tiene certeza de que el valor es de una clase en particular.
 &\boldsymbol{fi}                                                                                   \nonumber
 \end{alignat}
 
-Adicionalmente, es común definir la instrucción \textbf{matches} \todo{ravelo}
+Adicionalmente, es común definir la instrucción \textbf{matches}~\cite{ravelo}
 como la aplicación secuenciada del predicado \textbf{is} y la instrucción
-\textbf{match} de la clase apropiada. El ejemplo \ref{matches} muestra esto,
+\textbf{match} de la clase apropiada. El ejemplo~\ref{matches} muestra esto,
 como una combinación de los ejemplos anteriores, pero sin la necesidad de
 declarar explícitamente las variables para los sub-valores.
 
@@ -114,16 +191,13 @@ declarar explícitamente las variables para los sub-valores.
 &\boldsymbol{fi} \nonumber
 \end{alignat}
 
-% \todo{http://foldoc.org/algebraic%20data%20type}
-% \todo{\verb{http://haskell.cs.yale.edu/wp-content/uploads/2011/02/history.pdf}}
-
 \section{Lógica de Separación}
 
 La Lógica de Separación fue desarrollada por John Reynolds, Hongseok Yang y
-Samin Ishtiaq \cite{seplogpaper1}\cite{seplogpaper2}\cite{seplogpaper3} como una
+Samin Ishtiaq~\cite{seplogpaper1,seplogpaper2,seplogpaper3} como una
 extensión de la lógica de Hoare que permite razonar sobre el acceso a datos en
 la memoria de una computadora y como estos pueden mutar. Tal como lo explica
-Peter O'Hearn en ~\cite{separation-logic}, la Lógica de Separación se basa en
+Peter O'Hearn en~\cite{separation-logic}, la Lógica de Separación se basa en
 la \textit{conjunción separadora} $P * Q$, que significa que P y Q apuntan a
 porciones de memorias disjuntas. De esta forma se pueden escribir predicados
 que permitan realizar verificaciones sobre estructuras que hacen uso de
@@ -137,22 +211,24 @@ binario.
 
 Un árbol binario se caracteriza por el hecho de que cada nodo debe estar en un
 espacio de memoria distinto a los demás, lo que asegura que no existan ciclos.
-En el ejemplo \ref{eq:treesl}, asumiendo que el predicado \textbf{isatom?} puede realizar
-la distinción entre si es un valor atómico (entero, caracter, ...) o una
-referencia a memoria, se procede a verificar si la estructura E es un átomo.
-En caso positivo se devuelve el valor \textbf{emp}, el cual representa al heap
-vacío, es decir, el heap en donde no existen celdas reservadas. Si por el
-contrario E no es un átomo, entonces se verifica para cada hijo que sea un
-árbol binario, cubriendo así el caso recursivo. El operador \todo{nombre?}
-$E\mapsto x$ significa que E apunta al fragmento de memoria x. En este caso se
-hace uso de este operador de la forma $E\mapsto [l: x, r: y]$ que significa que
-los hijos izquierdo y derecho se ubican en los fragmentos de memorias $x$ y $y$
-respectivamente, y no es mas que una abreviación de $(E\mapsto x) * (E+1\mapsto y)$.
+En el ejemplo~\ref{eq:treesl}, asumiendo que el predicado \textbf{isatom?} puede
+realizar la distinción entre si es un valor atómico (entero, carácter, ...) o
+una referencia a memoria, se procede a verificar si la estructura E es un átomo.
+En caso positivo se devuelve el valor \textbf{emp}, el cual representa al
+\textit{heap} vacío, es decir, el \textit{heap} en donde no existen celdas
+reservadas. Si por el contrario E no es un átomo, entonces se verifica para cada
+hijo que sea un árbol binario, cubriendo así el caso recursivo. El operador
+deconstrucción de \textit{heap} unitario, $E \mapsto x$, significa que E apunta al
+fragmento de memoria x. En este caso se hace uso de este operador de la forma
+$E\mapsto [l: x, r: y]$ que significa que los hijos izquierdo y derecho se
+ubican en los fragmentos de memorias $x$ y $y$ respectivamente, y no es mas que
+una abreviación de $(E\mapsto x) * (E+1\mapsto y)$.
 
 Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
-\vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o heap
-y P es una aserción que se realizar sobre s y h. También se cuenta con el operador
-\textit{implicación separadora} $P-*\ Q$ que se entiende como, si para un heap dado
-se cumple P, entonces al extender este primer heap con otro heap disjunto se
-debe cumplir Q, y de manera formal, $s,h \vDash P-*\ Q$ se cumple si para todo h'
-disjunto de h $s,h' \vDash P$ y $s,h\Union h' \vDash Q$.
+\vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o
+\textit{heap} y P es una aserción que se realizar sobre s y h. También se cuenta
+con el operador \textit{implicación separadora} $P-*\ Q$ que entiende como, si
+para un \textit{heap} dado se cumple P, entonces al extender este primer
+\textit{heap} con otro \textit{heap} disjunto se debe cumplir Q, y de manera
+formal, $s,h \vDash P-*\ Q$ se cumple si para todo h' disjunto de h $s,h' \vDash
+P$ y $s,h\Union h' \vDash Q$.

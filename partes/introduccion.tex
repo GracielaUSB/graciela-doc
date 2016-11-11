@@ -1,6 +1,6 @@
 \chapter*{Introducción}
 \label{intro}
-\lhead{\emph{Introducción}}
+\setchapter{\emph{Introducción}}
 
 Históricamente, y por varios años, en los cursos de Laboratorio de Algoritmos I
 y II dictados en la Universidad Simón Bolívar, el lenguaje de programación
@@ -50,7 +50,7 @@ recomendaciones de su Proyecto de Grado, es necesario extender el lenguaje y el
 compilador para lograr que estos sean útiles para el segundo curso práctico de
 Algoritmos. Específicamente, recomiendan agregar al lenguaje el tipo
 \textit{apuntador} y las instrucciones necesarias para manipularlos, y la
-posibilidad de crear tipos de datos estructurados con comportamientos definidos
+posibilidad de crear tipos de dato estructurados con comportamientos definidos
 a través de aserciones invariantes.
 
 Así, es evidente la necesidad de agregar estas extensiones al lenguaje Graciela
@@ -66,17 +66,18 @@ GCL.
 
 Además de GaCeLa y Graciela, existen otras implementaciones de las ideas del
 lenguaje GCL ajenas a la Universidad Simón Bolívar, entre las cuales se
-encuentran el módulo para el lenguaje Perl \texttt{Commands::Guarded} y GCL 1.2.
-El primero \todo{decir algo sobre commands::guarded}, mientras que el segundo es
-un interpretador escrito en Prolog y C que impone muchas restricciones sobre
-arreglos y aserciones, y no soporta la declaración de procedimientos y
-funciones.
+encuentran  \texttt{Commands::Guarded}~\cite{perlguarded} y GCL
+1.2~\cite{gclonetwo}. El primero es un módulo para el lenguaje Perl que explota
+la idea de agregarle precondiciones y poscondiciones verificables a cada
+instrucción, mientras que el segundo es un interpretador escrito en Prolog y C
+que impone muchas restricciones sobre arreglos y aserciones, y no soporta la
+declaración de procedimientos y funciones.
 
 \section*{Objetivo General}
 
 Extender el compilador del lenguaje Graciela, una variante del GCL (Guarded
 Command Language) de Dijkstra, implantado por Araujo y Jiménez. Esta extensión
-deberá soportar tipos de datos definidos por el programador, apuntadores
+deberá soportar tipos de dato definidos por el programador, apuntadores
 explícitos, manejo de memoria automático, y un mecanismo de aserciones
 verificables que soporte estas nuevas capacidades.
 
@@ -104,7 +105,7 @@ subsiguientes, y que permite establecer un nivel de abstracción apropiado para
 estos. En el segundo, similarmente, se establece un marco tecnológico, en el
 cual se exponen las herramientas que permitieron desarrollar el proyecto en su
 forma actual. En el tercer capítulo, el desarrollo del proyecto, se detalla el
-estudio que se realizó de las recomendaciones dadas por Araujo y Jimenez y las
+estudio que se realizó de las recomendaciones dadas por Araujo y Jiménez y las
 consideraciones que se tomaron en cuenta para cumplir estas recomendaciones y
 los objetivos especificados para este proyecto, incluyendo también el proceso de
 desarrollo asociado a los objetivos adicionales que surgieron durante el
