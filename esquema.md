@@ -65,7 +65,7 @@
         - Variables de tipo
         - Invariantes de representación, acoplamiento
             - Invariante de acoplamiento "compilable"
-        - Procedimientos y Funciones de/sobre un TAD
+        - Procedimientos y Funciones de/sobre un TDA
 
     - Colecciones {} {{}} <<>> function relation
         - Similares a cuantificaciones, aplican restricciones similares
@@ -99,7 +99,7 @@
     - Extender los tipos de la teoría de conjuntos más allá de un nivel
     - Admitir variables de tipos instanciadas en no-básicas
     - Funciones y procedimientos correcursivos con cotas "tupla", forward declarations
-    - Estudiar la posibilidad de permitir varios grados de refinamiento en los TADs
+    - Estudiar la posibilidad de permitir varios grados de refinamiento en los TDAs
     - Lógica de separación
 
 

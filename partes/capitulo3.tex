@@ -293,7 +293,7 @@ general, puesto que sería necesario \todo{consultar esto con Monascal}.
 \subsection{Consideraciones sobre funciones y procedimientos}
 
 Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
-para que fueran más similaras a sus equivalentes en GCL. Simplemente, se
+para que fueran más similares a sus equivalentes en GCL. Simplemente, se
 eliminaron los lexemas \ingra{begin} y \ingra{end}, antes usados para
 delimitar el procedimiento, y el lexema \ingra{:} entre el identificador de la
 subrutina y su lista de parámetros, y se movió la poscondición junto a la
@@ -365,11 +365,11 @@ constante booleana \ingra{false} produce el rango <<vacío>>.
 Además, el operador de conjunción (\ingra{/\}) devuelve, si es
 posible, el rango que resulta de intersectar los rangos asociados a cada uno de
 sus operandos. A diferencia de las cuantificaciones lógicas, sin embargo, no se
-consideran los rangos generados por el operador de disjunción
+consideran los rangos generados por el operador de disyunción
 (\ingra{\/}), por lo cual si se desea que un rango sea procesado
 como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
 expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
-el uso de teoremas lógicos, convirtiendo una cuantificación en la disjunción de
+el uso de teoremas lógicos, convirtiendo una cuantificación en la disyunción de
 varias, o usando el operador de unión de conjuntos (\Union).
 
 Finalmente, si se ha construido un rango válido, este se registra en el ASA
@@ -703,7 +703,7 @@ genéricos.
 Estos tipos genéricos, o variables de tipo, se pueden declarar junto con la
 definición de un tipo de dato y usarse en la especificación interna de éste. Las
 variables de tipos solo pueden ser sustituidas por un tipo básico, es decir,
-tipo entero, flotante, caracter o booleano \todo{apuntadores???}. Al momento de
+tipo entero, flotante, carácter o booleano \todo{apuntadores???}. Al momento de
 declarar una variable de un tipo de dato definido por el programador con
 variables de tipo asociadas, se deben  especificar los tipos básicos que
 correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
@@ -858,14 +858,15 @@ invariantes, se tomaron las siguientes consideraciones.
   invariante de representación del TDA correspondiente. Si alguno de estos es
   falso, se emite un error a tiempo de ejecución.
 
-  \item \label{posttda} En el caso de los procedimientos que implementan procedimientos del TDA,
-  en este punto se evalúa la poscondición de este último. Si esta es falsa, se
-  espera a la verificación de la poscondición de la implementación para emitir
-  el error apropiado. Si es verdadera, continúan las demás verificaciones de
-  esta lista. Si no existe un procedimiento correspondiente en el TDA, es decir,
-  si se trata bien de un procedimiento definido únicamente en la
-  \textit{implementación} del tipo, o bien de un procedimiento definido en el
-  espacio global de definiciones, esta verificación es omitida.
+  \item En el caso de los procedimientos que implementan
+  procedimientos del TDA, en este punto se evalúa la poscondición de este
+  último. Si esta es falsa, se espera a la verificación de la poscondición de la
+  implementación para emitir el error apropiado. Si es verdadera, continúan las
+  demás verificaciones de esta lista. Si no existe un procedimiento
+  correspondiente en el TDA, es decir, si se trata bien de un procedimiento
+  definido únicamente en la \textit{implementación} del tipo, o bien de un
+  procedimiento definido en el espacio global de definiciones, esta verificación
+  es omitida.
 
   \item Para cada parámetro de tipo definido por el programador, se verifica el
   invariante de representación de la \textit{implementación} correspondiente. Si
@@ -873,18 +874,16 @@ invariantes, se tomaron las siguientes consideraciones.
 
   \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
   este punto, el curso del programa dependerá de los valores que hayan tomado
-  esta última y la poscondición del TDA:
+  esta última y la poscondición del TDA. Si no existe un procedimiento
+  correspondiente en el TDA, se toma su valor como verdadero.
     \begin{itemize}
-      \item Si se cumplieron ambas postcondiciones, la ejecución sigue normalmente
-      \item Si se cumple postcondición del la implementación, Se emite el
-      error ”No se cumple la poscondición”
-      \item Si se cumple postcondición del TDA, Se emite el error ”Este
-      procedimiento no implementa el TDA”
-      \item Sin ninguno de las dos postcondiciones se cumple, se emiten ambos errores.
+      \item Si se cumplieron ambas poscondiciones, la ejecución sigue normalmente
+      \item Si sólo se cumple la poscondición del la implementación, se emite el
+      error <<No se cumple la poscondición>>
+      \item Si sólo se cumple la poscondición del TDA, se emite el error <<Este
+      procedimiento no implementa el TDA>>
+      \item Si ninguna de las dos poscondiciones se cumple, se emiten ambos errores.
     \end{itemize}
-  Si la verificación del punto \ref{posttda} fue omitida,
-  sólo se toma en cuenta la columna izquierda de la tabla.
-
 \end{enumerate}
 
 Estas consideraciones aplican para las funciones, con la excepción de los
@@ -1030,7 +1029,7 @@ lenguaje y para integrarla con las demás extensiones deseadas, se decidió no
 incluirla en el ámbito del presente proyecto de grado. Cabe destacar que los
 tipos algebraicos libres representan tan sólo una fracción de lo estudiado en el
 curso de Algoritmos y Estructuras II dictado en la Universidad Simón Bolívar,
-mucho menor a la dedicada a los TADs, por lo cual, en cualquier caso, no sería
+mucho menor a la dedicada a los TDAs, por lo cual, en cualquier caso, no sería
 una extensión de vital importancia para el lenguaje Graciela y su compilador.
 Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
 que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a

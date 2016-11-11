@@ -11,7 +11,7 @@ programas escritos en él. Se dice que una Semántica es una \textbf{Semántica
 Axiomática} cuando las propiedades de las  distintas construcciones del lenguaje
 son expresadas mediante proposiciones lógicas. La \textbf{Lógica de Hoare} es un
 sistema formal de proposiciones lógicas utilizado para describir  las
-propiedades de una Semántica Axiomática, permitiendo demostrar la correctitud
+propiedades de una Semántica Axiomática, permitiendo demostrar la corrección
 parcial de programas. Las fórmulas en la Lógica de Hoare son llamadas
 \textbf{Tripletas de Hoare} y se escriben de la siguiente manera:
 
@@ -21,11 +21,11 @@ En la tripleta anterior, $S$ es una instrucción, mientras que $P$ y $Q$ son
 llamadas \textbf{Precondición} y \textbf{Poscondición}, respectivamente. El
 significado de esta tripleta es el siguiente: si la precondición $P$ sobre el
 estado de las variables del programa es cierta inmediatamente antes de la
-ejecución de $S$, y $S$ culmina su ejecución, entonces la poscondición $Q$ sobr
+ejecución de $S$, y $S$ culmina su ejecución, entonces la poscondición $Q$ sobre
 el estado de las variables del programa es cierta al finalizar $S$. Con esta
-aproximación, es posible demostrar la correctitud parcial de los programas, ya
+aproximación, es posible demostrar la corrección parcial de los programas, ya
 que la poscondición sólo se cumple cuando el programa termina; mientras que para
-demostrar la correctitud total de un programa, es necesario garantizar que si la
+demostrar la corrección total de un programa, es necesario garantizar que si la
 precondición se cumple, el programa termina.
 
 \section{Teoría de conjuntos}
@@ -104,12 +104,12 @@ en lenguaje natural o en lenguaje matemático.
 Una vez que se dispone de un TDA que modele de manera adecuada el
 comportamiento de un tipo de dato de interés, se procede a implementarlo. Para
 esto se debe escoger un nuevo modelo de representación que solo haga uso de
-estructuas concretas y re-especificar la aserciones encontradas en el TDA, en
-terminos de este nuevo modelo. Adicionalmente, se debe garantizar la
+estructuras concretas y re-especificar la aserciones encontradas en el TDA, en
+términos de este nuevo modelo. Adicionalmente, se debe garantizar la
 consistencia entre el modelos abstracto de representación y el modelo de
 representación de la implementación haciendo uso de técnicas de refinamiento,
 especificando formalmente la correspondencia entre ambos modelos. Finalmente
-se implementan todos los procedimientos y funciones correspodientes a las
+se implementan todos los procedimientos y funciones correspondientes a las
 operaciones del TAD~\cite{ravelo}.
 
 
@@ -163,7 +163,7 @@ usar una vez se tiene certeza de que el valor es de una clase en particular.
 &\boldsymbol{fi}                                                                                   \nonumber
 \end{alignat}
 
-Adicionalmente, es común definir la instrucción \textbf{matches} \todo{ravelo}
+Adicionalmente, es común definir la instrucción \textbf{matches}~\cite{ravelo}
 como la aplicación secuenciada del predicado \textbf{is} y la instrucción
 \textbf{match} de la clase apropiada. El ejemplo \ref{matches} muestra esto,
 como una combinación de los ejemplos anteriores, pero sin la necesidad de
@@ -199,7 +199,7 @@ binario.
 Un árbol binario se caracteriza por el hecho de que cada nodo debe estar en un
 espacio de memoria distinto a los demás, lo que asegura que no existan ciclos.
 En el ejemplo \ref{eq:treesl}, asumiendo que el predicado \textbf{isatom?} puede realizar
-la distinción entre si es un valor atómico (entero, caracter, ...) o una
+la distinción entre si es un valor atómico (entero, carácter, ...) o una
 referencia a memoria, se procede a verificar si la estructura E es un átomo.
 En caso positivo se devuelve el valor \textbf{emp}, el cual representa al heap
 vacío, es decir, el heap en donde no existen celdas reservadas. Si por el
@@ -213,7 +213,7 @@ respectivamente, y no es mas que una abreviación de $(E\mapsto x) * (E+1\mapsto
 Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
 \vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o heap
 y P es una aserción que se realizar sobre s y h. También se cuenta con el operador
-\textit{implicación separadora} $P-*\ Q$ que se entiende como, si para un heap dado
+\textit{implicación separadora} $P-*\ Q$ que entiende como, si para un heap dado
 se cumple P, entonces al extender este primer heap con otro heap disjunto se
 debe cumplir Q, y de manera formal, $s,h \vDash P-*\ Q$ se cumple si para todo h'
 disjunto de h $s,h' \vDash P$ y $s,h\Union h' \vDash Q$.

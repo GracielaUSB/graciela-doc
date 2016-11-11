@@ -97,7 +97,7 @@ para ella una expresión de cota, la cual, de manera equivalente a la cota de la
 instrucción \ingra{do}, será evaluada cada vez que sea llamada la subrutina, y
 en caso de no descender, o de volverse negativa, se dará el correspondiente
 error a tiempo de ejecución. Si se define una cota para una subrutina que no es
-recursiva, esta símplemente es ignorada.
+recursiva, esta simplemente es ignorada.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CUANTIFICACIONES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,7 +128,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
   desigualdades (\ingra{<}, \ingra{<=}, \ingra{>} o \ingra{>=}), como el
   operando menor y mayor en al menos una desigualdad, respectivamente, y
   adicionalmente el tipo de la variable auxiliar es \ingra{int} o \ingra{char}.
-  En este caso, se forma un rango númerico entre el máximo de los límites
+  En este caso, se forma un rango numérico entre el máximo de los límites
   inferiores y el mínimo de los límites superiores definidos por las
   desigualdades. Puede verse un ejemplo de esto en el fragmento de código
   \ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
@@ -140,7 +140,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
 
   \item [Rango de pertenencia] La variable auxiliar aparece del lado izquierdo
   de un operador de pertenencia (\Elem), con una colección en el lado derecho.
-  En este caso, se forma un rango de pertenenecia sobre la colección en
+  En este caso, se forma un rango de pertenencia sobre la colección en
   cuestión. Puede verse un ejemplo de esto en el fragmento de código
   \ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
 
@@ -194,7 +194,7 @@ ejecutar la iteración, y la segunda relación de pertenencia será evaluada par
 cada elemento. En caso de poderse formar más de un rango numérico, se tomará su
 intersección.
 
-Por último, se agregó el operador de cuantifiación \ingra{count}, o
+Por último, se agregó el operador de cuantificación \ingra{count}, o
 equivalentemente \ingra{#}. Este operador exige un cuerpo de tipo booleano, y el
 resultado de la cuantificación será el número de veces que sea cierta la
 expresión del cuerpo para los valores en el rango dado. De esta forma, se
@@ -237,7 +237,7 @@ var arrayOfPtr :  array[10] of int *
 
 Una variable de tipo apuntador puede ser comparada con otra, siempre que los
 tipos apuntados sean los mismos, haciendo uso de los operadores de igualdad
-(\ingra{==}) y desigualdad (\ingra{!=}). Tambien se puede asignar el valor
+(\ingra{==}) y desigualdad (\ingra{!=}). También se puede asignar el valor
 de un apuntador a otro, siempre y cuando se cumpla la condición mencionada
 anteriormente. Se cuenta con el símbolo reservado del lenguaje
 \ingra{null}, que representa a la dirección nula y con el que se pueden
@@ -408,8 +408,8 @@ definiciones.
 Los tipos de dato abstractos pueden declararse con la palabra reservada
 \ingra{abstract} seguida de un identificador y, de forma opcional, una secuencia
 de variables de tipo dentro de paréntesis y separadas por coma. Podemos separar
-la estructura interna de un TDA en tres secciones en las cuales se espeicifcan
-las caracteristicas y restricciones del mismo. Primero se debe especificar el
+la estructura interna de un TDA en tres secciones en las cuales se especifican
+las características y restricciones del mismo. Primero se debe especificar el
 modelo de representación, en el cual se permite declarar contantes y variables
 de cualquier tipo, incluyendo tipos de la Teoría de Conjuntos. A continuación se
 debe especificar el invariante de representación dentro de un bloque contenido
@@ -424,7 +424,7 @@ de dato abstracto \ingra{Diccionario} con un procedimiento para agregar un
 elemento, puede declararse forma en la que se muestra en el fragmento de código
 \ref{lst:tadDicc}.
 
-\begin{widegracielacode}[caption=TAD Diccionario, label=lst:tadDicc]
+\begin{widegracielacode}[caption=TDA Diccionario, label=lst:tadDicc]
 abstract Diccionario (T0, T1) begin
   const MAX := 100 : int;
   var   conoc      : set of T0;
@@ -470,7 +470,7 @@ momento de especificar el tipo de dato. La primera condición, es que todos
 procedimientos y funciones halladas en la especificación del TDA deben
 implementarse, aunque esto no evita poder definir otros métodos. La segunda
 condición es que, cualquier uso de variables de tipo dentro del cuerpo o
-cabezera de un método, está restringido al caso en el que uno de los
+cabecera de un método, está restringido al caso en el que uno de los
 parámetros del mismo, sea del tipo de dato dentro del cual se está definiendo
 y contenga a su vez las variables de tipo en cuestión.
 
@@ -483,7 +483,7 @@ invariante y la relación de acoplamiento. De esta forma, una posible
 implementación del TDA \ingra{Diccionario} debería verse de la como se muestra
 en el fragmento de código \ref{lst:dicc}
 
-\begin{widegracielacode}[caption=Una posible implementación del TAD Diccionario, label=lst:dicc]
+\begin{widegracielacode}[caption=Una posible implementación del TDA Diccionario, label=lst:dicc]
 type Dicc (T0, T1) implements Diccionario (T0, T1) begin
   var clave : array [MAX] of T0;
   var valor : array [MAX] of T1;
@@ -521,7 +521,7 @@ end
 \end{widegracielacode}
 
 Cabe mencionar que no se pueden declarar variables de un TDA fuera del mismo y
-pueden existir multiples implementaciones para un TDA.
+pueden existir múltiples implementaciones para un TDA.
 
 \section{Herramientas para el programador}
 \subsection{Facilidad de instalación y uso para programadores noveles}
@@ -529,13 +529,13 @@ pueden existir multiples implementaciones para un TDA.
   \item [APT] \todo{APT}
 
   \item[Homebrew] La instalación del compilador graciela en sistemas
-    operativos macOS se hace haciendo uso de la herramienta Homebrew, 
+    operativos macOS se hace haciendo uso de la herramienta Homebrew,
     con la cual se reduce a los comandos mostrados en la figura \ref{brew}.
 
     \begin{lstlisting}[caption=Homebrew para instalar graciela]
       $ brew tap GracielaUSB/graciela
       $ brew install graciela
-    \end{lstlisting} 
+    \end{lstlisting}
 
 \end{description}
 \subsection{Mejoras al ambiente de programación}
