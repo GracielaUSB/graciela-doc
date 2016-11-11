@@ -23,7 +23,7 @@
 
   - Tipos Algebraicos Libres [moises+]
 
-  - Tipos de datos abstractos [both]
+  - Tipos de dato abstractos [both]
 
 
 - Marco tecnológico              (#)
@@ -85,7 +85,7 @@
 
   - apuntadores y su notación [carlos]
   - colecciones [moises+]
-  - tipos de datos abstractos [carlos]
+  - tipos de dato abstractos [carlos]
 
   - Herramientas para el programador [todo]
 

@@ -1,6 +1,6 @@
 \chapter{Marco Tecnológico}
 \label{capitulo2}
-\lhead{Capítulo 2. \emph{Marco Tecnológico}}
+\setchapter{Capítulo 2. \emph{Marco Tecnológico}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,7 +174,6 @@ conjuntos, y en el código generado para las nuevas instrucciones \ingra{new} y
 memoria relacionados con los arreglos, debido a la forma en la que fueron
 implementados.
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% AMBIENTES DE PROGRAMACIÓN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,13 +223,19 @@ plataformas en las cuales se ofrece el compilador, con la intención de que sea
 sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
 última versión disponible.
 
-\subsection{APT}
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Homebrew}]
 
-\todo{APT}
+\item [APT]~\cite{apt} (Advanced Package Tool, <<Herramienta Avanzada de
+Paquetes>>) es una herramienta de software propia de Debian y distribuciones de
+Linux derivadas de Debian, que administra la instalación y remoción de software
+en estos sistemas operativos. Se decidió utilizar APT debido, precisamente, a
+que está incluida en una gran cantidad de sistemas operativos, y a su facilidad
+de uso.
 
-\subsection{Homebrew}
+\item [Homebrew]~\cite{brew} es un manejador de paquetes para el sistema
+operativo macOS. Entre las razones por la cual se eligió este manejador de
+paquetes, fue su simplicidad de uso, tanto para quien desea instalar una pieza
+de software, como para quien crea y distribuye el paquete, comparación de las
+demás opciones disponibles.
 
-Manejador de paquetes para el sistema operativo macOS. Entre las razones por
-la cual se eligió este manejador de paquetes, fue su simplicidad de uso, tanto
-para quien desea instalar una pieza de software, como para quien crea y
-distribuye el paquete, comparación de las demás opciones disponibles.
+\end{description}

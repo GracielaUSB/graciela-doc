@@ -69,8 +69,13 @@
 \clubpenalty=9999                 % Almost no orphans at top of page.
 \interfootnotelinepenalty=9999    % Almost never break footnotes.
 \usepackage{fancyhdr}
-\lhead[\rm\thepage]{\fancyplain{}{\sl{\rightmark}}}
-\rhead[\fancyplain{}{\sl{\leftmark}}]{\rm\thepage}
+
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\thechaptername}
+\fancyhead[RE]{\relax}
+
+% \lhead[\rm\thepage]{\fancyplain{}{\sl{\rightmark}}}
+% \rhead[\fancyplain{}{\sl{\leftmark}}]{\rm\thepage}
 \chead{}\lfoot{}\rfoot{}\cfoot{}
 \pagestyle{fancy}
 \renewcommand{\chaptermark}[1]{\btypeout{\thechapter\space #1}\markboth{\@chapapp\ \thechapter\ #1}{\@chapapp\ \thechapter\ #1}}
@@ -132,7 +137,7 @@
 \usepackage[pdfpagemode={UseOutlines},bookmarks=true,bookmarksopen=true,
    bookmarksopenlevel=0,bookmarksnumbered=true,hypertexnames=false,
    colorlinks,linkcolor={blue},citecolor={blue},urlcolor={red},
-   pdfstartview={FitV},unicode,breaklinks=true]{hyperref}
+   pdfstartview={FitV},unicode,breaklinks=false]{hyperref}
 \pdfstringdefDisableCommands{
    \let\\\space
 }
@@ -335,7 +340,7 @@
 % \addtotoc{Agradecimientos}        -- ¿Debe aparecer en el índice?
 % \addtocontents{toc}{\vspace{1em}}
 \thispagestyle{plain}
-{\huge{\textbf{Agradecimientos}} \par}
+\noindent{\huge{\textbf{Agradecimientos}} \par}
 {\normalsize #1}
 \vfil\vfil\null
 

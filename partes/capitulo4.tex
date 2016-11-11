@@ -1,6 +1,7 @@
 \chapter{Resultados}
 \label{capitulo4}
-\lhead{Capítulo 4. \emph{Resultados}}
+\setchapter{Capítulo 4. \emph{Resultados}}
+
 
 El resultado del presente Proyecto de Grado es doble, pues se extendió el
 lenguaje Graciela para incluir manejo de apuntadores, expresiones de la teoría
@@ -322,7 +323,7 @@ escribirse, respectivamente, como
 \end{gracielacode}
 
 También se permite la declaración de variables de tipos colección dentro de los
-Tipos de Datos Abstractos. La notación para esto es la misma que para las
+Tipos de Dato Abstractos. La notación para esto es la misma que para las
 declaraciones de tipos básicos, cambiando el tipo usado. Así, para definir,
 respectivamente, un conjunto, un multiconjunto, y una secuencia de enteros, se
 usa la siguiente notación:
@@ -395,13 +396,13 @@ var y : relation int <-> char;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tipos de Datos}
 Existen dos clasificaciones de los tipos de datos que pueden definirse en el
-lenguaje Graciela, los tipos de datos abstractos o TDA y los tipos de datos
+lenguaje Graciela, los tipos de dato abstractos o TDA y los tipos de datos
 que implementan a un TDA. Estos deben ser definidos dentro del espacio global
 de definiciones.
 
-\subsection{Tipos de Datos Abstractos}
+\subsection{Tipos de Dato Abstractos}
 
-Los tipos de datos abstractos pueden declararse con la palabra reservada
+Los tipos de dato abstractos pueden declararse con la palabra reservada
 \ingra{abstract} seguida de un identificador y, de forma opcional, una secuencia
 de variables de tipo dentro de paréntesis y separadas por coma. Podemos separar
 la estructura interna de un TDA en tres secciones en las cuales se espeicifcan
@@ -439,7 +440,7 @@ abstract Diccionario (T0, T1) begin
 end
 \end{widegracielacode}
 
-\subsection{Implementación de Tipos de Datos Abstractos}
+\subsection{Implementación de Tipos de Dato Abstractos}
 
 Aquellos tipos de datos que pretendan implementar un TDA, deben ser declarados
 con la palabra reservada \ingra{type}, un identificador y sus variables de

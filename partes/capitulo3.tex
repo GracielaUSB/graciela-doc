@@ -1,6 +1,7 @@
 \chapter{Desarrollo}
 \label{capitulo3}
-\lhead{Capítulo 3. \emph{Desarrollo}}
+\setchapter{Capítulo 3. \emph{Desarrollo}}
+
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
@@ -74,7 +75,7 @@ podían ser extendidos. Estas recomendaciones eran las siguientes:
 \begin{itemize}
 
   \item Ofrecer al programador la posibilidad de crear estructuras de datos
-  propias, mediante la implementación de Tipos de Datos Abstractos (TDAs).
+  propias, mediante la implementación de Tipos de Dato Abstractos (TDAs).
 
   \item Incluir la manipulación de apuntadores por parte del programador,
   ampliando el sistema de tipos del lenguaje Graciela para introducir el tipo
@@ -488,7 +489,7 @@ Adicionalmente, fue necesario permitir la declaración de variables de tipos
 colección, función y relación, pero únicamente dentro de Tipos de Datos
 Abstractos, por lo cual se agregó al analizador sintáctico para declaraciones la
 capacidad de reconocer estos tipos y de dar mensajes de error apropiados cuando
-se intente usarlos fuera de Tipos de Datos Abstractos.
+se intente usarlos fuera de Tipos de Dato Abstractos.
 
 Finalmente, se agregaron los operadores usuales de la teoría de conjuntos. Se
 hace una exposición de ellos en el apéndice NUMERODEAPENDICE.
@@ -739,7 +740,7 @@ especificación de \ingra{Conjunto}, es sustituida por el tipo \ingra{int}.
 
 \subsection{Procedimientos y funciones}
 
-Como se mencionó previamente, los tipos de datos abstractos definen una
+Como se mencionó previamente, los tipos de dato abstractos definen una
 interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
 cada una con sus respectivas precondiciones y poscondiciones.
 

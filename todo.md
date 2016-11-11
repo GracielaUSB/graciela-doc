@@ -9,11 +9,9 @@
 - Acrónimos [cada quien]
 
 - Marco Teórico
-    - Programación formal y tripletas de Hoare [moises]
     - TDA, TDC [carlos]
 
 - Marco Tecnológico
-    - APT [moises] <-- <!-- TODO -->
 
 - Resultados
     - Cositas para los niños [moises]
