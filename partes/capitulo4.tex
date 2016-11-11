@@ -29,15 +29,15 @@ subrutinas. Adicionalmente, se simplificó el símbolo utilizado para las
 aserciones que se utilizan dentro de bloques de código imperativo, pasando de
 \ingra|{a ~\textit{exp}~ a}| a \ingra|{~\textit{exp}~}|.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% RECUPERACIÓN DE ERRORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Recuperación de errores durante el análisis sintáctico}
-
-El compilador \texttt{graciela} cuenta ahora con una mejor capacidad para
-recuperarse de errores durante el análisis sintáctico de un archivo, y ofrece
-mensajes de error más fáciles de entender en gran parte de los casos.
-\todo{ejemplos de esto}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %% RECUPERACIÓN DE ERRORES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Recuperación de errores durante el análisis sintáctico}
+%
+% El compilador \texttt{graciela} cuenta ahora con una mejor capacidad para
+% recuperarse de errores durante el análisis sintáctico de un archivo, y ofrece
+% mensajes de error más fáciles de entender en gran parte de los casos.
+% \{ejemplos de esto}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ARREGLOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,8 +130,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
   adicionalmente el tipo de la variable auxiliar es \ingra{int} o \ingra{char}.
   En este caso, se forma un rango numérico entre el máximo de los límites
   inferiores y el mínimo de los límites superiores definidos por las
-  desigualdades. Puede verse un ejemplo de esto en el fragmento de código
- ~\ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
+  desigualdades. Puede verse un ejemplo de esto en el fragmento de código~\ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
   incluyendo  el límite inferior pero no el superior.
 
 \begin{gracielacode}[caption=Cuantificación con rango numérico, label=lst:numrange]
@@ -141,8 +140,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
   \item [Rango de pertenencia] La variable auxiliar aparece del lado izquierdo
   de un operador de pertenencia (\Elem), con una colección en el lado derecho.
   En este caso, se forma un rango de pertenencia sobre la colección en
-  cuestión. Puede verse un ejemplo de esto en el fragmento de código
- ~\ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
+  cuestión. Puede verse un ejemplo de esto en el fragmento de código~\ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
 
 \begin{gracielacode}[caption=Cuantificación con rango de pertenencia, label=lst:setrange]
 var s : set of A
@@ -385,8 +383,8 @@ verse un ejemplo de ambos casos en el fragmento de código~\ref{lst:funcreleval}
 \end{gracielacode}
 
 De manera similar a las colecciones, se permite la declaración de funciones y
-relaciones entre dos tipos, con la notación mostrada en el fragmento de código
-\ref{funcreldecl}.
+relaciones entre dos tipos, con la notación mostrada en el fragmento de
+código~\ref{lst:funcreldecl}.
 
 \begin{gracielacode}[caption=Declaración de variables de tipos \textit{función} y \textit{relación}, label=lst:funcreldecl]
 var x : function int -> char;
@@ -524,23 +522,43 @@ Cabe mencionar que no se pueden declarar variables de un TDA fuera del mismo y
 pueden existir múltiples implementaciones para un TDA.
 
 \section{Herramientas para el programador}
-\subsection{Facilidad de instalación y uso para programadores noveles}
-\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Multiconjunto}]
-  \item [APT] \todo{APT}
 
-  \item[Homebrew] La instalación del compilador graciela en sistemas
-    operativos macOS se hace haciendo uso de la herramienta Homebrew,
-    con la cual se reduce a los comandos mostrados en la figura~\ref{lst:brew}.
+Se simplificó el proceso de compilación, de modo que ahora basta ejecutar el
+comando \texttt{graciela} para generar un programa ejecutable. Además, se agregó
+el comando \texttt{rungraciela}, el cual compila el programa dado, lo almacena
+como un ejecutable temporal, lo ejecuta, y finalmente lo elimina. Esto tiene la
+ventaja de poder ejecutarse en un solo comando, facilitando la prueba rápida de
+experimentos en el lenguaje.
 
-    \begin{lstlisting}[caption=Instrucciones para instalar el compilador de Graciela con Homebrew, label={lst:brew}]
-      $ brew tap GracielaUSB/graciela
-      $ brew install graciela
-    \end{lstlisting}
+Para facilitar la instalación del compilador, se usaron las herramientas:
+
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Homebrew}]
+
+  \item [APT] Para instalar el compilador graciela en sistemas operativos
+    derivados de Debian se hace a través de la herramienta APT, usando los
+    comandos del fragmento de código~\ref{lst:apt}
+
+  \item [Homebrew] La instalación del compilador graciela en sistemas
+    operativos macOS se hace a través de la herramienta Homebrew,
+    con los comandos mostrados en el fragmento de código~\ref{lst:brew}.
 
 \end{description}
-\subsection{Mejoras al ambiente de programación}
-\todo{Editores}
-\blindtext[1]
 
-\subsection{Análisis de rendimiento}
-\blindtext[1]
+\newpage
+
+\begin{lstlisting}[caption=Instrucciones para instalar el compilador de Graciela en Linux con APT, label={lst:apt}]
+  # add-apt-repository ppa:graciela-usb/ppa
+  # apt-get update
+  # apt-get install graciela
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Instrucciones para instalar el compilador de Graciela en macOS con Homebrew, label={lst:brew}]
+  $ brew tap GracielaUSB/graciela
+  $ brew install graciela
+\end{lstlisting}
+
+Por último, se agregaron resaltadores de código y plantillas automáticas para
+los editores de texto \textbf{Vi / Vim}, \textbf{Sublime Text}, \textbf{Atom} y
+\textbf{Gedit}. Para Vi / Vim y Gedit, estas extensiones se agregan al instalar
+el compilador, mientras que en Sublime Text y Atom pueden agregarse a través de
+los manejadores de paquetes de cada editor.

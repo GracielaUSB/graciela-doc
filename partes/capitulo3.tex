@@ -99,8 +99,8 @@ tomó la segunda de las recomendaciones.
 No se decidió implementar la extensión de la tercera recomendación puesto que su
 aporte a los cursos en los que podría usarse el lenguaje Graciela se consideró
 limitado, aunque en definitiva se trata de una extensión valiosa para el
-lenguaje en general y se mantiene la recomendación para futuros
-implementadores\todo{???} del lenguaje y su compilador.
+lenguaje en general y se mantiene la recomendación para futuros proyectos de
+extensión del lenguaje y su compilador.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Modularización de la base de código}
@@ -212,7 +212,7 @@ entero, que no expresa el verdadero problema del caso.
 
 \begin{gracielacode}[caption=Error en dimensiones de arreglo, label=lst:badarr]
 |[ var arr : array [5, 10] of int
-;  writeln(arr[3])
+ ;  writeln(arr[3])
 ]|
 \end{gracielacode}
 
@@ -266,7 +266,10 @@ de los procedimientos. Por ejemplo, la firma de procedimiento en el fragmento de
 aceptada por el compilador:
 
 \begin{gracielacode}[caption=Firma de procedimiento con parámetro de tipo arreglo, label=lst:arrproc]
-proc sub(const size : int, inout arr : array [size, size * 2] of int)
+proc sub(
+  const size : int,
+  inout arr : array [size, size * 2] of int
+)
 \end{gracielacode}
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
@@ -275,16 +278,17 @@ fragmento de código~\ref{lst:arrproccall}.
 
 \begin{gracielacode}[caption=Llamada a procedimiento con argumento de tipo arreglo, label=lst:arrproccall]
 |[ var arr : array [5, 5]
-;  sub (5, arr)
+ ; sub (5, arr)
 ]|
 \end{gracielacode}
 
-En este caso, el procedimiento \ingra{sub} espera un arreglo rectangular de
-tamaño \ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que
-el tamaño del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de
-tamaño \ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa
-llamada. Esta verificación no puede hacerse a tiempo de compilación en el caso
-general, puesto que sería necesario \todo{consultar esto con Monascal}.
+En este caso, el procedimiento \ingra{sub} espera un arreglo de tamaño
+\ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que el tamaño
+del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de tamaño
+\ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa llamada.
+Esta verificación no puede hacerse a tiempo de compilación en el caso general,
+puesto que sería equivalente a predecir todos los posibles cursos de ejecución
+del programa.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Consideraciones sobre funciones y procedimientos}
@@ -350,14 +354,13 @@ conseguida, el rango asociado a ella. Por ejemplo, con la variable generadora
 \ingra{x}, la expresión \ingra{x >= 5} tiene asociado el rango $[5, \infty)$.
 
 Cuando el analizador sintáctico se encuentra en una cuantificación, agrega la
-variable generadora correspondiente a la pila del estado, e intenta construir
-un rango. Los únicos operadores que construyen rangos son la igualdad
-(\ingra{==}), que construye rangos <<unitarios>>; las comparaciones aritméticas
-(\ingra{>}, \ingra{>=}, \ingra{<}, \ingra{<=}), que construyen rangos
-<<aritméticos>>; y el operador <<pertenece>> de la Teoría de Conjuntos ($\in$)
-\todo{los conjuntos y demás tipos de la teoría de conjuntos se explican más
-adelante, ¿cómo decir eso?}, que produce rangos <<conjunto>>, mientras que la
-constante booleana \ingra{false} produce el rango <<vacío>>.
+variable generadora correspondiente a la pila del estado, e intenta construir un
+rango. Los únicos operadores que construyen rangos son la igualdad (\ingra{==}),
+que construye rangos <<unitarios>>; las comparaciones aritméticas (\ingra{>},
+\ingra{>=}, \ingra{<}, \ingra{<=}), que construyen rangos <<aritméticos>>; y el
+operador <<pertenece>> de la Teoría de Conjuntos ($\in$) [ver sección
+\ref{sect:sets}], que produce rangos <<conjunto>>, mientras que la constante
+booleana \ingra{false} produce el rango <<vacío>>.
 
 Además, el operador de conjunción (\ingra{/\}) devuelve, si es
 posible, el rango que resulta de intersectar los rangos asociados a cada uno de
@@ -409,7 +412,7 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TEORÍA DE CONJUNTOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Teoría de conjuntos}
+\section{Teoría de conjuntos}\label{sect:sets}
 \subsection{Consideraciones}
 
 Para permitir mayor expresividad en las aserciones del lenguaje, específicamente
@@ -531,9 +534,9 @@ declaración y uso de un apuntador a entero.
 
 \begin{gracielacode}[caption=Uso de apuntadores, label=lst:point]
 |[ var p : int *
-;  new(p)
-;  *p := 10
-;  free(p)
+ ;  new(p)
+ ;  *p := 10
+ ;  free(p)
 ]|
 \end{gracielacode}
 
@@ -562,14 +565,14 @@ memoria dinámica se realiza llamando a la función estándar de C \texttt{free}
 
 Durante la etapa de planificación y diseño de la extensión al lenguaje Graciela,
 se consideró la posibilidad de agregar a este el soporte para expresiones
-propias de la lógica de separación \todo{explicada en el marco teórico}, de modo
-que los programadores pudieran especificar de manera sencilla propiedades acerca
-de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
-implementar los operadores propios de la lógica de separación, $*$ (conjunción
-separadora), $\mapsto$ (deconstrucción de \textit{heap} unitario), y $-*$
-(implicación separadora), así como la constante $emp$, es necesario almacenar la
-información correspondiente al \textit{heap} en cada caso, exigiendo el manejo
-cuidadoso a tiempo de ejecución de estructuras internas temporales con este fin.
+propias de la lógica de separación, de modo que los programadores pudieran
+especificar de manera sencilla propiedades acerca de estructuras recursivas que
+hicieran uso de apuntadores. Sin embargo, para implementar los operadores
+propios de la lógica de separación, $*$ (conjunción separadora), $\mapsto$
+(deconstrucción de \textit{heap} unitario), y $-*$ (implicación separadora), así
+como la constante $emp$, es necesario almacenar la información correspondiente
+al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a tiempo de
+ejecución de estructuras internas temporales con este fin.
 
 Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
 separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
@@ -578,7 +581,7 @@ influyó en esta decisión fue la consideración de que el público para el cual
 está dirigido el lenguaje Graciela, los estudiantes de los cursos introductorios
 de algoritmos y estructuras, tan sólo está familiarizado con la lógica de
 predicados, y está estudiando la lógica de Hoare, por lo cual agregar a esta
-carga otro sistema formal \todo{???} (uno que no pertenece a los programas de
+carga otro sistema formal (uno que no pertenece a los programas de
 estudios de los cursos en cuestión) resultaría en un gran potencial para
 confusión para el programador, sin agregar mucho valor al lenguaje.
 
@@ -700,7 +703,7 @@ genéricos.
 Estos tipos genéricos, o variables de tipo, se pueden declarar junto con la
 definición de un tipo de dato y usarse en la especificación interna de éste. Las
 variables de tipos solo pueden ser sustituidas por un tipo básico, es decir,
-tipo entero, flotante, carácter o booleano \todo{apuntadores???}. Al momento de
+tipo entero, flotante, carácter o booleano. Al momento de
 declarar una variable de un tipo de dato definido por el programador con
 variables de tipo asociadas, se deben  especificar los tipos básicos que
 correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
@@ -974,8 +977,7 @@ Una de las posibles extensiones planteadas para el compilador durante el
 transcurso de este proyecto, debido a su relevancia para el curso Algoritmos y
 Estructuras II, fue la de ofrecer al programador la capacidad de definir Tipos
 Algebraicos Libres (TALs), de modo que se realizó la correspondiente investigación
-teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado
-\todo{esto debe decirse???}.
+teórica, quedando reflejada en el Marco Teórico del presente Proyecto de Grado.
 
 Se consiguió que para implementar esta característica exitosamente, era
 necesario extender el compilador para reconocer definiciones de tipos
@@ -1033,22 +1035,20 @@ que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a
 la usada en la teoría del curso mencionado, y podrían ser utilizados en los
 laboratorios correspondientes a esta área.
 
-\todo{dejar esta extensión como recomendación?}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Herramientas para el programador}
-% \subsection{Colección de programas}
-% \blindtext[1]
-% % Referencia a los anexos
-\subsection{Facilidad de instalación y uso para programadores noveles}
-\todo{APT + Homebrew}
-\blindtext[1]
 
-\subsection{Mejoras al ambiente de programación}
-\todo{Editores}
-\blindtext[1]
+Una vez el compilador alcanzó el desempeño deseado, se investigaron los medios
+necesarios para empaquetarlo y distribuirlo, dirigidos a las plataformas
+soportadas actualmente, los sistemas operativos Linux y macOS. Para Linux, se
+utilizó la herramienta APT, disponible en una alta proporción de las
+distribuciones de Linux puesto que forma parte íntegra de Debian y
+distribuciones derivadas de ella. Para macOS, se decidió utilizar Homebrew, por
+ser una plataforma sencilla de usar.
 
-\subsection{Depuración y análisis de rendimiento}
-\blindtext[1]
+Luego de esto, se estudiaron distintos editores de texto diseñados para la
+programación y sus sistemas de paquetes, para agregarle a cada uno resaltadores
+de sintaxis para el lenguaje Graciela, así como la inserción automática de
+plantillas muy frecuentes del lenguaje.

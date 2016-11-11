@@ -30,12 +30,12 @@ precondición se cumple, el programa termina.
 
 \section{Teoría de conjuntos}
 
-La Teoría de Conjuntos es la rama de la matemática que se encarga del estudio de
-colecciones bien formados de objetos, que pueden o no ser de naturaleza
-matemática. Esta teoría surge de la idea original de conjuntos de Georg Cantor,
-quien los definió como una colección, finita o infinita, de objetos definidos y
-distinguibles, y a su vez los conjuntos pueden ser considerados en sí mismos
-como objetos.
+La Teoría de Conjuntos~\cite{gries} es la rama de la matemática que se encarga
+del estudio de colecciones bien formados de objetos, que pueden o no ser de
+naturaleza matemática. Esta teoría surge de la idea original de conjuntos de
+Georg Cantor, quien los definió como una colección, finita o infinita, de
+objetos definidos y distinguibles, y a su vez los conjuntos pueden ser
+considerados en sí mismos como objetos.
 
 A partir de las ideas de Cantor, se comenzó un proceso de axiomatización de la
 matemática, con el cual se construyeron en base a los conjuntos otros objetos
@@ -86,15 +86,15 @@ detalles relevantes, como los posibles uso de un programa, y suprimir aquellos
 detalles que no lo son, como la implementación del programa.
 
 Un Tipo de Dato Abstracto o TDA define una clase de objetos abstractos, los
-cuales se caracterizan completamente por las operaciones disponibles que
-pueden aplicarse a estos~\cite{liskov}. En otras palabras, un TDA puede ser
-especificado operaciones características del tipo en cuestión y un conjunto de
-valores a los cuales se le aplican dichas operaciones, que definan su
-comportamiento lógico~\cite{dalewalker}. De esta forma se desliga la
+cuales se caracterizan completamente por las operaciones disponibles que pueden
+aplicarse a estos~\cite{liskov}. En otras palabras, un TDA puede ser
+especificado a través de operaciones características del tipo en cuestión y un
+conjunto de valores a los cuales se le aplican dichas operaciones, que definen
+su comportamiento lógico~\cite{dalewalker}. De esta forma se desliga la
 especificación formal de la implementación concreta de un tipo, pudiendo
 discriminar entre una implementación u otra, sin afectar su comportamiento.
 
-Comúnmente, la especificación formal de un TAD posee un modelo abstracto de
+Comúnmente, la especificación formal de un TDA posee un modelo abstracto de
 representación, que consiste en una colección de estructuras internas de alto
 nivel como conjuntos o relaciones, y sus operaciones se modelan como
 procedimientos y funciones, de los cuales solo se necesitan saber las
@@ -110,7 +110,28 @@ consistencia entre el modelos abstracto de representación y el modelo de
 representación de la implementación haciendo uso de técnicas de refinamiento,
 especificando formalmente la correspondencia entre ambos modelos. Finalmente
 se implementan todos los procedimientos y funciones correspondientes a las
-operaciones del TAD~\cite{ravelo}.
+operaciones del TDA~\cite{ravelo}.
+
+Una propiedad importante de los TDAs es que sus procedimientos jamás deben
+alterar sus invariantes, pues de lo contrario, el objeto afectado por el
+procedimiento ya no pertenecería al modelo abstracto. Esta propiedad puede
+representarse como una familia de tripletas de Hoare (figura
+\ref{eqn:tdatriple}), donde $p$ es un procedimiento definido como
+$\textbf{proc}\ p (Y)$, $Y$ es una lista de parámetros que posiblemente incluye
+variables de un TDA, e $Inv(x)$ es el predicado que condensa todos los
+invariantes del valor $x$ si $x$ es de un TDA.
+
+\begin{equation} \label{eqn:tdatriple}
+\begin{gathered}
+% \frac{
+  \{ P[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}\\
+  p\ (X)\\
+  \{ Q[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}
+% }{
+% }
+\end{gathered}
+\end{equation}
+
 
 \section{Tipos Algebraicos Libres}
 
@@ -170,9 +191,6 @@ declarar explícitamente las variables para los sub-valores.
 &\boldsymbol{fi} \nonumber
 \end{alignat}
 
-% \todo{http://foldoc.org/algebraic%20data%20type}
-% \todo{\verb{http://haskell.cs.yale.edu/wp-content/uploads/2011/02/history.pdf}}
-
 \section{Lógica de Separación}
 
 La Lógica de Separación fue desarrollada por John Reynolds, Hongseok Yang y
@@ -200,11 +218,11 @@ En caso positivo se devuelve el valor \textbf{emp}, el cual representa al
 \textit{heap} vacío, es decir, el \textit{heap} en donde no existen celdas
 reservadas. Si por el contrario E no es un átomo, entonces se verifica para cada
 hijo que sea un árbol binario, cubriendo así el caso recursivo. El operador
-\todo{nombre?} $E\mapsto x$ significa que E apunta al fragmento de memoria x. En
-este caso se hace uso de este operador de la forma $E\mapsto [l: x, r: y]$ que
-significa que los hijos izquierdo y derecho se ubican en los fragmentos de
-memorias $x$ y $y$ respectivamente, y no es mas que una abreviación de
-$(E\mapsto x) * (E+1\mapsto y)$.
+deconstrucción de \textit{heap} unitario, $E \mapsto x$, significa que E apunta al
+fragmento de memoria x. En este caso se hace uso de este operador de la forma
+$E\mapsto [l: x, r: y]$ que significa que los hijos izquierdo y derecho se
+ubican en los fragmentos de memorias $x$ y $y$ respectivamente, y no es mas que
+una abreviación de $(E\mapsto x) * (E+1\mapsto y)$.
 
 Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
 \vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o

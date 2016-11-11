@@ -1,3 +1,127 @@
 \chapter*{Conclusiones y Recomendaciones}
 \label{conclusiones}
 \setchapter{\emph{Conclusiones y Recomendaciones}}
+
+Durante el desarrollo de este Proyecto de Grado, se diseñó una importante
+extensión al lenguaje de programación Graciela y se implementaron los cambios
+correspondientes en su compilador. Con esta extensión, es posible utilizar
+variables de tipo apuntador y definir estructuras con comportamientos abstractos
+verificables a través del uso de invariantes lógicos, aprovechando expresiones
+de la teoría de conjuntos. Así, se extiende la capacidad didáctica del lenguaje,
+pues permite estudiar, con muy ligeros cambios respecto a los ejemplos
+utilizados en la teoría, los temas propios del curso de Algoritmos y Estructuras
+II de la Universidad Simón Bolívar. Adicionalmente, se mejoraron características
+ya presentes en el lenguaje y en el compilador, como la manipulación de
+arreglos, el uso de cotas para las subrutinas y la escritura de
+cuantificaciones, siempre con la intención de apoyar las prácticas disciplinadas
+de programación a través del uso de estrategias formales.
+
+Esta extensión fue implementada en dos partes, \textit{Front-End} y
+\textit{Back-End}, cada una empleando un conjunto particular de herramientas.
+Para el \textit{Front-End}, la parte del compilador encargada de analizar el
+código fuente escrito en Graciela y a partir de éste producir un Árbol
+Sintáctico Abstracto, se utilizó principalmente la biblioteca de análisis
+sintáctico \textit{Megaparsec}, así como un Monad en Haskell especializado para
+este propósito. Respecto a la versión original del compilador de Graciela, ahora
+se reconocen estructuras más diversas, como las definiciones de tipos de dato
+abstractos o sus implementaciones, expresiones con apuntadores o expresiones de
+la teoría de conjuntos, y en caso de errores de sintaxis o semántica, se proveen
+mensajes de error más claros.
+
+Para el \textit{Back-End}, se aprovechó la familia de software LLVM, a través de
+las bibliotecas de Haskell \textit{llvm-general} y \textit{llvm-general-pure}.
+Estas bibliotecas permiten emitir código intermedio de LLVM, que luego es
+optimizado y convertido en código nativo de alta calidad a través del compilador
+LLVM. Adicionalmente, se usaron los lenguajes C y C++, así como la librería
+estándar de este último, para implementar las biblioteas externas de funciones
+para los programas escritos en Graciela.
+
+Así, el producto final de este Proyecto de Grado es un lenguaje, junto con su
+compilador, dirigido a la enseñanza de algoritmos a través de métodos formales y
+especialmente diseñado para los cursos de Algoritmos y Estructuras I y II de la
+Universidad Simón Bolívar, que incluye, adicionalmente a las características
+presentes en su versión original:
+
+\begin{itemize}
+  \item Instalación y uso sencillos
+  \item Procedimientos y funciones con cotas numéricas.
+  \item Pase de parámetros constantes.
+  \item Pase de arreglos como parámetros de modo \textit{In}, \textit{In-Out} y \textit{Out}.
+  \item Expresiones de la teoría de conjuntos.
+  \item Manipulación de apuntadores con las instrucciones \ingra{new} y \ingra{free}.
+  \item Definición de Tipos de Dato Abstractos con sus invariantes y procedimientos abstractos.
+  \item Implementación de Tipos de Dato Abstractos, con verificaciones para la relación de implementación.
+\end{itemize}
+
+Para futuros proyectos dirigidos a mejorar y ampliar el lenguaje Graciela, se
+presentan las siguientes recomendaciones:
+
+\begin{itemize}
+
+  \item Agregar soporte al compilador en el sistema operativo Microsoft Windows.
+  Para esto, debe estudiarse la manera más apropiada de empaquetar y distribuir
+  el compilador para este sistema. Gracias a que el compilador GHC y las familia
+  de herramientas LLVM cuentan con soporte para Windows, los cambios en el
+  código fuente serán despreciables.
+
+  \item Permitir la compilación de varios archivos a través de un nuevo par de
+  palabras reservadas, \ingra{package} e \ingra{import}. Una de las
+  características de Megaparsec es que el analizador sintáctico permite cambiar
+  el archivo que se está analizando en un momento dado, y bastaría asociar la
+  palabra \ingra{import} con un cambio como este.
+
+  \item Proveer la capacidad de definición de tipos de datos enumerados,
+  posiblemente integrándolos al sistema de operadores aritméticos y relacionales
+  del lenguaje, y con la capacidad de ser usados en las construcciones que
+  aceptarían otros tipos básicos, como expresiones de la teoría de conjuntos.
+  Para esto, bastaría definir una palabra reservada, por ejemplo \ingra{enum},
+  y almacenar los identificadores definidos para cada tipo en la tabla de símbolos,
+  para finalmente utilizar enteros como la representación en código intermedio.
+
+  \item Permitir la definición de Tipos Algebráicos Libres. Esto es un caso más
+  general de la recomendación anterior, de modo que sólo tiene sentido
+  implementar una o la otra. En este caso, se debe permitir que los valores del
+  tipo sean funciones de aridad arbitraria, posiblemente recursivas y con
+  variables de tipos.
+
+  \item Considerando que la biblioteca externa para tipos de la teoría de
+  conjuntos está escrita en C++, usando la librería estándar de este lenguaje,
+  sería un ejercicio interesante de desarrollo de compiladores reescribir esta
+  librería en Graciela. En definitiva, cada uno de los tipos provistos por esta
+  biblioteca puede ser visto como un TDA. Para lograr esto, sería necesario
+  modificar el generador de código del compilador para producir código
+  reubicable, pero una vez hecho esto sólo faltaría definir los TDAs.
+
+  \item Una de las limitaciones que se introdujo al lenguaje fue que las
+  expresiones de la teoría de conjuntos sólo pueden ser de un nivel, es decir,
+  no se permiten colecciones de colecciones. Esto no siempre es suficiente en el
+  mundo de los algoritmos, por lo que sería valioso agregar expresiones
+  arbitrariamente anidadas de estos tipos.
+
+  \item Otra limitación en el estado actual del lenguaje está en las variables
+  de tipos, ya que estas sólo pueden ser instanciadas en tipos no-básicos.
+  Permitir TDAs que tomen otros TDAs en sus variables de tipos permitiría
+  construcciones más interesantes, como listas de listas o pilas de
+  diccionarios.
+
+  \item Permitir la definición de subrutinas correcursivas. Actualmente, las
+  subrutinas sólo pueden llamarse a sí mismas (si tienen cota) o a subrutinas
+  definidas antes de sí mismas, por lo cual no es posible crear correcursiones.
+  Para poder llamar subrutinas definidas más abajo de sí mismas, debe agregarse
+  a la gramática la posiblidad de declarar subrutinas <<por adelantado>>, por
+  ejemplo escribiendo la firma de la subrutina sola y posteriormente con su
+  cuerpo. Para asegurar que los programas terminan, esto debe hacerse
+  simultáneamente con un cambio sutil en el código generado para las subrutinas:
+  ahora, cada una lleva registro no sólo de sus propias expresiones de cota,
+  sino de las cotas todas las subrutinas que la llaman correcursivamente, y en
+  cada iteración debe asegurarse que el conjunto de cotas disminuyó.
+
+  \item Para poder hacer aseveraciones acerca de apuntadores con mayor
+  comodidad, sería valioso agregar la posibilidad de escribir expresiones de la
+  lógica de separación en las aserciones del lenguaje. Para permitir esto, debe
+  estudiarse cuidadosamente la definición de los operadores de esta lógica y
+  deben definirse las estructuras internas de los programas compilados que
+  mantendrán la información sobre el estado del \textit{heap} para cada
+  aserción.
+
+\end{itemize}

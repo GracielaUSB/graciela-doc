@@ -63,6 +63,7 @@
 \usepackage{xcolor}
 \usepackage{caption}
 \usepackage[pass, letterpaper]{geometry}
+\usepackage{pdfpages}
 
 % Paquetes locales
 % Puedes agregar paquetes locales (archivos .sty) en un subdirectorio % 'paquetes'.
@@ -150,7 +151,7 @@
     % list of keywords
     keywords=[1]{},
     morekeywords=[2]{
-        proc, func, program, begin, end, abstract, type,
+        proc, func, program, package, import, begin, end, abstract, type, enum,
         if, do, in, out, inout, fi, od, write,
         writeln, read, from, where, of, implements,
         set, rel, relation, multiset, sequence, function,
@@ -371,6 +372,12 @@
 \newcommand{\setchapter}[1]{\renewcommand{\thechaptername}{#1}}
 
 \begin{document}
+
+\includepdf[offset=2.5cm -2.5cm]{portada.pdf}
+\cleardoublepage
+\includepdf[offset=2.5cm -2.5cm]{portada2.pdf}
+\cleardoublepage
+
 \frontmatter
 
 \setstretch{1.3}
@@ -384,17 +391,32 @@
 
 \setcounter{page}{5}
 \abstract{
-% \addtocontents{toc}{\vspace{1em}}
 
-Máximo 250 palabras
-\blindtext[1]
+El lenguaje Graciela y su compilador, diseñados por Araujo y Jiménez~\cite{ayj},
+cuentan con las características necesarias para su uso en el curso Algoritmos y
+Estructuras I de la Universidad Simón Bolívar y su respectivo laboratorio. Sin
+embargo, no cuentan con dos elementos cruciales para su uso en el curso que le
+sigue, Algoritmos y Estructuras II, que son el manejo de apuntadores y la
+definición de Tipos de Dato Abstractos (TDAs) con sus implementaciones, por lo
+cual se decidió extenderlos para soportar estas características. Para esto, se
+diseñó una gramática extendida con estas características. Luego se extendió el
+analizador sintáctico para implementar esta gramática. Se añadieron las
+verificaciones de contexto necesarias para validar un programa en presencia de
+estas nuevas construcciones, y finalmente se agregaron las traducciones
+apropiadas a código intermedio LLVM. Durante este proceso, se cambió la
+biblioteca de análisis sintáctico \textit{Parsec} por \textit{Megaparsec}, por
+resultar más flexible para la recuperación de errores y para empilar
+\textit{Monads} sobre el \textit{Monad} de análisis sintáctico. Además, se
+agregaron expresiones de la teoría de conjuntos para hacer más expresivas las
+aserciones de los TDAs. Por último, se dio al proyecto una estructura más
+modular para facilitar la escritura de futuras extensiones a su compilador.
 
 
 % Las palabras clave son generalmente los nombres de áreas de investigación a
 % los cuales está asociado el trabajo. Generalmente son tres o cuatro.
 \noindent
 \begin{small}
-  \textbf{Palabras clave}: GCL, compilador, Haskell, LLVM, Graciela, Tipo de Dato Abstracto, Megaparsec, apuntador.
+  \textbf{Palabras clave}: GCL, compilador, Haskell, LLVM, Graciela, Tipo de Dato Abstracto, apuntador.
 \end{small}
 }
 
@@ -416,47 +438,47 @@ Máximo 250 palabras
 \clearpage
 
 % Agradecimientos
-\acknowledgements{
-
-%% Agradecimientos ambos
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
-facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
-mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
-augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
-ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
-dolor sit amet, consectetuer adipiscing elit.
-
-\begin{multicols}{2}
-%% Agradecimientos Moisés
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
-facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
-mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
-augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
-ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
-dolor sit amet, consectetuer adipiscing elit.
-
-\begin{flushright}
-  --- M. A.
-\end{flushright}
-
-\vfill
-\columnbreak
-
-%% Agradecimientos Carlos
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
-facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
-mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
-augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
-ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
-dolor sit amet, consectetuer adipiscing elit.
-
-\begin{flushright}
-  --- C. S.
-\end{flushright}
-
-\end{multicols}
-}
-\clearpage
+% \acknowledgements{
+%
+% %% Agradecimientos ambos
+% Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
+% facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
+% mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
+% augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
+% ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
+% dolor sit amet, consectetuer adipiscing elit.
+%
+% \begin{multicols}{2}
+% %% Agradecimientos Moisés
+% Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
+% facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
+% mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
+% augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
+% ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
+% dolor sit amet, consectetuer adipiscing elit.
+%
+% \begin{flushright}
+%   --- M. A.
+% \end{flushright}
+%
+% \vfill
+% \columnbreak
+%
+% %% Agradecimientos Carlos
+% Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Etiam lobortis
+% facilisis sem. Nullam nec mi et neque pharetra sollicitudin. Praesent imperdiet
+% mi nec ante. Donec ullamcorper, felis non sodales commodo, lectus velit ultrices
+% augue, a dignissim nibh lectus placerat pede. Vivamus nunc nunc, molestie ut,
+% ultricies vel, semper in, velit. Ut porttitor. Praesent in sapien. Lorem ipsum
+% dolor sit amet, consectetuer adipiscing elit.
+%
+% \begin{flushright}
+%   --- C. S.
+% \end{flushright}
+%
+% \end{multicols}
+% }
+% \clearpage
 
 \pagestyle{fancy}
 

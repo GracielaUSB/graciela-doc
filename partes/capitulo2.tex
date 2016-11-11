@@ -56,22 +56,19 @@ cuales serán mencionadas en detalles en las siguientes secciones.
 
 \subsection{C, C++}
 
-\todo{referencias}
-
-\textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
-el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
-estáticos y débilmente tipificados, pero ofrecen ventajas para realizar
-operaciones a muy bajo nivel, como el manejo y acceso manual de la memoria.
+\textit{C}~\cite{c-lang} y \textit{C++}~\cite{cpp-lang} son lenguajes
+imperativos, y orientado a objetos en el caso de \textit{C++}. Estos dos
+lenguajes poseen un sistema de tipo estático y con conversiones implícitas, pero
+ofrecen ventajas para realizar operaciones a muy bajo nivel, como el manejo y
+acceso manual de la memoria.
 
 Ambos lenguajes poseen mecanismo para declarar estructuras de datos básicos,
-funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un
-lenguaje orientado a objetos, entran conceptos como clases, herencia de clases
-y encapsulamiento. También, a diferencia del lenguaje \textit{C}, \textit{C++}
-posee una biblioteca estándar mas extensa, en la cual se ofrecen estructuras
-de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
+funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un lenguaje
+orientado a objetos, entran conceptos como clases, herencia de clases y
+encapsulamiento. También, a diferencia del lenguaje \textit{C}, \textit{C++}
+posee una biblioteca estándar mas extensa, en la cual se ofrecen estructuras de
+datos mas complejas como mapas, conjuntos o vectores, y algoritmos de
 ordenamiento o búsqueda sobre dichas estructuras.
-
-\todo{stdlib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA ANÁLISIS LÉXICO Y SINTÁCTICO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,15 +87,13 @@ reconocedor, o ejecutar un segundo reconocedor en caso de que el primero falle.
 
 Si bien esta biblioteca no ofrece soporte para recuperación de errores durante
 el análisis sintáctico, éste puede implementarse haciendo uso de la función
-\texttt{try}, la cual restablece el estado original del flujo de entrada en
-caso de fallar el reconocedor pasado como argumento. Esto debe hacerse de manera
-cuidadosa, puesto que
-\todo{http://blog.ezyang.com/2014/05/parsec-try-a-or-b-considered-harmful/} si
-el reconocedor en cuestión es complejo, la información analizada antes del punto
-donde ocurrió el error se pierde. Lo recomendable es usar un conjunto pequeño de
-lexemas, conocido en inglés como \textit{lookahead}, para decidir el camino que
-debe tomar el analizador sintáctico en un punto donde existen múltiples
-opciones.
+\texttt{try}, la cual restablece el estado original del flujo de entrada en caso
+de fallar el reconocedor pasado como argumento. Esto debe hacerse de manera
+cuidadosa, puesto que, si el reconocedor en cuestión es complejo, la información
+analizada antes del punto donde ocurrió el error se pierde~\cite{parsectry}. Lo
+recomendable es usar un conjunto pequeño de lexemas, conocido en inglés como
+\textit{lookahead}, para decidir el camino que debe tomar el analizador
+sintáctico en un punto donde existen múltiples opciones.
 
 \subsection{Megaparsec}
 
@@ -167,7 +162,7 @@ permite realizar un perfilaje detallado de la ejecución de un programa y
 detectar errores en procesos multihilo.
 
 En este proyecto, se utilizó \textit{Valgrind} con la intención de detectar
-posibles fugas de memoria en el código de las librerías externas de Graciela,
+posibles fugas de memoria en el código de las bibliotecas externas de Graciela,
 particularmente en el caso de las estructuras de tipos de la teoría de
 conjuntos, y en el código generado para las nuevas instrucciones \ingra{new} y
 \ingra{free} de apuntadores. Adicionalmente, se usó para revisar los accesos a
@@ -179,12 +174,12 @@ implementados.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ambientes de programación}
 
-Como objetivo adicional \todo{ask novich}, se estudió la posibilidad de
-incorporar herramientas para mejorar la experiencia del programador en Graciela.
-Específicamente, se indagó acerca de los editores de texto para programación más
-comúnmente usados entre los estudiantes de la carrera de Ingeniería de la
-Computación y sobre cómo agregarles características como un resaltador
-sintáctico y la inserción automática de plantillas de código.
+Como objetivo adicional se estudió la posibilidad de incorporar herramientas
+para mejorar la experiencia del programador en Graciela. Específicamente, se
+indagó acerca de los editores de texto para programación más comúnmente usados
+entre los estudiantes de la carrera de Ingeniería de la Computación y sobre cómo
+agregarles características como un resaltador sintáctico y la inserción
+automática de plantillas de código.
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Sublime Text}]
 

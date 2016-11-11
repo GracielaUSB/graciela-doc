@@ -94,12 +94,12 @@
     - Compilación de varios archivos (package/import)
     - Tipos enumerados
     - TALs (subsume tipos enumerados)
-    - Construir un depurador
+    <!-- - Construir un depurador -->
     - Reescribir la biblioteca externa para tipos abstractos en Graciela
     - Extender los tipos de la teoría de conjuntos más allá de un nivel
     - Admitir variables de tipos instanciadas en no-básicas
     - Funciones y procedimientos correcursivos con cotas "tupla", forward declarations
-    - Estudiar la posibilidad de permitir varios grados de refinamiento en los TDAs
+    <!-- - Estudiar la posibilidad de permitir varios grados de refinamiento en los TDAs -->
     - Lógica de separación
 
 
