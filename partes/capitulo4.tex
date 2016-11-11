@@ -59,7 +59,7 @@ declarándolos como arreglos de arreglos de algún tipo, y para utilizar sus
 elementos se hacía uso de tantos subíndices (\ingra{[i]}) como dimensiones
 tuviera el arreglo. Ahora, son declarados como arreglos de varias dimensiones,
 especificando entre corchetes sus tamaños en cada dimensión, separados por
-comas, como en el fragmento de código \ref{lst:arrdec}.
+comas, como en el fragmento de código~\ref{lst:arrdec}.
 
 \begin{gracielacode}[caption=Declaración de variable de tipo arreglo, label=lst:arrdec]
 var unArreglo : array [x, y, z] of int
@@ -67,7 +67,7 @@ var unArreglo : array [x, y, z] of int
 
 Similarmente, para hacer uso de sus elementos, se usan tantos subíndices como
 dimensiones tuviera el arreglo de interés, pero entre un mismo par de corchetes,
-como en el fragmento de código \ref{lst:arridx}.
+como en el fragmento de código~\ref{lst:arridx}.
 
 \begin{gracielacode}[caption=Acceso a variable de tipo arreglo, label=lst:arridx]
 writeln (unArreglo[1, 2, 3])
@@ -131,7 +131,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
   En este caso, se forma un rango numérico entre el máximo de los límites
   inferiores y el mínimo de los límites superiores definidos por las
   desigualdades. Puede verse un ejemplo de esto en el fragmento de código
-  \ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
+ ~\ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
   incluyendo  el límite inferior pero no el superior.
 
 \begin{gracielacode}[caption=Cuantificación con rango numérico, label=lst:numrange]
@@ -142,7 +142,7 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
   de un operador de pertenencia (\Elem), con una colección en el lado derecho.
   En este caso, se forma un rango de pertenencia sobre la colección en
   cuestión. Puede verse un ejemplo de esto en el fragmento de código
-  \ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
+ ~\ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
 
 \begin{gracielacode}[caption=Cuantificación con rango de pertenencia, label=lst:setrange]
 var s : set of A
@@ -153,7 +153,7 @@ var s : set of A
   \item [Rango puntual] La variable auxiliar aparece, sola, en cualquier lado de
   un operador de igualdad (\ingra{==}). En este caso, se forma un rango puntual
   correspondiente a la expresión del otro lado del operador. Puede verse un
-  ejemplo de esto en el fragmento de código \ref{lst:pointrange}. En ese caso,
+  ejemplo de esto en el fragmento de código~\ref{lst:pointrange}. En ese caso,
   el rango resultante es el valor de la expresión
   \lstinline[language=graciela]{a ~\op~b ~\op~c}.
 
@@ -165,7 +165,7 @@ var a, b, c : int
 
   \item [Rango vacío] La expresión puede ser evaluada como la constante
   \ingra{false} a tiempo de compilación, resultando un rango vacío. Puede verse
-  un ejemplo de esto en el fragmento de código \ref{lst:emptyrange}. En ese
+  un ejemplo de esto en el fragmento de código~\ref{lst:emptyrange}. En ese
   caso, el rango resultante es el rango vacío, con todas las consecuencias que
   pueda tener esto para el valor de la cuantificación y la ejecución del
   programa.
@@ -198,7 +198,7 @@ Por último, se agregó el operador de cuantificación \ingra{count}, o
 equivalentemente \ingra{#}. Este operador exige un cuerpo de tipo booleano, y el
 resultado de la cuantificación será el número de veces que sea cierta la
 expresión del cuerpo para los valores en el rango dado. De esta forma, se
-cumplen las equivalencias de los fragmentos de código \ref{lst:forallcount} y
+cumplen las equivalencias de los fragmentos de código~\ref{lst:forallcount} y
 \ref{lst:existcount}.
 
 \begin{gracielacode}[caption=Equivalencia entre cuantificador universal y count, label=lst:forallcount]
@@ -294,7 +294,7 @@ En el primer caso, simplemente se nombran los elementos de la colección
 separados por comas, existiendo la posibilidad de no especificar elementos para
 la colección vacía. Así, el conjunto, multiconjunto y secuencia con los números
 1, 2 y 3 pueden escribirse en Graciela, respectivamente, como se muestra en el
-fragmento de código \ref{lst:extcollections}.
+fragmento de código~\ref{lst:extcollections}.
 
 \begin{gracielacode}[caption=Expresiones de tipos \textit{colección} por extensión, label=lst:extcollections]
 {1, 2, 3}
@@ -312,7 +312,7 @@ consideraciones que para las cuantificaciones. La tercera parte, el cuerpo, es
 la expresión que será agregada a la colección para cada valor posible de la
 variable auxiliar. Así, las mismas colecciones del ejemplo anterior podrían
 escribirse, respectivamente, como se muestra en el
-fragmento de código \ref{lst:compcollections}.
+fragmento de código~\ref{lst:compcollections}.
 
 \begin{gracielacode}[caption=Expresiones de tipos \textit{colección} por comprensión, label=lst:compcollections]
 {i : int | 0 < i /\ i < 4 | i}
@@ -326,7 +326,7 @@ También se permite la declaración de variables de tipos colección dentro de l
 Tipos de Dato Abstractos. La notación para esto es la misma que para las
 declaraciones de tipos básicos, cambiando el tipo usado. Así, para definir,
 respectivamente, un conjunto, un multiconjunto, y una secuencia de enteros, se
-usa la notación del fragmento de código \ref{lst:declcollections}.
+usa la notación del fragmento de código~\ref{lst:declcollections}.
 
 \begin{gracielacode}[caption=Declaración de variables de tipos \textit{colección}, label=lst:declcollections]
 var x : set of int;
@@ -349,7 +349,7 @@ Adicionalmente, en el caso en que el conjunto pasado a \ingra{func} contuviese
 dos pares ordenados con el mismo primer elemento, se daría un error a tiempo de
 ejecución, por incumplirse la definición matemática de \textit{función}. Así, la
 función que duplica los números entre el 1 y el 10 puede escribirse como se
-muestra en el fragmento de código \ref{lst:funcfunc}, mientras que la relación
+muestra en el fragmento de código~\ref{lst:funcfunc}, mientras que la relación
 entre los números entre el 1.0 y el 10.0 con sus raíces cuadradas positiva y
 negativa puede escribirse como se muestra en el fragmento de código
 \ref{lst:relfunc}
@@ -377,7 +377,7 @@ paréntesis. En el caso de las funciones, el resultado es un valor del tipo del
 codominio, o un error a tiempo de ejecución si el valor usado como argumento no
 pertenece al dominio, mientras que para las relaciones, el resultado es siempre
 un conjunto, potencialmente vacío, de elementos del tipo del codominio. Puede
-verse un ejemplo de ambos casos en el fragmento de código \ref{lst:funcreleval}.
+verse un ejemplo de ambos casos en el fragmento de código~\ref{lst:funcreleval}.
 
 \begin{gracielacode}[caption=Evaluación de \textit{función} y \textit{relación}, label=lst:funcreleval]
 { func ({ (2, 4), (3, 6), (5, 10) }) (3) == 6 };
@@ -481,7 +481,7 @@ Conjuntos. El único lugar donde se está permitido hacer uso de las variables
 de alto nivel del TDA como campos de la \textit{implementación}, es dentro del
 invariante y la relación de acoplamiento. De esta forma, una posible
 implementación del TDA \ingra{Diccionario} debería verse de la como se muestra
-en el fragmento de código \ref{lst:dicc}
+en el fragmento de código~\ref{lst:dicc}
 
 \begin{widegracielacode}[caption=Una posible implementación del TDA Diccionario, label=lst:dicc]
 type Dicc (T0, T1) implements Diccionario (T0, T1) begin
@@ -530,9 +530,9 @@ pueden existir múltiples implementaciones para un TDA.
 
   \item[Homebrew] La instalación del compilador graciela en sistemas
     operativos macOS se hace haciendo uso de la herramienta Homebrew,
-    con la cual se reduce a los comandos mostrados en la figura \ref{brew}.
+    con la cual se reduce a los comandos mostrados en la figura~\ref{lst:brew}.
 
-    \begin{lstlisting}[caption=Homebrew para instalar graciela]
+    \begin{lstlisting}[caption=Instrucciones para instalar el compilador de Graciela con Homebrew, label={lst:brew}]
       $ brew tap GracielaUSB/graciela
       $ brew install graciela
     \end{lstlisting}

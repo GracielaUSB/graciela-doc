@@ -5,7 +5,7 @@
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
-revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
+revisión del trabajo previo, el proyecto se orientó en cinco áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
 por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
 programador.
@@ -161,15 +161,16 @@ biblioteca tendría problemas en este aspecto, o al menos resultaría compleja y
 más propensa a defectos de programación.
 
 Así, se investigaron bibliotecas alternativas para análisis sintáctico y se
-consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico
-\todo{explicar en el Marco Tecnológico}, \texttt{Megaparsec} provee el
-combinador \texttt{withRecovery}, que permite agregar recuperación de errores
-con la técnica de \textit{Panic Mode} (<<nodo pánico>>)~\cite{aho2} a un
-analizador sintáctico de manera sencilla. Este combinador recibe una función de
-recuperación y un analizador sintáctico base, y ejecuta la primera cuando dicho
-analizador falla. Por ejemplo, para agregar recuperación de errores a las
-instrucciones, separadas por punto y coma, se usó código como el del fragmento
-\ref{lst:withrec}.
+consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico,
+\texttt{Megaparsec} provee el combinador \texttt{withRecovery}, que permite
+agregar recuperación de errores con la técnica de \textit{Panic Mode} (<<modo
+pánico>>)~\cite{aho2} a un analizador sintáctico de manera sencilla. Este
+combinador recibe una función de recuperación y un analizador sintáctico base, y
+ejecuta la primera cuando dicho analizador falla. Por ejemplo, para agregar
+recuperación de errores a las instrucciones, separadas por punto y coma, se usó
+código como el del fragmento~\ref{lst:withrec}, de modo que, con ligeros cambios
+según el contexto del analizador, fue posible agregar recuperación de errores al
+compilador.
 
 \begin{haskellcode}[caption=Uso de \texttt{withRecovery}, label=lst:withrec]
 withRecovery recover instruction
@@ -177,9 +178,6 @@ withRecovery recover instruction
     recover err = void anyToken `manyTill` match TokSemicolon
                >> tell err
 \end{haskellcode}
-
-Así, con ligeros cambios según el contexto del analizador, fue posible agregar
-recuperación de errores al compilador.
 
 Otra ventaja de la biblioteca \texttt{Megaparsec} sobre \texttt{Parsec} es que
 el \emph{Monad} provisto por la primera, a diferencia del provisto por la
@@ -206,18 +204,17 @@ También se consideró que sería cómodo para el programador poder hablar de
 arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
 errores apropiados, a tiempo de compilación, al usar un arreglo de \ingra{n}
 dimensiones con un número de índices distinto de \ingra{n}. Por ejemplo,
-intentar compilar el fragmento de código \ref{lst:badarr},
+intentar compilar el fragmento de código~\ref{lst:badarr} emitiría un mensaje de
+error acerca del uso de un índice de dimensión 1 para leer de un arreglo de 2
+dimensiones. En la versión original del compilador, la situación equivalente
+produciría un error acerca de intentar imprimir un objeto de tipo arreglo de
+entero, que no expresa el verdadero problema del caso.
 
 \begin{gracielacode}[caption=Error en dimensiones de arreglo, label=lst:badarr]
 |[ var arr : array [5, 10] of int
 ;  writeln(arr[3])
 ]|
 \end{gracielacode}
-
-emitiría un mensaje de error acerca del uso de un índice de dimensión 1 para
-leer de un arreglo de 2 dimensiones. En la versión original del compilador, la
-situación equivalente produciría un error acerca de intentar imprimir un objeto
-de tipo arreglo de entero, que no expresa el verdadero problema del caso.
 
 Para evitarle confusión a los programadores, se eliminó la posibilidad de
 declarar arreglos de arreglos, y se emite un error a tiempo de compilación
@@ -237,9 +234,9 @@ elementos y cuya segunda entrada es el bloque de memoria donde se almacenan los
 elementos.
 
 Específicamente, para arreglos de \ingra{n} dimensiones, se generan estructuras
-<<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo
-entero de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el
-último corresponde a un apuntador a un espacio de memoria contiguo de tamaño
+<<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo entero
+de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el último
+corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
 es un arreglo estático, o en la memoria dinámica si se trata de un apuntador a
@@ -265,7 +262,7 @@ además del modo Ref ya provisto en la especificación original. Adicionalmente,
 se decidió permitir el pase de arreglos de tamaño arbitrario como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
 parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
-de los procedimientos. Por ejemplo, la firma de procedimiento en el fragmento de código \ref{lst:arrproc} sería
+de los procedimientos. Por ejemplo, la firma de procedimiento en el fragmento de código~\ref{lst:arrproc} sería
 aceptada por el compilador:
 
 \begin{gracielacode}[caption=Firma de procedimiento con parámetro de tipo arreglo, label=lst:arrproc]
@@ -274,7 +271,7 @@ proc sub(const size : int, inout arr : array [size, size * 2] of int)
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
 de \ingra{sub} podría ser llamado con argumentos que no concuerden, como en el
-fragmento de código \ref{lst:arrproccall}.
+fragmento de código~\ref{lst:arrproccall}.
 
 \begin{gracielacode}[caption=Llamada a procedimiento con argumento de tipo arreglo, label=lst:arrproccall]
 |[ var arr : array [5, 5]
@@ -529,7 +526,7 @@ La reserva y liberación de memoria dinámica para un apuntador se realiza con l
 funciones propias del lenguaje \ingra{new} y \ingra{free}, ambas con
 consideraciones adicionales para el caso de apuntadores a arreglos y apuntadores
 a tipos definidos por el programador, que se describen detalladamente en sus
-respectivas secciones. El fragmento de código \ref{lst:point} ejemplifica la
+respectivas secciones. El fragmento de código~\ref{lst:point} ejemplifica la
 declaración y uso de un apuntador a entero.
 
 \begin{gracielacode}[caption=Uso de apuntadores, label=lst:point]
@@ -569,10 +566,10 @@ propias de la lógica de separación \todo{explicada en el marco teórico}, de m
 que los programadores pudieran especificar de manera sencilla propiedades acerca
 de estructuras recursivas que hicieran uso de apuntadores. Sin embargo, para
 implementar los operadores propios de la lógica de separación, $*$ (conjunción
-separadora), $\mapsto$ (\todo{cómo se llama esto?}), y $-*$ (implicación
-separadora), así como la constante $emp$, es necesario almacenar la información
-correspondiente al \textit{heap} en cada caso, exigiendo el manejo cuidadoso a
-tiempo de ejecución de estructuras internas temporales con este fin.
+separadora), $\mapsto$ (deconstrucción de \textit{heap} unitario), y $-*$
+(implicación separadora), así como la constante $emp$, es necesario almacenar la
+información correspondiente al \textit{heap} en cada caso, exigiendo el manejo
+cuidadoso a tiempo de ejecución de estructuras internas temporales con este fin.
 
 Debido a esta dificultad, se decidió no agregar expresiones de la lógica de
 separación al lenguaje, y en su lugar ofrecer la alternativa más sencilla de
@@ -707,7 +704,7 @@ tipo entero, flotante, carácter o booleano \todo{apuntadores???}. Al momento de
 declarar una variable de un tipo de dato definido por el programador con
 variables de tipo asociadas, se deben  especificar los tipos básicos que
 correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
-fragmento de código \ref{lst:insttvar}.
+fragmento de código~\ref{lst:insttvar}.
 
 \begin{gracielacode}[caption=Instanciación de variables de tipo, label=lst:insttvar]
 abstract ConjuntoA (T) begin
@@ -815,7 +812,7 @@ intermedio dos subrutinas llamadas \texttt{agregar-Conjunto-i} y
 \texttt{agregar-Conjunto-c}.
 
 Con respecto a la verificación de las precondiciones, poscondiciones e
-invariantes, se tomaron las siguientes consideraciones.
+invariantes, se genera el código necesario para las siguientes verificaciones:
 
 \begin{enumerate}
 
@@ -1017,7 +1014,7 @@ $e\ \textbf{matches}\ c\ (a,\ a)$ y $e\ \textbf{matches}\ c\ (e,\ f)$.
 
 En cuanto al código intermedio generado para expresiones de tipos algebraicos
 libres, se vio que la manera general de representarlas es como estructuras que
-residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone un
+residen en el \textit{heap}, haciendo uso implícito de apuntadores. Esto supone un
 conflicto con uno de los objetivos de este proyecto, proveer al programador las
 herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
 claro cuales deben ser los efectos de la interacción de expresiones de tipos
