@@ -6,7 +6,7 @@
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
 revisión del trabajo previo, el proyecto se orientó en cuatro áreas, a saber,
-(1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de datos definidos
+(1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
 por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
 programador.
 
@@ -83,7 +83,7 @@ podían ser extendidos. Estas recomendaciones eran las siguientes:
   estudiantes del curso Laboratorio de Algoritmos II, por la importancia de los
   apuntadores en el curso.
 
-  \item Proveer la capacidad de creación de tipos de datos enumerados definidos
+  \item Proveer la capacidad de creación de tipos de dato enumerados definidos
   por el programador, con la posibilidad de integrarlos al sistema de operadores
   aritméticos y relacionales del lenguaje.
 
@@ -163,13 +163,15 @@ más propensa a defectos de programación.
 Así, se investigaron bibliotecas alternativas para análisis sintáctico y se
 consiguió \texttt{Megaparsec}. Como se explica en el Marco Tecnológico
 \todo{explicar en el Marco Tecnológico}, \texttt{Megaparsec} provee el
-combinador \texttt{withRecovery}, que permite agregar recuperación de errores a
-un analizador sintáctico de manera sencilla. Este combinador recibe una función
-de recuperación y un analizador sintáctico base, y ejecuta la primera cuando
-dicho analizador falla. Por ejemplo, para agregar recuperación de errores a las
-instrucciones, separadas por punto y coma, se usó código como el siguiente:
+combinador \texttt{withRecovery}, que permite agregar recuperación de errores
+con la técnica de \textit{Panic Mode} (<<nodo pánico>>)~\cite{aho2} a un
+analizador sintáctico de manera sencilla. Este combinador recibe una función de
+recuperación y un analizador sintáctico base, y ejecuta la primera cuando dicho
+analizador falla. Por ejemplo, para agregar recuperación de errores a las
+instrucciones, separadas por punto y coma, se usó código como el del fragmento
+\ref{lst:withrec}.
 
-\begin{haskellcode}
+\begin{haskellcode}[caption=Uso de \texttt{withRecovery}, label=lst:withrec]
 withRecovery recover instruction
   where
     recover err = void anyToken `manyTill` match TokSemicolon
@@ -204,9 +206,9 @@ También se consideró que sería cómodo para el programador poder hablar de
 arreglos multidimensionales en lugar de arreglos de arreglos, y así recibir
 errores apropiados, a tiempo de compilación, al usar un arreglo de \ingra{n}
 dimensiones con un número de índices distinto de \ingra{n}. Por ejemplo,
-intentar compilar el siguiente fragmento de código,
+intentar compilar el fragmento de código \ref{lst:badarr},
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Error en dimensiones de arreglo, label=lst:badarr]
 |[ var arr : array [5, 10] of int
 ;  writeln(arr[3])
 ]|
@@ -263,18 +265,18 @@ además del modo Ref ya provisto en la especificación original. Adicionalmente,
 se decidió permitir el pase de arreglos de tamaño arbitrario como parámetros
 siempre que todas las variables en las expresiones que denotan su tamaño sean
 parámetros anteriores de la subrutina, pasados en modo \ingra{const} en el caso
-de los procedimientos. Por ejemplo, la firma del siguiente procedimiento sería
+de los procedimientos. Por ejemplo, la firma de procedimiento en el fragmento de código \ref{lst:arrproc} sería
 aceptada por el compilador:
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Firma de procedimiento con parámetro de tipo arreglo, label=lst:arrproc]
 proc sub(const size : int, inout arr : array [size, size * 2] of int)
 \end{gracielacode}
 
 Desafortunadamente, un procedimiento (o una función) con una firma similar a la
-de \ingra{sub} podría ser llamado con argumentos que no concuerden, por
-ejemplo,
+de \ingra{sub} podría ser llamado con argumentos que no concuerden, como en el
+fragmento de código \ref{lst:arrproccall}.
 
-\begin{gracielacode}
+\begin{gracielacode}[caption=Llamada a procedimiento con argumento de tipo arreglo, label=lst:arrproccall]
 |[ var arr : array [5, 5]
 ;  sub (5, arr)
 ]|
@@ -414,7 +416,7 @@ tiempo de ejecución, pero el comportamiento sigue siendo el esperado.
 \subsection{Consideraciones}
 
 Para permitir mayor expresividad en las aserciones del lenguaje, específicamente
-en aquellas asociadas con los tipos de datos definidos por el programador, como
+en aquellas asociadas con los tipos de dato definidos por el programador, como
 invariantes de representación y de acoplamiento, se decidió agregar al lenguaje
 Graciela facilidades para escribir expresiones de la teoría de conjuntos.
 Específicamente, se consideró necesario agregar los tipos conjunto,
@@ -486,7 +488,7 @@ soportar secuencias, dado que también es posible indizar secuencias anónimas
 definidas por extensión o por comprensión.
 
 Adicionalmente, fue necesario permitir la declaración de variables de tipos
-colección, función y relación, pero únicamente dentro de Tipos de Datos
+colección, función y relación, pero únicamente dentro de Tipos de Dato
 Abstractos, por lo cual se agregó al analizador sintáctico para declaraciones la
 capacidad de reconocer estos tipos y de dar mensajes de error apropiados cuando
 se intente usarlos fuera de Tipos de Dato Abstractos.
@@ -530,7 +532,7 @@ a tipos definidos por el programador, que se describen detalladamente en sus
 respectivas secciones. El fragmento de código \ref{lst:point} ejemplifica la
 declaración y uso de un apuntador a entero.
 
-\begin{gracielacode}[caption=Ejemplo de apuntadores, label=lst:point]
+\begin{gracielacode}[caption=Uso de apuntadores, label=lst:point]
 |[ var p : int *
 ;  new(p)
 ;  *p := 10
@@ -585,9 +587,9 @@ confusión para el programador, sin agregar mucho valor al lenguaje.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TIPOS DE DATOS (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TIPOS DE DATO (...) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Tipos de datos definidos por el programador}
+\section{Tipos de dato definidos por el programador}
 
 %  - LA GRAMÁTICA VA AL FINAL PERO IGUAL HABLAMOS SOBRE ELLA -> SOBRE TODO EL WHERE
 
@@ -596,13 +598,13 @@ confusión para el programador, sin agregar mucho valor al lenguaje.
 
 El objetivo principal de este proyecto es agregar al lenguaje Graciela y a su
 compilador, las características y el soporte necesarios para permitir al
-programador definir tipos de datos estructurados abstractos o TDA. Como se busca
+programador definir tipos de dato estructurados abstractos o TDA. Como se busca
 lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
 GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
 alto nivel como el invariante de representación y las precondiciones y
 poscondiciones de los procedimientos y funciones que definen su interfaz.
-Estos tipos de datos, definidos dentro del lenguaje de programación con la
+Estos tipos de dato, definidos dentro del lenguaje de programación con la
 palabra reservada \ingra{abstract}, nunca definen una implementación en
 particular, sino que se limitan, precisamente, a definir los comportamientos que
 debería cumplir cualquier estructura de datos que pretenda implementarlos.
@@ -612,7 +614,7 @@ un nuevo tipo de dato que, usando únicamente estructuras de bajo nivel y un
 invariante de acoplamiento que precise la correspondencia entre estas
 estructuras de bajo nivel y las de alto nivel del tipo de dato abstracto, logre
 cumplir las restricciones y comportamientos de este último. En adelante, nos
-referiremos a estos tipos de datos, los cuales siempre deben implementar un TDA,
+referiremos a estos tipos de dato, los cuales siempre deben implementar un TDA,
 como \textit{implementaciones}. Dentro del lenguaje, estos son definidos usando
 la palabra reservada \ingra{type} y el TDA implementado se especifica usando la
 palabra reservada \ingra{implements}.
@@ -689,7 +691,7 @@ de acoplamiento>>.
 
 \subsection{Variables de tipo}
 
-En el lenguaje GCL es posible especificar tipos de datos estructurados que no
+En el lenguaje GCL es posible especificar tipos de dato estructurados que no
 dependen de tipos concretos para sus operaciones. Por ejemplo, se puede definir
 el tipo \textit{Lista} sin  especificar, en la definición, si se trata de listas
 de enteros o de números de punto flotante. Como se desea que el lenguaje
@@ -707,7 +709,7 @@ variables de tipo asociadas, se deben  especificar los tipos básicos que
 correspondan a cada variable en cuestión. Un ejemplo de esto puede verse en el
 fragmento de código \ref{lst:insttvar}.
 
-\begin{gracielacode}[caption=Ejemplo de instanciación de variables de tipo, label=lst:insttvar]
+\begin{gracielacode}[caption=Instanciación de variables de tipo, label=lst:insttvar]
 abstract ConjuntoA (T) begin
   var a : T;
   ...
@@ -933,7 +935,7 @@ estas rutinas:
 
 \subsection{Verificación de tipos}
 
-Para poder integrar los tipos de datos definidos por el programador al sistema
+Para poder integrar los tipos de dato definidos por el programador al sistema
 de tipos del compilador de Graciela, fue necesario extender el verificador de
 tipos. Esto se hizo definiendo un monoide sobre el conjunto de los tipos de
 Graciela, con el elemento neutro <<cualquier tipo>>, representado como
@@ -950,7 +952,7 @@ sobre los tipos de Graciela y con resultado booleano a partir del operador
 
 Los tipos de Graciela se representan dentro del compilador como un
 tipo de Haskell con constructores para los tipos básicos, apuntadores, arreglos,
-variables de tipos, y tipos de datos definidos por el programador.
+variables de tipos, y tipos de dato definidos por el programador.
 Adicionalmente, se definieron constructores auxiliares de este tipo de Haskell
 para representar los conceptos de <<cualquier tipo>> y <<tipo indefinido>>,
 además de <<uno de los tipos en una lista dada>>, los cuales fueron útiles para
@@ -1025,7 +1027,7 @@ residen en el \emph{heap}, haciendo uso implícito de apuntadores. Esto supone u
 conflicto con uno de los objetivos de este proyecto, proveer al programador las
 herramientas para manipular explícitamente apuntadores. Adicionalmente, no queda
 claro cuales deben ser los efectos de la interacción de expresiones de tipos
-algebraicos libres con expresiones de tipos de datos estructurados, por ejemplo,
+algebraicos libres con expresiones de tipos de dato estructurados, por ejemplo,
 el uso de un TAL con un TDA en uno de sus parámetros, o viceversa.
 
 Por lo tanto, debido a la dificultad de implementar esta extensión para el

@@ -123,6 +123,7 @@
 \usepackage{booktabs}
 \usepackage{rotating}
 \usepackage{listings}
+\lccode`~=0
 \usepackage{paquetes/lstpatch}
 \lstset{captionpos=b,
         frame=tb,
