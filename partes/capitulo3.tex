@@ -873,22 +873,17 @@ invariantes, se tomaron las siguientes consideraciones.
 
   \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
   este punto, el curso del programa dependerá de los valores que hayan tomado
-  esta última y la poscondición del TDA, como puede verse en la tabla
-  \ref{table:posconds}. Si la verificación del punto \ref{posttda} fue omitida,
+  esta última y la poscondición del TDA:
+    \begin{itemize}
+      \item Si se cumplieron ambas postcondiciones, la ejecución sigue normalmente
+      \item Si se cumple postcondición del la implementación, Se emite el
+      error ”No se cumple la poscondición”
+      \item Si se cumple postcondición del TDA, Se emite el error ”Este
+      procedimiento no implementa el TDA”
+      \item Sin ninguno de las dos postcondiciones se cumple, se emiten ambos errores.
+    \end{itemize}
+  Si la verificación del punto \ref{posttda} fue omitida,
   sólo se toma en cuenta la columna izquierda de la tabla.
-
-  \begin{table}[]
-  \centering
-  \begin{tabular}{ll|l|l|}
-  \cline{3-4}
-  \multicolumn{2}{l}{\multirow{2}{*}{}} & \multicolumn{2}{l|}{\textbf{Poscondición del TDA}} \\ \cline{3-4}
-  \multicolumn{2}{l}{} & Se cumple & No se cumple \\ \hline
-  \multicolumn{1}{|l|}{\multirow{2}{*}{\belowbaseline[0ex]{\rotatebox[origin=c]{90}{\parbox[c]{1cm}{\centering\textbf{Poscondición \\ de la \\ implementación}}}}}} & Se cumple & Éxito, la ejecución continúa normalmente & Se emite el error "Este procedimiento no implementa el TDA" \\ \cline{2-4}
-  \multicolumn{1}{|l|}{} & No se cumple & Se emite el error "No se cumple la poscondición" & Se emiten ambos errores. \\ \hline
-  \end{tabular}
-  \caption{Curso de ejecución luego de evaluación de poscondiciones}
-  \label{table:posconds}
-  \end{table}
 
 \end{enumerate}
 
