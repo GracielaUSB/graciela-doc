@@ -1,0 +1,123 @@
+\documentclass[letterpaper, 12pt, oneside, spanish]{tesis}
+
+% Paquetes para idioma
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Otros paquetes instalados
+% Básicos
+\usepackage[backend=bibtex8,bibstyle=ieee,citestyle=numeric]{biblatex}
+\addbibresource{bibliografia.bib}
+\newbibmacro*{bbx:savehash}{\relax}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{url}
+\usepackage{datetime}
+\usepackage{array}
+\usepackage{todonotes}
+\longdate
+
+% Para dibujar figuras
+\usepackage{tikz}
+
+% Para cambiar el color de las letras
+\usepackage{color}
+
+% Para incluir código (básico)
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+
+\usepackage{hyperref}
+\usepackage{nameref}
+\hypersetup{urlcolor=blue, colorlinks=false}
+
+% Para más símbolos matemáticos
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{fontspec}
+
+% Para colocar teoremas en cajas
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+
+% Para suprimir algunas advertencias
+\usepackage{silence}
+
+% Otros paquetes
+\usepackage{tabularx}
+\usepackage{stackengine}
+\usepackage{rotating}
+\usepackage[shortcuts]{extdash}
+\usepackage{relsize}
+\usepackage{etoolbox}
+\usepackage[justification=centering]{caption}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage[pass]{geometry}
+
+% Paquetes locales
+% Puedes agregar paquetes locales (archivos .sty) en un subdirectorio % 'paquetes'.
+% Utiliza la sintaxis \usepackage{paquetes/nombrePaquete}
+
+% Todas las imágenes se cargan del subdirectorio 'img' por defecto.
+\graphicspath{{img/}}
+
+% Sangrías de 3 espacios (3 veces el espacio de la x)
+\parindent 3ex
+
+% Interlineado
+\setlength{\baselineskip}{1.5pt}
+
+% Interpárrafo
+\setlength{\parskip}{16.5pt}
+
+\topmargin 2cm
+
+% Macros
+\newcommand{\projectTitle}{Apuntadores y Tipos de Dato Abstractos \\ para Graciela}
+\newcommand{\authorName}{Moisés Ackerman Lañado \and Carlos Spaggiari Roa}
+\newcommand{\tutorName}{Ernesto Hernández\nobreakdash-Novich}
+\hyphenation{Araujo Jiménez Ackerman Spaggiari calloc Sintáctico}
+
+\newdate{presentationdate}{16}{3}{2016}
+
+\hypersetup{
+  pdfinfo={
+    Author={Moisés Ackerman, Carlos Spaggiari},
+    Title={Apuntadores y Tipos de Dato Abstractos para Graciela},
+    Subject={Extensión al lenguaje Graciela y a su compilador},
+    Keywords={GCL, compilador, Haskell, LLVM, Graciela, Tipo de Dato Abstracto, Megaparsec, apuntador},
+  }
+}
+
+\newcommand{\thechaptername}{\relax}
+\newcommand{\setchapter}[1]{\renewcommand{\thechaptername}{#1}}
+
+\begin{document}
+\frontmatter
+\begin{titlepage}
+  \title{
+    \vspace{-2cm} \includegraphics[width=1.2in]{./usb.png} \\[.2cm]
+    \large Universidad Simón Bolívar \\
+    Decanato de Estudios Profesionales \\
+    Coordinación de Ingeniería de la Computación
+    \vfill \LARGE \projectTitle \vfill
+  }
+  \author{Por: \\
+    \begin{tabular}{*{2}{>{\centering}p{.40\textwidth}}}
+      Moisés Ackerman Lañado & Carlos Spaggiari Roa \tabularnewline
+    \end{tabular}\\[1.2cm]
+    \vphantom{Realizado con la asesoría de:}\\
+    \vphantom{\tutorName}\\[1.2cm]
+    \textbf{Proyecto de Grado} \\
+    Presentado ante la Ilustre Universidad Simón Bolívar \\
+    como requisito parcial para optar al título de \\
+    Ingeniero de Computación
+  }
+  \date{Sartenejas, \monthname[\the\month] de \the\year}
+\end{titlepage}
+\maketitle
+\newpage\null\thispagestyle{empty}\newpage
+\end{document}

@@ -1,18 +1,83 @@
 \chapter*{Introducción}
 \label{intro}
-\lhead{\emph{Introducción}}
+\setchapter{\emph{Introducción}}
 
-\section*{Planteamiento del problema}
+Históricamente, y por varios años, en los cursos de Laboratorio de Algoritmos I
+y II dictados en la Universidad Simón Bolívar, el lenguaje de programación
+utilizado para la instrucción fue GaCeLa, basado en el lenguaje GCL de Edsger
+Dijkstra y desarrollado, junto con su compilador, dentro de la Universidad. Este
+compilador no generaba código nativo para la plataforma destino, sino que
+transformaba el programa a compilar en otro programa escrito en el lenguaje
+Java, idealmente con la misma semántica del original. Este programa generado
+debía ser ejecutado usando la máquina virtual de Java (JVM o \textit{Java
+Virtual Machine} en inglés).
 
-\section*{Justificación}
+Desafortunadamente, dependiendo del programa en GaCeLa compilado, el programa
+generado en Java presentaba errores que no eran reportados sino hasta que se
+intentaba ejecutarlo dentro de la JVM, forzando a los estudiantes a modificar
+manualmente este archivo generado mecánicamente a fin de poder ejecutarlo,
+actividad para la cual claramente no estaban preparados, ni era objeto de
+evaluación de los cursos en cuestión. Adicionalmente, no se contaba con el
+personal suficiente para mantener el compilador y reparar este tipo de errores a
+nivel del compilador en lugar de en el código generado, por lo cual los
+profesores que dictaban estas materias cambiaron el lenguaje de instrucción por
+otros lenguajes, entre ellos Pascal, Modula 2, JML y Python, cayendo en desuso
+al rededor del año 2010. Actualmente, la documentación disponible para GaCeLa es
+muy limitada.
 
-\section*{Antecedentes}
+En los cursos teóricos de Algoritmos I y II de la Universidad Simón Bolívar, por
+otro lado, el lenguaje de instrucción sigue siendo GCL. En consecuencia, los
+estudiantes de estos cursos teóricos, que deben ser inscritos simultáneamente
+con el laboratorio correspondiente, se ven forzados a hacer una traducción
+mental entre los conceptos estudiados en la teoría y los ejercicios elaborados
+en el laboratorio.
+
+Durante el año 2015, Joel Araujo y José Luis Jiménez desarrollaron, como
+Proyecto de Grado, un nuevo lenguaje, Graciela, y su respectivo compilador. Este
+lenguaje cuenta con los tipos básicos \ingra{int}, \ingra{char}, \ingra{float} y
+\ingra{boolean}, y arreglos de estos, ofrece instrucciones de lectura,
+escritura, asignación, selección y repetición, permite insertar aserciones entre
+las instrucciones (posiblemente haciendo uso de cuantificaciones) y permite la
+definición de funciones y procedimientos (con los modos \textit{in},
+\textit{in-out}, \textit{out} y \textit{ref} para el pase de parámetros). El
+compilador desarrollado por Araujo y Jiménez genera código intermedio LLVM que
+posteriormente es convertido en código nativo para la plataforma deseada
+haciendo uso del \textit{Back-End} de LLVM.
+
+El lenguaje de Araujo y Jiménez tiene todas las características necesarias para
+el primer curso práctico de Algoritmos, pero, como lo indican en las
+recomendaciones de su Proyecto de Grado, es necesario extender el lenguaje y el
+compilador para lograr que estos sean útiles para el segundo curso práctico de
+Algoritmos. Específicamente, recomiendan agregar al lenguaje el tipo
+\textit{apuntador} y las instrucciones necesarias para manipularlos, y la
+posibilidad de crear tipos de dato estructurados con comportamientos definidos
+a través de aserciones invariantes.
+
+Así, es evidente la necesidad de agregar estas extensiones al lenguaje Graciela
+y a su compilador, dado que son cruciales para el segundo curso práctico de
+Algoritmos, concernido precisamente con el manejo de apuntadores y la definición
+de tipos estructurados con comportamientos abstractos. Estas extensiones estarán
+siempre guiadas por la especificación del lenguaje GCL siempre que esto sea
+posible, para continuar la promoción del aprendizaje de la programación usando
+métodos formales en apoyo con los cursos teóricos dictados usando el lenguaje
+GCL.
+
+\section*{Otros antecedentes}
+
+Además de GaCeLa y Graciela, existen otras implementaciones de las ideas del
+lenguaje GCL ajenas a la Universidad Simón Bolívar, entre las cuales se
+encuentran  \texttt{Commands::Guarded}~\cite{perlguarded} y GCL
+1.2~\cite{gclonetwo}. El primero es un módulo para el lenguaje Perl que explota
+la idea de agregarle precondiciones y poscondiciones verificables a cada
+instrucción, mientras que el segundo es un interpretador escrito en Prolog y C
+que impone muchas restricciones sobre arreglos y aserciones, y no soporta la
+declaración de procedimientos y funciones.
 
 \section*{Objetivo General}
 
 Extender el compilador del lenguaje Graciela, una variante del GCL (Guarded
 Command Language) de Dijkstra, implantado por Araujo y Jiménez. Esta extensión
-deberá soportar tipos de datos definidos por el programador, apuntadores
+deberá soportar tipos de dato definidos por el programador, apuntadores
 explícitos, manejo de memoria automático, y un mecanismo de aserciones
 verificables que soporte estas nuevas capacidades.
 
@@ -33,3 +98,19 @@ verificables que soporte estas nuevas capacidades.
 \end{itemize}
 
 \section*{Organización del Trabajo}
+
+Este Proyecto de Grado se presenta en cuatro capítulos. En el primero, se
+establece un marco teórico al cual se hace referencia en los capítulos
+subsiguientes, y que permite establecer un nivel de abstracción apropiado para
+estos. En el segundo, similarmente, se establece un marco tecnológico, en el
+cual se exponen las herramientas que permitieron desarrollar el proyecto en su
+forma actual. En el tercer capítulo, el desarrollo del proyecto, se detalla el
+estudio que se realizó de las recomendaciones dadas por Araujo y Jiménez y las
+consideraciones que se tomaron en cuenta para cumplir estas recomendaciones y
+los objetivos especificados para este proyecto, incluyendo también el proceso de
+desarrollo asociado a los objetivos adicionales que surgieron durante el
+desarrollo del mismo. En el cuarto capítulo se exponen los resultados del
+proyecto, describiendo con detalle la sintaxis definitiva incorporada al
+lenguaje Graciela y la explicación de la semántica de estas extensiones, así
+como las herramientas y utilidades que se desarrollaron para facilitar el uso de
+dicho lenguaje.

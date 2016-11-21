@@ -1,6 +1,6 @@
 \chapter{Marco Tecnológico}
 \label{capitulo2}
-\lhead{Capítulo 2. \emph{Marco Tecnológico}}
+\setchapter{Capítulo 2. \emph{Marco Tecnológico}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,23 +16,23 @@ utilizaron para desarrollar las bibliotecas externas para los programas
 compilados.
 
 \subsection{Haskell}
-Haskell es un lenguaje de programación funcional puro compilado, de proposito
+Haskell~\cite{haskell} es un lenguaje de programación funcional puro compilado, de propósito
 general, que se basa en el \textit{cálculo lambda}. Al ser un lenguaje
 funcional puro, todo programa se escribe haciendo uso de expresiones
 matemáticas puras y se asegura que para todo valor que se proporcione como
-entrada, las funciones llamadas dentro de la ejecución del mismo, devolveran
+entrada, las funciones llamadas dentro de la ejecución del mismo, devolverán
 siempre el mismo resultado. Esto se debe a la carencia de variables mutables y
 efectos de borde, lo que permite a su vez, generar código ensamblador mas
 astuto con respecto a los lenguajes imperativos.
 
-Entre sus principales caracteristicas está la de un sistema de tipos estático
-y fuertemente tipado, es decir, para todas las estructuras declaradas en el
-programa, se verifica su tipo a tiempo de compilación y toda conversión entre
+Entre sus principales características está la de un sistema de tipos estático y
+sin conversiones explícitas, es decir, para todas las estructuras declaradas en
+el programa, se verifica su tipo a tiempo de compilación y toda conversión entre
 tipo debe colocarse de manera explícita. Por otro lado, La evaluación de
-expresiones es de forma perezosa, dando como consecuencia que ninguna
-expresión se evalue hasta el momento en el que se usa y la posibilidad de
-poder crear estructuras infinitas, las cuales son construidas parcialmente
-mientras van siendo utilizadas.
+expresiones es de forma perezosa, dando como consecuencia que ninguna expresión
+se evalúe hasta el momento en el que se usa y la posibilidad de poder crear
+estructuras infinitas, las cuales son construidas parcialmente mientras van
+siendo utilizadas.
 
 Escribir un programa haciendo uso exclusivamente de expresiones matemáticas
 puras, trae consigo limitaciones cuando se requiere realizar operaciones de
@@ -40,7 +40,7 @@ entrada y salida, o cualquier otra operación que implique efectos de bordes.
 Este tipo de cómputo se puede lograr dentro de un lenguaje funcional haciendo
 uso de los \textit{monads}, estructuras que permiten representar cálculos una
 como secuencia de operaciones y que proporcionan contexto a las expresiones
-puras. Estos contextos monádicos permiten realizar computos de entrada y
+puras. Estos contextos monádicos permiten realizar cómputos de entrada y
 salida, manejo de excepciones, entre otros, sin dejar de lado la pureza
 funcional.
 
@@ -48,26 +48,27 @@ Uno de los factores que se debe tomar en cuenta cuando se elige un lenguaje de
 programación, es la cantidad y calidad de las bibliotecas disponibles para el
 mismo. Haskell, posee una amplia gama de bibliotecas de mucha utilidad, entre la
 cuales destacan las bibliotecas que permiten depurar y perfilar programas,
-manejar y reresentar estructuras complejas, y en el caso del presente
+manejar y representar estructuras complejas, y en el caso del presente
 proyecto, bibliotecas que proporcionan facilidades para construir reconocedores
 recursivos descendentes y para generación de código intermedio LLVM, las
-cuales seran menciadas en detalles en las siguientes secciones.
+cuales serán mencionadas en detalles en las siguientes secciones.
 
 
 \subsection{C, C++}
-\textit{C} y \textit{C++} son lenguajes imperativos, y orientado a objetos en
-el caso de \textit{C++}. Estos dos lenguajes poseen un sistema de tipo
-estáticos y debilmente tipificados, pero ofrecen ventajas para realizar
-operaciones a muy bajo nivel, como el manejo y acceso manual de la memoria.
 
-Ambos lenguajes poseen mecanismo para declarar estructuras de datos basicos,
-funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un
-lenguaje orientado a objetos, entran conceptos como cleses, herencia de clases
-y encapsulamiento. Tambien, a diferencia del lenguaje \textit{C}, \textit{C++}
-posee una biblioteca estandar mas extensa, en la cual se ofrecen estructuras
-de datos mas complejas como mapas, conjuntos o vectores, y algoritmos
-ordenamiento o busqueda sobre dichas estructuras.
+\textit{C}~\cite{c-lang} y \textit{C++}~\cite{cpp-lang} son lenguajes
+imperativos, y orientado a objetos en el caso de \textit{C++}. Estos dos
+lenguajes poseen un sistema de tipo estático y con conversiones implícitas, pero
+ofrecen ventajas para realizar operaciones a muy bajo nivel, como el manejo y
+acceso manual de la memoria.
 
+Ambos lenguajes poseen mecanismo para declarar estructuras de datos básicos,
+funciones y tipos enumerados, sin embargo, con \textit{C++}, al ser un lenguaje
+orientado a objetos, entran conceptos como clases, herencia de clases y
+encapsulamiento. También, a diferencia del lenguaje \textit{C}, \textit{C++}
+posee una biblioteca estándar mas extensa, en la cual se ofrecen estructuras de
+datos mas complejas como mapas, conjuntos o vectores, y algoritmos de
+ordenamiento o búsqueda sobre dichas estructuras.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA ANÁLISIS LÉXICO Y SINTÁCTICO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,29 +76,37 @@ ordenamiento o busqueda sobre dichas estructuras.
 \section{Herramientas para Análisis Léxico y Sintáctico}
 
 \subsection{Parsec}
-\textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
-construcción de un reconocedor recursivo descendente. Esta biblioteca provee
-de una estructuras monádica, con las que se pueden generar reconocedores
-sintácticos básicos y combinarlos para formar reconocedores cada vez más
-complejos. Debido a la naturaleza monádica de los computos que se realizan, se
-puede hacer uso de funciones y operadores, como por ejemplo, \texttt{many} o
-\texttt{<|>}, los cuales permiten ejecutar cero o mas veces un reconocedor, o
-ejercutar un segundo reconocedor en caso de que el primero falle,
-respectivamente.
 
-Si bien no se ofrece soporte para recuperación de errores, se puede
-implementar haciendo uso la función \texttt{try}, la cual reestablece el
-estado original del flujo de entrada, en caso de que un reconocedor falle,
-habiendo o no consumido de la entrada.
+\textit{Parsec} es una biblioteca destinada a facilitar herramientas para la
+construcción de analizadores sintácticos recursivos descendentes~\cite{parsec}.
+Esta biblioteca provee estructuras monádica con las que se pueden generar
+reconocedores sintácticos básicos y combinarlos para formar reconocedores cada
+vez más complejos.  Esta biblioteca provee combinadores como \texttt{many} y
+\texttt{<|>} los cuales permiten, respectivamente, ejecutar cero o mas veces un
+reconocedor, o ejecutar un segundo reconocedor en caso de que el primero falle.
+
+Si bien esta biblioteca no ofrece soporte para recuperación de errores durante
+el análisis sintáctico, éste puede implementarse haciendo uso de la función
+\texttt{try}, la cual restablece el estado original del flujo de entrada en caso
+de fallar el reconocedor pasado como argumento. Esto debe hacerse de manera
+cuidadosa, puesto que, si el reconocedor en cuestión es complejo, la información
+analizada antes del punto donde ocurrió el error se pierde~\cite{parsectry}. Lo
+recomendable es usar un conjunto pequeño de lexemas, conocido en inglés como
+\textit{lookahead}, para decidir el camino que debe tomar el analizador
+sintáctico en un punto donde existen múltiples opciones.
 
 \subsection{Megaparsec}
-La biblioteca \textit{Megaparsec} es un bifurcación (\emph{fork}, en inglés)
-de la biblioteca \textit{Parsec}, la cual ademas de ofrecer la mismas
-funcionalidades que ésta ultima, agrega otras funcionalidades de especial
-importancia para la elaboración de un analizador sintáctico, como el soporte
-para la recuperación de errores.
 
-\todo{extender esto}
+La biblioteca \textit{Megaparsec}~\cite{megaparsec} es un bifurcación
+(\emph{fork}, en inglés) de la biblioteca \textit{Parsec}, la cual además de
+ofrecer la mismas funcionalidades que ésta ultima, agrega otras funcionalidades
+de especial importancia para la elaboración de un analizador sintáctico, en
+particular el soporte para la recuperación de errores, a través del combinador
+\texttt{withRecovery}. Adicionalmente, en esta biblioteca, el \textit{Monad}
+para el análisis sintáctico forma parte de diversas instancias de Haskell, de
+modo que se pueden usar transformadores de \textit{Monads} sobre el analizador
+sintáctico, lo cual permite manejar estados específicos para cada parte del
+lenguaje a analizar con facilidad.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,9 +116,28 @@ para la recuperación de errores.
 
 \subsection{LLVM}
 
+El proyecto LLVM (originalmente las siglas de \textit{Low Level Virtual
+Machine}, o <<Máquina Virtual de Bajo Nivel>>, pero ahora se trata de un nombre
+propio) es una <<colección modular y reutilizable de tecnologías de compiladores
+y cadenas de herramientas>>. Estas herramientas pueden ser usadas según sea
+conveniente para construir y desarrollar compiladores de manera sencilla,
+aprovechando una infraestructura sólida, con la capacidad de generar código
+nativo para una gran variedad de plataformas. La manera más común de usar LLVM
+para escribir un compilador es escribiendo el \textit{Front-End} para el
+lenguaje que se desea compilar de modo que genere código intermedio
+(\textit{IR}) de LLVM. Luego de esto, basta usar el \textit{Back-End} de LLVM
+para convertir esta representación intermedia en código nativo para la
+plataforma destino deseada.
+
+Adicionalmente, el \textit{Back-End} de LLVM puede aplicar una gran variedad de
+optimizaciones al código intermedio que recibe, mientras que las tecnologías de
+cadenas de herramientas permiten desarrollar depuradores y perfiladores para los
+lenguajes que aprovechan su \textit{Back-End}.
+
 \subsection{llvm-general y llvm-general-pure}
 
-Las bibliotecas \texttt{llvm-general} y \texttt{llvm-general-pure} para el
+Las bibliotecas \texttt{llvm-general} y
+\texttt{llvm-general-pure}~\cite{llvm-general, llvm-general-pure} para el
 lenguaje Haskell ofrecen una interfaz muy sencilla y completa con las
 bibliotecas externas de LLVM para la generación de código intermedio. Por un
 lado, \textit{llvm-general-pure} brinda una serie de estructuras de datos que se
@@ -127,44 +155,57 @@ programa.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Herramientas para la Depuración del Manejo de Memoria}
 
-Para este fin se utilizó \textit{Valgrind}. \textit{Valgrind} es una herramienta
-de software, que ayuda a la depuraración y detección errores relacionados a una
-mala gestión de la memoria de un proceso, como accesos indebidos o la fuga de
-memoria dinámica. Tambien permite realizar un perfilaje detallado de la
-ejecución de un programa y detectar errores en procesos multihilo.
+\textit{Valgrind}~\cite{valgrind} es una herramienta de software que ayuda a la
+depuración y detección errores relacionados a una mala gestión de la memoria de
+un proceso, como accesos indebidos o la fuga de memoria dinámica. También
+permite realizar un perfilaje detallado de la ejecución de un programa y
+detectar errores en procesos multihilo.
 
 En este proyecto, se utilizó \textit{Valgrind} con la intención de detectar
-posibles fugas de memoria en el código de las librerías externas de Graciela,
+posibles fugas de memoria en el código de las bibliotecas externas de Graciela,
 particularmente en el caso de las estructuras de tipos de la teoría de
 conjuntos, y en el código generado para las nuevas instrucciones \ingra{new} y
 \ingra{free} de apuntadores. Adicionalmente, se usó para revisar los accesos a
 memoria relacionados con los arreglos, debido a la forma en la que fueron
 implementados.
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% AMBIENTES DE PROGRAMACIÓN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ambientes de programación}
 
-Como objetivo adicional \todo{ask novich}, se estudió la posibilidad de
-incorporar herramientas para mejorar la experiencia del programador en Graciela.
-Específicamente, se indagó acerca de los editores de texto para programación más
-comúnmente usados entre los estudiantes de la carrera de Ingeniería de la
-Computación y sobre cómo agregarles características como un resaltador
-sintáctico y la inserción automática de fragmentos de código.
+Como objetivo adicional se estudió la posibilidad de incorporar herramientas
+para mejorar la experiencia del programador en Graciela. Específicamente, se
+indagó acerca de los editores de texto para programación más comúnmente usados
+entre los estudiantes de la carrera de Ingeniería de la Computación y sobre cómo
+agregarles características como un resaltador sintáctico y la inserción
+automática de plantillas de código.
 
-\subsection{Vi}
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Sublime Text}]
 
-Es un editor de texto presente en todos los sistemas operativos derivados de
-Unix, que  permite mover, copiar, eliminar o insertar caracteres con mucha
-versatilidad. Cuenta con una versión mejorada llamada \textit{Vim}
+  \item [Vi / Vim] está presente en todos los sistemas operativos derivados de
+  Unix. Permite mover, copiar, eliminar o insertar caracteres con mucha
+  versatilidad. Tiene como ventaja su simplicidad y contar con una importante
+  cantidad de paquetes que permiten personalizarlo a gusto del usuario. Es
+  gratuito y de código abierto.
 
-\subsection{Sublime Text}
+  \item [Sublime Text] es un editor de texto de ambiente gráfico escrito en el
+  lenguaje C++ y con soporte para \textit{plug-ins} escritos en el lenguaje
+  Python y distribuidos a través del manejador de paquetes diseñado
+  exclusivamente para este editor \textit{Package Control}. Su código es cerrado
+  y se debe adquirir una licencia para su uso prolongado, pero se ofrece una
+  versión de prueba gratuita.
 
-\subsection{Atom}
+  \item [Atom] es un editor de texto escrito en el lenguaje JavaScript. El
+  editor puede personalizarse a gusto del usuario pero tiene la desventaja de
+  ser mas lento en comparación con otros editores compilados como Vim o Sublime
+  Text. Incluye un manejador de paquetes similar al de Sublime Text. Es gratuito
+  y de código abierto.
 
-\subsection{Gedit}
+  \item [Gedit] viene con el entorno de escritorio GNOME y también puede ser
+  personalizado por el usuario. Es gratuito y de código abierto.
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DISTRIBUCIÓN DE SOFTWARE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -177,11 +218,19 @@ plataformas en las cuales se ofrece el compilador, con la intención de que sea
 sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
 última versión disponible.
 
-\subsection{APT}
+\begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Homebrew}]
 
-\subsection{Homebrew}
+\item [APT]~\cite{apt} (Advanced Package Tool, <<Herramienta Avanzada de
+Paquetes>>) es una herramienta de software propia de Debian y distribuciones de
+Linux derivadas de Debian, que administra la instalación y remoción de software
+en estos sistemas operativos. Se decidió utilizar APT debido, precisamente, a
+que está incluida en una gran cantidad de sistemas operativos, y a su facilidad
+de uso.
 
-Manejador de paquetes para el sistema operativo macOS. Entre las razones por
-la cual se eligió este manejador de paquetes, fue su simplicidad de uso, tanto
-para quien desea instalar una pieza de software, como para quien crea y
-distribuye el paquete, comparación de las demás opciones disponibles.
+\item [Homebrew]~\cite{brew} es un manejador de paquetes para el sistema
+operativo macOS. Entre las razones por la cual se eligió este manejador de
+paquetes, fue su simplicidad de uso, tanto para quien desea instalar una pieza
+de software, como para quien crea y distribuye el paquete, comparación de las
+demás opciones disponibles.
+
+\end{description}

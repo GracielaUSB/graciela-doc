@@ -1,49 +1,40 @@
 # Graciela-Doc
-- Herramientas para el programador
-
-- FIXME: consideraciones sobre procedimientos -> Monascal
+- FIXME: consideraciones sobre procedimientos -> Monascal (luego)
 
 - GENERAL
-    - Captionear fragmentos de código y wrappearlos manualmente
+    - Captionear fragmentos de código y wrappearlos manualmente [cada quien]
 
-- Introducción
-    - Planteamiento del problema
-    - Justificación
-    - Antecedentes
-    - Organización del trabajo
+- Resumen [moises]
+
+- Acrónimos [cada quien]
 
 - Marco Teórico
-    - Programación formal y tripletas de Hoare
-    - Teoría de conjuntos
-    - TDA, TDC -> breve discusión de Carroll Morgan
-    - TAL
-    - Lógica de Separación
+    - TDA, TDC [carlos]
 
 - Marco Tecnológico
-    - Parsec (extender)
-    - Megaparsec (extender)
-    - LLVM
-    - Editores
-    - APT/Homebrew
 
 - Resultados
-    - Cositas para los niños
+    - Cositas para los niños [moises]
 
-- Conclusiones
+- Conclusiones [ambos 9Nov16]
 
-- REFERENCIAS y Bibliografía
+- REFERENCIAS y Bibliografía [cada quien]
 
-- Apéndices (menor prioridad)
+- Apéndices (> 11Nov16)
     - Gramática
     - Operadores de conjuntos
     - Instrucciones nuevas
     - Funciones predefinidas nuevas
     - Modos de parámetros
-    - Algoritmos y ejemplos
     - Instrucciones de instalación y uso
+    - Algoritmos y ejemplos
 
 
 # Graciela, AFTER THE DAMN BOOK
+- APT instala highlighter de vim
+
+- Monolingualización del compilador
+
 - Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
   tengan una mala inicialización
 - Agregar a los procedimientos incluso aunque haya errores en definición.
