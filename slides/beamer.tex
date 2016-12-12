@@ -1,0 +1,44 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Madrid}
+  \usecolortheme{crane}
+  \usefonttheme{default}
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{syntax}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{fontspec}
+\usepackage{amssymb}
+
+\input{./commands/listings}
+
+\setlength{\grammarparsep}{5pt plus 1pt minus 1pt}
+\setlength{\grammarindent}{7em}
+
+\title[Graciela]{Apuntadores y Tipos de Dato Abstractos \\ para Graciela}
+\author[Ackerman - Spaggiari]{Moisés Ackerman \and Carlos Spaggiari}
+\institute[USB]{Universidad Simón Bolívar}
+\date{\today{}}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\input{./partes/sect1}
+\input{./partes/sect2}
+\input{./partes/sect3}
+\input{./partes/sect4}
+
+\end{document}

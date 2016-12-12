@@ -1,0 +1,151 @@
+\section{Lo profundo}
+\subsection{Objetivos}
+\begin{frame}{Objetivos}
+\begin{itemize}
+  \item Tipos de datos estructurados abstractos
+  \item Tipos de datos estructurados
+  \item Apuntadores
+\end{itemize}
+\end{frame}
+
+
+\subsection{Tipos de datos estructurados abstractos}
+\begin{frame}[fragile]{La gramática}
+\scriptsize
+\begin{grammar}
+
+<ADT> ::= `abstract' <Id> <TypeVars> `begin' <AbstBody> `end'
+
+<TypeVars> ::= `(' <Id> <MoreIds> `)' | $\lambda$
+
+<MoreIds> ::= `,' <Id> <MoreIds> | $\lambda$
+
+<AbstBody> ::= <AbstVarDecs> <Invariant> <ProcDecs>
+
+<AbstVarDecs> ::= <AbstVarDec> `;' <AbstVarDecs> | $\lambda$
+
+<AbstVarDec> ::= (`var'|`const') <Id> <MoreIds> `:' <AbstType>
+
+<AbstType> ::= `set' `of' <Basic'>
+\alt `multiset' `of' <Basic'>
+\alt `seq' `of' <Basic'>
+\alt `func' <Basic'> `->' <Basic'>
+\alt `rel' <Basic'> `->' <Basic'>
+\alt `(' <Basic'> `,' <Basic'> <MoreBasics'> `)'
+\alt <Basic'>
+
+<Basic'> ::= <Id> | <Basic>
+
+<Basic> ::= `int' | `char' | `double' | `bool'
+
+\end{grammar}
+\end{frame}
+
+\begin{frame}[fragile]{La gramática, cont.}
+\scriptsize
+\begin{grammar}
+
+<Invariant> ::= `\{inv' <BoolExp> `inv\}'
+
+<ProcDecs> ::= <ProcDec> <ProcDecs>
+
+<ProcDec> ::= `proc' <Id> `(' <ProcArgs> `)' <Precond> <Postcond>
+
+<ProcArgs> ::= <ProcArg> `,' <ProcArgs> | $\lambda$
+
+<ProcArg> ::= (`in'|`out'|`inout'|`ref') <Id> `:' <AbstType'>
+
+<AbstType'> ::= <AbstType>
+\alt <Id> <TypeVars>
+
+<Precond> ::= `\{pre' <BoolExp> `pre\}'
+
+<Postcond> ::= `\{post' <BoolExp> `post\}'
+
+\end{grammar}
+\end{frame}
+
+
+\subsection{Tipos de datos estructurados}
+\begin{frame}[fragile]{La gramática}
+\scriptsize
+\begin{grammar}
+
+<DT> ::= `type' <Id> <Types> `begin' <DTBody> `end'
+
+
+<Types> ::= `(' <Type> <MoreTypes> `)' | $\lambda$
+
+<Type> ::= array of <Type>
+\alt `*' <Type>
+\alt <Basic>
+
+<MoreTypes> ::= `,' <Type> <MoreTypes> | $\lambda$
+
+<Body> ::= <VarDecs> <Repinv> <Coupinv> <ProcDefs>
+
+<Repinv> ::= `\{repinv' <BoolExp> `repinv\}'
+
+<Coupinv> ::= `\{coupinv' <BoolExp> `coupinv\}'
+
+<ProcDefs> ::= <ProcDef> <ProcDefs>
+
+<ProcDef> ::= \textit{(Definido por Araujo y Jiménez)}
+
+\end{grammar}
+\end{frame}
+
+
+\subsection{Acoplamiento}
+\begin{frame}{Verificación de precondiciones}
+\begin{enumerate}
+\item Se verifica la precondición del TD (concreto). Si falla, se da una
+      \textbf{\textit{advertencia}} a tiempo de ejecución, ``No se cumplió la precondición'',
+      y no se hacen más verificaciones dentro de esta llamada. Si se cumple,
+      la verificación sigue.
+
+\item Se utiliza el invariante de acoplamiento para generar las estructuras
+      del TDA a partir de las del TD (concreto).
+
+\item Se verifica la precondición del TDA con las estructuras generadas
+      en el paso anterior. Si falla, se da un \textbf{\textit{error}} a tiempo de
+      ejecución, ``Este procedimiento no implementa el abstracto''. Si se cumple,
+      se ejecuta el cuerpo del método.
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Verificación de poscondiciones}
+\begin{enumerate}
+\item Se utiliza el invariante de acoplamiento para generar las estructuras
+      del TDA a partir de las del TD (concreto).
+
+\item Se verifican tanto la poscondición del TD (concreto) como la del TDA,
+      existiendo las siguientes posibilidades:
+
+\vskip 0.5cm
+
+\tiny\centering
+\begin{tabular}{| l || c | c |}
+  \hline
+  Poscondición \ldots & abstracta se cumple & abstracta falla \\
+  \hline \hline
+  concreta se cumple & \parbox[t]{2cm}{Éxito} & \parbox[t]{3cm}{``Este procedimiento no implementa el abstracto, revisar acoplamiento''} \\
+  \hline
+  concreta falla & ``No cumple poscondición'' & ← y ↑ \\
+  \hline
+\end{tabular}
+
+\end{enumerate}
+\end{frame}
+
+
+\subsection{Apuntadores}
+\begin{frame}{Apuntadores}
+\begin{itemize}
+  \item Se desea un uso sencillo pero sin límites excesivos para los apuntadores
+  \item Se considera apropiado manejar apuntadores exclusivamente a estructuras en el \textit{heap},
+    manejados con palabras clave \texttt{new} y \texttt{free}.
+  \item Interacción delicada con tipos de datos estructurados al momento de verificar aserciones.
+\end{itemize}
+\end{frame}
