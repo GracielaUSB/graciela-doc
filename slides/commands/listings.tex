@@ -18,13 +18,24 @@
 \newcommand{\Rbag}{\textmonofallback{⟆}}
 \newcommand{\Lseq}{\textmonofallback{⟨}}
 \newcommand{\Rseq}{\textmonofallback{⟩}}
-\newcommand{\Union}{\textmonofallback{∪}}
-\newcommand{\Land}{\textmonofallback{∧}}
-\newcommand{\Lor}{\textmonofallback{∨}}
-\newcommand{\Elem}{\textmonofallback{∈}}
-\newcommand{\Notelem}{\textmonofallback{∉}}
-\newcommand{\Forall}{\textmonofallback{∀}}
-\newcommand{\Exist}{\textmonofallback{∃}}
+
+\newcommand{\Msum}{\color{cyan process}{\textmonofallback{⊎}}}
+\newcommand{\Union}{\color{cyan process}{\textmonofallback{∪}}}
+\newcommand{\Intersect}{\color{cyan process}{\textmonofallback{∩}}}
+\newcommand{\Subsett}{\color{cyan process}{\textmonofallback{⊆}}}
+\newcommand{\Ssubset}{\color{cyan process}{\textmonofallback{⊂}}}
+\newcommand{\SsubsetAlt}{\color{cyan process}{\textmonofallback{⊊}}}
+\newcommand{\Superset}{\color{cyan process}{\textmonofallback{⊇}}}
+\newcommand{\Ssuperset}{\color{cyan process}{\textmonofallback{⊃}}}
+\newcommand{\SsupersetAlt}{\color{cyan process}{\textmonofallback{⊋}}}
+\newcommand{\Append}{\color{cyan process}{\textmonofallback{⧺}}}
+
+\newcommand{\Land}{\color{cyan process}{\textmonofallback{∧}}}
+\newcommand{\Lor}{\color{cyan process}{\textmonofallback{∨}}}
+\newcommand{\Elem}{\color{cyan process}{\textmonofallback{∈}}}
+\newcommand{\Notelem}{\color{cyan process}{\textmonofallback{∉}}}
+\newcommand{\Forall}{\color{cyan process}{\textmonofallback{∀}}}
+\newcommand{\Exist}{\color{cyan process}{\textmonofallback{∃}}}
 
 
 % greens
@@ -44,32 +55,35 @@
 \lstdefinelanguage{graciela}{ %
     keywordstyle=\bfseries\color{crimson},
     % list of keywords
-    keywords=[1]{},
+    keywords=[1]{where},
     morekeywords=[2]{
         proc, func, program, package, import, begin, end, abstract, type, enum,
         if, do, in, out, inout, fi, od, write,
-        writeln, read, from, where, of, implements,
+        writeln, read, from, of, implements,
         set, rel, relation, multiset, sequence, function,
         var, const, array, int, boolean, float, char,
         new, free, abort, warn, skip, random
     },
     keywordstyle=[2]{\color{cerulean}\bfseries},
     % symbol keywords
-    alsoletter={+/\\-*<>=!\{\}},
+    alsoletter={+/\\-*<>=!\{\}\#0123456789v},
     morekeywords=[3]{
         +,  /\\, \\/, ∧, ∨, -, *, /, div, mod, \\, ->, →, <->,
-        ↔, [, ], elem, notelem, ∈, ∉, union, intersect, ∪, ∩, \Union
+        ↔, [, ], elem, notelem, ∈, ∉, union, intersect, ∪, ∩,
         msum, ⊎, ++, ⧺, subset, ssubset, superset, ssuperset,
         ⊆, ⊂, ⊊, ⊇, ⊃, ⊋, ×, ÷, ^, sqrt, √, ⇒ ⇐, ≡, ≢,
         ==>, <==, ===, !==, ==, !=, ≠, <=, <, >, >=, ≤, ≥, !, ¬,
         forall, exist, notexist, max, min, product, sum, count,
-        toFloat, toInt, toChar, toBoolean, toSequence, toSet, toMultiset
-        ∀, ∃, ∄, ∑, ∏, \#
+        toFloat, toInt, toChar, toBoolean, toSequence, toSet, toMultiset,
+        ∀, ∃, ∄, ∑, ∏, \#, multiplicity, domain, codomain
     },
     keywordstyle=[3]\color{cyan process},
-    morekeywords=[4]{\{repinv, \{coupinv, \{pre, \{post, \{bound, \{inv, repinv\}, coupinv\}, pre\}, post\}, bound\}, inv\}},
+    morekeywords=[4]{
+      \{repinv, \{coupinv, \{pre, \{post, \{bound, \{inv, 
+      repinv\}, coupinv\}, pre\}, post\}, bound\}, inv\},
+      repinv, coupinv, pre, post, bound, inv} 
     keywordstyle=[4]\color{darkcandyapplered},
-    morekeywords=[5]{true, false, null},
+    morekeywords=[5]{true, false, null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
     keywordstyle=[5]\color{caribbeangreen},
     numbers=none,
     stepnumber=1,
@@ -96,8 +110,8 @@
     columns=flexible,                   % flexible character width
     keepspaces=true,                    % keep all spaces
     % margins
-    floatplacement=h,
-    aboveskip=1cm, xleftmargin=1cm, xrightmargin=1cm,
+    xleftmargin=1cm, xrightmargin=1cm, aboveskip=0.3cm,
+    moredelim=[is][\sout]{`}{`},
     % % listings does not support UTF-8
     literate= {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
               {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1

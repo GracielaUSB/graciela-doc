@@ -1,0 +1,184 @@
+\section{Tipos de Dato Abstractos}
+
+\begin{frame}{Objetivo principal}
+Esta fue la recomendación más importante y de mayor envergadura dada por Araujo y Jiménez, y se convirtió en el centro de la presente extensión al lenguaje Graciela y a su compilador.
+
+\begin{itemize}
+  \item Se busca la misma expresividad del lenguaje GCL.
+  \item Se pueden definir restricciones y comportamientos abstractos que son verificados a tiempo de ejecución.
+\end{itemize}
+\end{frame}
+
+\subsection*{Abstracciones}
+
+\begin{frame}{Comportamientos abstractos}
+\begin{itemize}
+  \item Se definen con la palabra reservada \ingra{abstract}.
+  \item Cuentan con variables internas para establecer propiedades sobre ellos, pudiendo ser éstas de tipos de la teoría de conjuntos. Las variables internas de tipos de la teoría de conjuntos sólo se materializan al evaluar aserciones.
+  \item Incluyen un invariante de representación, especificado con la palabra \ingra{repinv} que se verifica al entrar y al salir de sus procedimientos, y al entrar a sus funciones.
+  \item Estos procedimientos y funciones establecen
+  precondiciones y poscondiciones como los de los procedimientos y funciones regulares, pero pueden hacer mención de las variables internas. Sin embargo, no tienen cuerpos, y se limitan precisamente a definir una interfaz.
+\end{itemize}
+\end{frame}
+
+\subsection*{Implementaciones}
+\begin{frame}{Implementaciones}
+Para aprovechar la definición de un tipo de dato abstracto, es necesario proveer una \textit{implementación} de éste.
+\begin{itemize}
+  \item Se definen con la palabra reservada \ingra{type}.
+  \item También cuentan con variables internas, pero estas sólo pueden ser de tipos básicos, apuntadores, o arreglos.
+  \item Incluyen un invariante de representación, especificado con la palabra \ingra{repinv}, que puede hacer mención de las variables internas de la implementación.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Implementaciones, cont.}
+\begin{itemize}
+    \item Además, incluyen un invariante de acoplamiento que establece la relación entre las variables internas del TDA y las de la implementación. En la literatura, se trata de una expresión lógica que debe ser demostrada, pero se decidió separar en dos partes, una \textit{relación} de acoplamiento, especificacada con la palabra \ingra{where} y un \textit{invariante} de acoplamiento, con la aserción \ingra{coupinv}.
+  \item Por último, una \textit{implementación} también cuenta con procedimientos y funciones, y debe especificar una implementación para todos ellos. Adicionalmente, si el TDA especifica un procedimiento o función, cualquier \ingra{type} que busque implementarlo debe contar con su propia definición de éste.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Relación \textit{implementa a}}
+Si se tiene el procedimiento $\textbf{proc}\ p (Y)$, e $Inv(x)$ es el predicado que condensa todos los
+invariantes del valor $x$ si $x$ es de un TDA, entonces se debe cumplir que
+
+\begin{equation*} \label{eqn:tdatriple}
+\begin{gathered}
+% \frac{
+  \{ P[X/Y] \land (\forall x\ |\ x \in X \land isTDA?(x)\ |\ Inv(x) )\}\\
+  p\ (X)\\
+  \{ Q[X/Y] \land (\forall x\ |\ x \in X \land isTDA?(x)\ |\ Inv(x) )\}
+% }{
+% }
+\end{gathered}
+\end{equation*}
+\end{frame}
+
+\begin{frame}{Relación \textit{implementa a}}
+Por lo tanto, cuando en Graciela se hace una llamada, se verifican las siguientes aserciones, en orden
+
+\begin{enumerate}
+  \item Precondición de la implementación.
+
+  \item Relación e Invariante de acoplamiento.
+
+  \item Invariante de representación de la \textit{implementación}.
+
+  \item Precondición del TDA, si existe.
+
+  \item Invariante de representación del TDA.
+
+  \item \textit{Cuerpo del procedimiento}.
+
+
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Relación \textit{implementa a}, cont.}
+\begin{enumerate}\setcounter{enumi}{6}
+  \item Relación e Invariante de acoplamiento.
+
+  \item Invariante de representación del TDA.
+
+  \item Poscondición del TDA, si existe.
+
+  \item Invariante de representación de la \textit{implementación}.
+
+  \item Poscondición de la implementación.
+    \begin{itemize}
+      \item Si se cumplieron ambas poscondiciones, la ejecución sigue normalmente
+      \item Si sólo se cumple la poscondición del la implementación, se emite el
+      error <<No se cumple la poscondición>>
+      \item Si sólo se cumple la poscondición del TDA, se emite el error <<Este
+      procedimiento no implementa el TDA>>
+      \item Si ninguna de las dos poscondiciones se cumple, se emiten ambos errores.
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\subsection*{Implementación}
+
+\begin{frame}{Detrás de la escena}
+Los invariantes de representación (\ingra{repinv}), y los invariantes  (\ingra{coupinv}) y relaciones de acoplamiento (\ingra{where}) funcionan como rutinas internas que son generadas para cada TDA y cada implementación, y son llamadas en los momentos apropiados. 
+
+Adicionalmente, para cada implementación, se generan rutinas internas para crear, copiar y eliminar objetos de su tipo. 
+\end{frame}
+
+\begin{frame}{Modos de parámetros}
+Por supuesto, debe ser posible pasar objetos de un TDA en los distintos modos de parámetros del lenguaje Graciela, a saber, In, In-Out, Out y Ref.
+
+\begin{description}
+  \item [In]     Se crea en el heap una estructura del tipo apropiado, se copia el parámetro real en ella, y se pasa un apuntador a esta estructura.
+  \item [Out]    Se crea en el heap una estructura del tipo apropiado, vacía, y se pasa un apuntador a esta estructura. Al finalizar el procedimiento, se copia esta estructura sobre el parámetro real.
+  \item [In-Out] Combinación de los dos modos anteriores. 
+  \item [Ref]    Simplemente se pasa una referencia al parámetro real.
+  \item [Const]  Este modo de parámetros sólo está disponible para variables de tipos básicos. 
+\end{description}
+
+\end{frame}
+
+\defverbatim[colored]\typevar{
+\begin{lstlisting}[language=graciela, style=code, escapechar=\~]
+abstract ALista (A)
+    ...
+
+type Lista(B) implements ALista(B)
+    ...
+    proc p (in l : Lista(B))
+      ...
+\end{lstlisting}
+}
+
+\begin{frame}{Variables de tipo}
+Una situación bastante frecuente en los TDA es que sus comportamientos son genéricos sobre los tipos que contienen. Por lo tanto, se decidió permitir
+especificar los TDAs y sus implementaciones con variables de tipo. 
+
+\typevar
+
+En Graciela, estas variables de tipo siempre serán instanciadas en tipos básicos, y los procedimientos definidos dentro de \ingra{ALista(A)} y \ingra{Lista(B)} no pueden hacer suposiciones sobre \ingra{A} o \ingra{B} más allá de que son comparables, mostrables y legibles por teclado. 
+\end{frame}
+
+\defverbatim[colored]\typevarr{
+\begin{lstlisting}[language=graciela, style=code, escapechar=\~]
+var miListaInt  : Lista (int);
+var miListaChar : Lista (char);
+
+p(miListaInt);
+p(miListaChar);
+\end{lstlisting}
+}
+
+\begin{frame}{Variables de tipo, cont.}
+Si se crea una variable de un TDA dentro del programa principal, o dentro de un procedimiento en el alcance global, se deben especificar tipos básicos para
+cada una de las variables de tipo dadas en la declaración \ingra{type}.
+
+\typevarr
+
+A tiempo de compilación, se generan dos tipos de estructura, y para cada una, 
+una copia de cada procedimiento, función, y rutina interna, cambiando únicamente
+el tipo que sustituye a la variable de tipo \ingra{B}. Esto podría parecer 
+exagerado, pero de hecho es la misma técnica de plantillas que utiliza el 
+compilador de C++.
+\end{frame}
+
+\defverbatim[colored]\typevarrr{
+\begin{lstlisting}[language=graciela, style=code, escapechar=\~]
+type Lista(B) implements ALista(B)
+    ...
+    proc q (in l : Lista(B), in b : B)
+      ...
+
+var miListaInt  : Lista (int);
+var miListaChar : Lista (char);
+
+q (miListaInt,   3 )
+q (miListaChar, '3')
+\end{lstlisting}
+}
+
+\begin{frame}{Variables de tipo, cont.}
+Por último, la verificación de tipos para llamadas a procedimientos de TDAs 
+es capaz de reconocer el tipo apropiado para el segundo parámetro de un procedimiento como
+
+\typevarrr
+\end{frame}

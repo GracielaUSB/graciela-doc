@@ -206,7 +206,7 @@ binario.
 
 \begin{align}
   tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp \label{eq:treesl}\\
-             &\boldsymbol{else}\ \exists xy.\ E\mapsto[l:\ x,\ r:\ y]\ ∗\ tree(x)\ ∗\ tree(y) \nonumber
+             &\boldsymbol{else}\ \exists xy.\ E\mapsto[l:\ x,\ r:\ y]\ *\ tree(x)\ *\ tree(y) \nonumber
 \end{align}
 
 Un árbol binario se caracteriza por el hecho de que cada nodo debe estar en un
@@ -219,7 +219,7 @@ En caso positivo se devuelve el valor \textbf{emp}, el cual representa al
 reservadas. Si por el contrario E no es un átomo, entonces se verifica para cada
 hijo que sea un árbol binario, cubriendo así el caso recursivo. El operador
 deconstrucción de \textit{heap} unitario, $E \mapsto x$, significa que E apunta al
-fragmento de memoria x. En este caso se hace uso de este operador de la forma
+fragmento de memoria $x$. En este caso se hace uso de este operador de la forma
 $E\mapsto [l: x, r: y]$ que significa que los hijos izquierdo y derecho se
 ubican en los fragmentos de memorias $x$ y $y$ respectivamente, y no es mas que
 una abreviación de $(E\mapsto x) * (E+1\mapsto y)$.

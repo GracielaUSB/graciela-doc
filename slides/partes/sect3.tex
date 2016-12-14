@@ -1,23 +1,108 @@
-\section{Resultados}
+\section{Apuntadores}
 
-\subsection{Resultados esperados}
-\begin{frame}{Resultados esperados}
+\subsection*{Notación}
+
+\begin{frame}{Recomendación de Araujo y Jiménez}
+Esta extensión al lenguaje fue una recomendación explícita de Araujo y Jiménez
+por su amplia utilidad para el curso <<Algoritmos y Estructuras II>>. Se permite
+declarar variables de tipo apuntador a cualquier otro tipo del lenguaje fuera 
+de la teoría de conjuntos.
+
 \begin{itemize}
-  \item Especificación formal de la extensión de Graciela a implantar.
-  \item Extensión del front-end del compilador.
+  \item{\makebox[4cm][l]{Declaración           } \ingra|var pt : T~~* | }
+  \item{\makebox[4cm][l]{Reserva de memoria    } \ingra|new  (pt) | }
+  \item{\makebox[4cm][l]{Liberación de memoria } \ingra|free (pt) | }
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Paréntesis}
+
+Asimismo, se extendió el reconocedor sintáctico de los tipos para aceptar el 
+uso de paréntesis, a fin de permitir al programador distinguir entre, por 
+ejemplo, un arreglo de apuntadores y un apuntador a un arreglo.
+
+\begin{itemize}
+  \item{\makebox[4cm][l]{Arreglo de apuntadores } \ingra|var ptarr : array [n] of (T~~*~~) | }
+  \item{\makebox[4cm][l]{Apuntador a arreglo    } \ingra|var arrpt : (array [n] of T)* | }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Debugging}
+
+Para asegurarnos de que las funciones \texttt{new} y \texttt{free} funcionaban
+de la manera esperada, hicimos uso de la herramienta \textit{Valgrind}. 
+\begin{itemize}
+  \item Toma un ejecutable.
+  \item Lo enlaza con sus propias funciones de reserva y liberación de memoria.
+  \item Elabora un reporte sobre posibles accesos indebidos y pérdida de memoria 
+    dinámica.
+\end{itemize}
+
+Gracias a esto, descubrimos varias fugas de memoria y accesos indebidos, específicamente
+en el uso de arreglos. La forma en que habíamos implementado inicialmente los arreglos conformantes presentaba fallos y estos fueron solventados exitosamente.
+\end{frame}
+
+\subsection*{Aserciones}
+\begin{frame}{Lógica de separación}
+Para poder expresar aserciones sobre estructuras que hacen uso de apuntadores, 
+el Prof. Monascal nos orientó hacia la extensión de la Lógica de Hoare conocida 
+como Lógica de Separación.
+
+\begin{itemize}
+  \item No le agrega poder a la Lógica de Hoare.
+  \item Pero aporta expresividad y permite enunciar propiedades complejas de 
+  una manera más sucinta.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Lógica de separación, semántica}
+
+\begin{description}
+  \item [emp] Es la constante que representa un \textit{heap} vacío. 
+  \item [$*$] Es la \textit{conjunción separadora}. $P*Q$ significa que P y Q son verdaderas en porciones disjuntas de la memoria.
+  \item [$\mapsto$] Es el operador de \textit{deconstrucción de heap unitario}. $E \mapsto x$ significa que E apunta al fragmento de memoria $x$. Suele usarse de la forma $E \mapsto [l : x, r : y]$, equivalente a $(E \mapsto x) * (E + 1 \mapsto y)$
+\end{description}
 
 \end{frame}
 
-\subsection{Actividades propuestas}
-\begin{frame}{Actividades propuestas}
-\begin{itemize}
-  \item Evaluar las recomendaciones del jurado del proyecto de grado de Araujo y
-Jiménez sobre la semántica del lenguaje propuesta por ellos.
-  \item Revisión de la bibliografía existente para el manejo de tipos definidos
-por el usuario en el contexto de programación formal.
-  \item Implantación de un Lexer y un Parser extendidos que soporten las nuevas
-funcionalidades propuestas.
-\end{itemize}
+\begin{frame}{Lógica de separación, cont.}
+\framesubtitle{Ejemplo motivador}
+
+\begin{align*}
+  tree(E) \Longleftrightarrow\ &\boldsymbol{if}\ isatom?(E)\ \boldsymbol{then}\ emp \\
+             &\boldsymbol{else}\ \exists xy.\ E\mapsto[l: x,\ r: y] * tree(x) * tree(y) \nonumber
+\end{align*}
 
 \end{frame}
+
+\begin{frame}{Lógica de separación, cont}
+Sin embargo,
+\begin{itemize}
+  \item Difícil implementación debido a complejas estructuras internas (simulación del heap).
+  \item Nuevo sistema formal para estudiantes de cursos introductorios. 
+\end{itemize}
+\end{frame}
+
+% \section{Resultados}
+
+% \subsection*{Resultados esperados}
+% \begin{frame}{Resultados esperados}
+% \begin{itemize}
+%   \item Especificación formal de la extensión de Graciela a implantar.
+%   \item Extensión del front-end del compilador.
+% \end{itemize}
+
+% \end{frame}
+
+% \subsection*{Actividades propuestas}
+% \begin{frame}{Actividades propuestas}
+% \begin{itemize}
+%   \item Evaluar las recomendaciones del jurado del proyecto de grado de Araujo y
+% Jiménez sobre la semántica del lenguaje propuesta por ellos.
+%   \item Revisión de la bibliografía existente para el manejo de tipos definidos
+% por el usuario en el contexto de programación formal.
+%   \item Implantación de un Lexer y un Parser extendidos que soporten las nuevas
+% funcionalidades propuestas.
+% \end{itemize}
+
+% \end{frame}

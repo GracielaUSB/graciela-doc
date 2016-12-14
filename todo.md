@@ -35,8 +35,8 @@
 
 - Monolingualización del compilador
 
-- Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque
-  tengan una mala inicialización
+- Agregar a la tabla de símbolos todas las variables declaradas, incluso aunque tengan una mala inicialización
+
 - Agregar a los procedimientos incluso aunque haya errores en definición.
 
 - Parser no debe especificar orden para tipos/procedimientos
@@ -51,6 +51,10 @@
 - Only first five errors given by default
 
 - Agregar backend de conversiones
+
+- Tipos sin parámetros no hacen match con abstract
+
+- prohibir parámetros const de tipos no-básicos \,
 
 # Syntax Highlighting
 - Agregar operador msum (misma categoría que union)
