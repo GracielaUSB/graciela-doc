@@ -1,8 +1,7 @@
-\section{Apuntadores}
+\section{ }
 
-\subsection*{Notación}
-
-\begin{frame}{Recomendación de Araujo y Jiménez}
+\begin{frame}{Apuntadores}
+\framesubtitle{Recomendación de Araujo y Jiménez}
 Esta extensión al lenguaje fue una recomendación explícita de Araujo y Jiménez
 por su amplia utilidad para el curso <<Algoritmos y Estructuras II>>. Se permite
 declarar variables de tipo apuntador a cualquier otro tipo del lenguaje fuera 
@@ -14,6 +13,8 @@ de la teoría de conjuntos.
   \item{\makebox[4cm][l]{Liberación de memoria } \ingra|free (pt) | }
 \end{itemize}
 \end{frame}
+
+\section{Apuntadores}
 
 \begin{frame}{Paréntesis}
 
@@ -30,7 +31,7 @@ ejemplo, un arreglo de apuntadores y un apuntador a un arreglo.
 \begin{frame}{Debugging}
 
 Para asegurarnos de que las funciones \texttt{new} y \texttt{free} funcionaban
-de la manera esperada, hicimos uso de la herramienta \textit{Valgrind}. 
+de la manera esperada, hicimos uso de la herramienta \textit{Valgrind}\footfullcite{valgrind}. 
 \begin{itemize}
   \item Toma un ejecutable.
   \item Lo enlaza con sus propias funciones de reserva y liberación de memoria.
@@ -46,7 +47,7 @@ en el uso de arreglos. La forma en que habíamos implementado inicialmente los a
 \begin{frame}{Lógica de separación}
 Para poder expresar aserciones sobre estructuras que hacen uso de apuntadores, 
 el Prof. Monascal nos orientó hacia la extensión de la Lógica de Hoare conocida 
-como Lógica de Separación.
+como Lógica de Separación\footfullcite{separation-logic}.
 
 \begin{itemize}
   \item No le agrega poder a la Lógica de Hoare.
@@ -82,27 +83,3 @@ Sin embargo,
   \item Nuevo sistema formal para estudiantes de cursos introductorios. 
 \end{itemize}
 \end{frame}
-
-% \section{Resultados}
-
-% \subsection*{Resultados esperados}
-% \begin{frame}{Resultados esperados}
-% \begin{itemize}
-%   \item Especificación formal de la extensión de Graciela a implantar.
-%   \item Extensión del front-end del compilador.
-% \end{itemize}
-
-% \end{frame}
-
-% \subsection*{Actividades propuestas}
-% \begin{frame}{Actividades propuestas}
-% \begin{itemize}
-%   \item Evaluar las recomendaciones del jurado del proyecto de grado de Araujo y
-% Jiménez sobre la semántica del lenguaje propuesta por ellos.
-%   \item Revisión de la bibliografía existente para el manejo de tipos definidos
-% por el usuario en el contexto de programación formal.
-%   \item Implantación de un Lexer y un Parser extendidos que soporten las nuevas
-% funcionalidades propuestas.
-% \end{itemize}
-
-% \end{frame}
