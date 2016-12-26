@@ -15,23 +15,28 @@ propiedades de una Semántica Axiomática, permitiendo demostrar la corrección
 parcial de programas. Las fórmulas en la Lógica de Hoare son llamadas
 \textbf{Tripletas de Hoare} y se escriben de la siguiente manera:
 
-$$ \{P\}\ S\ \{Q\} $$
+\begin{equation*}
+\begin{gathered}
+\{P\}\ S\ \{Q\}
+\end{gathered}
+\end{equation*}
+
 
 En la tripleta anterior, $S$ es una instrucción, mientras que $P$ y $Q$ son
-llamadas \textbf{Precondición} y \textbf{Poscondición}, respectivamente. El
+llamadas \textbf{Precondición} y \textbf{Postcondición}, respectivamente. El
 significado de esta tripleta es el siguiente: si la precondición $P$ sobre el
 estado de las variables del programa es cierta inmediatamente antes de la
-ejecución de $S$, y $S$ culmina su ejecución, entonces la poscondición $Q$ sobre
+ejecución de $S$, y $S$ culmina su ejecución, entonces la postcondición $Q$ sobre
 el estado de las variables del programa es cierta al finalizar $S$. Con esta
 aproximación, es posible demostrar la corrección parcial de los programas, ya
-que la poscondición sólo se cumple cuando el programa termina; mientras que para
+que la postcondición sólo se cumple cuando el programa termina; mientras que para
 demostrar la corrección total de un programa, es necesario garantizar que si la
 precondición se cumple, el programa termina.
 
 \section{Teoría de conjuntos}
 
 La Teoría de Conjuntos~\cite{gries} es la rama de la matemática que se encarga
-del estudio de colecciones bien formados de objetos, que pueden o no ser de
+del estudio de colecciones bien formadas de objetos, que pueden o no ser de
 naturaleza matemática. Esta teoría surge de la idea original de conjuntos de
 Georg Cantor, quien los definió como una colección, finita o infinita, de
 objetos definidos y distinguibles, y a su vez los conjuntos pueden ser
@@ -59,8 +64,10 @@ conjuntos podemos destacar las siguientes estructuras:
   \item [Secuencia] Las secuencias son colecciones de objetos enumerados, en las
   cuales se permite la repetición de los mismos. A diferencia del conjunto y el
   multiconjunto, el orden de los elementos sí tiene importancia. Formalmente,
-  una secuencia puede ser definida como una función entre los números naturales
-  y los elementos de la colección. Cuenta con los operadores de concatenación y
+  una secuencia puede ser definida como una función cuyo dominio es un 
+  subconjunto de los números naturales de la forma $[0, n)$, donde $n$ es el 
+  tamaño de la secuencia, y cuyo codominio es un subconjunto del tipo que 
+  corresponde a los elementos. Cuenta con los operadores de concatenación y
   subindización.
 
   \item [Relación] Una relación es una asociación entre un conjunto de entrada
@@ -98,7 +105,7 @@ Comúnmente, la especificación formal de un TDA posee un modelo abstracto de
 representación, que consiste en una colección de estructuras internas de alto
 nivel como conjuntos o relaciones, y sus operaciones se modelan como
 procedimientos y funciones, de los cuales solo se necesitan saber las
-precondiciones, poscondiciones e invariantes que deben cumplirse, expresadas
+precondiciones, postcondiciones e invariantes que deben cumplirse, expresadas
 en lenguaje natural o en lenguaje matemático.
 
 Una vez que se dispone de un TDA que modele de manera adecuada el
@@ -121,17 +128,16 @@ $\textbf{proc}\ p (Y)$, $Y$ es una lista de parámetros que posiblemente incluye
 variables de un TDA, e $Inv(x)$ es el predicado que condensa todos los
 invariantes del valor $x$ si $x$ es de un TDA.
 
-\begin{equation} \label{eqn:tdatriple}
-\begin{gathered}
+ARREGLAR CON INFORMACIÓN DEL PROF. FLAVIANI
+
+\begin{alignat}{1}
 % \frac{
-  \{ P[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}\\
-  p\ (X)\\
-  \{ Q[X/Y] \land (\forall x\ |\ x \in X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\}
+  \{ P[X/\,Y] \land (\forall x\ |\ x \in\ & X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\} \nonumber \\
+  p\ (& X) \label{eqn:tdatriple} \\ 
+  \{ Q[X/\,Y] \land (\forall x\ |\ x \in\ & X \land \textrm{isTDA?}(x)\ |\ Inv(x) )\} \nonumber 
 % }{
 % }
-\end{gathered}
-\end{equation}
-
+\end{alignat}
 
 \section{Tipos Algebraicos Libres}
 
@@ -149,9 +155,12 @@ suma de los conjuntos de las clases, debido a que son disjuntos.
 
 El ejemplo motivador en la mayoría de los cursos que hablan sobre Tipos
 Algebraicos Libres (TALs) es el del árbol binario. Un lenguaje que soporte TALs
-aceptaría una definición como la siguiente.
+aceptaría una definición como la de la figura \ref{eqn:freetype}.
 
-$$ \textbf{freetype}\ Tree(e)\ = Leaf(e)\ |\ Node(Tree(e),\ Tree(e)) $$
+\begin{alignat}{1}
+\textbf{freetype}\ Tree(e)\ = Leaf(e)\ |\ Node(Tree(e),\ Tree(e)) \label{eqn:freetype}
+\end{alignat}
+
 
 Este TAL es el tipo suma suma de las clases
 $Leaf(e)$ y $Node(Tree(e),\ Tree(e))$,
@@ -198,7 +207,7 @@ Samin Ishtiaq~\cite{seplogpaper1,seplogpaper2,seplogpaper3} como una
 extensión de la lógica de Hoare que permite razonar sobre el acceso a datos en
 la memoria de una computadora y como estos pueden mutar. Tal como lo explica
 Peter O'Hearn en~\cite{separation-logic}, la Lógica de Separación se basa en
-la \textit{conjunción separadora} $P * Q$, que significa que P y Q apuntan a
+la \textit{conjunción separadora}, $P\, \ast\, Q$, que significa que P y Q apuntan a
 porciones de memorias disjuntas. De esta forma se pueden escribir predicados
 que permitan realizar verificaciones sobre estructuras que hacen uso de
 apuntadores, como por ejemplo verificar que una estructura es un árbol
@@ -224,11 +233,11 @@ $E\mapsto [l: x, r: y]$ que significa que los hijos izquierdo y derecho se
 ubican en los fragmentos de memorias $x$ y $y$ respectivamente, y no es mas que
 una abreviación de $(E\mapsto x) * (E+1\mapsto y)$.
 
-Aunado a esto, la lógica de separación permite hacer pruebas de la forma $s,h
-\vDash P$ donde s es un valor almacenado, h es un fragmento de memoria o
-\textit{heap} y P es una aserción que se realizar sobre s y h. También se cuenta
-con el operador \textit{implicación separadora} $P-*\ Q$ que entiende como, si
-para un \textit{heap} dado se cumple P, entonces al extender este primer
-\textit{heap} con otro \textit{heap} disjunto se debe cumplir Q, y de manera
-formal, $s,h \vDash P-*\ Q$ se cumple si para todo h' disjunto de h $s,h' \vDash
-P$ y $s,h\Union h' \vDash Q$.
+La lógica de separación permite hacer pruebas de la forma $s,h
+\vDash P$ donde s es un valor almacenado, $h$ es un fragmento de memoria o
+\textit{heap} y $P$ es una aserción que se realiza sobre $s$ y $h$. También cuenta
+con el operador \textit{implicación separadora}, $P-*\ Q$, que se entiende como, si
+para un \textit{heap} dado se cumple $P$, entonces al extender este primer
+\textit{heap} con otro \textit{heap} disjunto se debe cumplir $Q$; de manera
+formal, $s, h \vDash P-*\ Q$ se cumple si $\forall h', h' \cap h = \emptyset, h' \vDash
+P\,\, \land \,\, s, h \cup h' \vDash Q$.

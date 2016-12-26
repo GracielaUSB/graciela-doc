@@ -19,7 +19,7 @@ para mejorar la experiencia del programador novel.
 Para dar más claridad a los programas escritos en Graciela, se decidió que el
 bloque principal debe estar precedido por la palabra clave \ingra{main}. Por
 otro lado, en la definición de procedimientos y funciones, se movió la
-poscondición junto con la precondición, de modo que aparecen antes del cuerpo de
+postcondición junto con la precondición, de modo que aparecen antes del cuerpo de
 la subrutina, eliminándose así la necesidad de usar las palabras clave
 \ingra{begin} y \ingra{end} para delimitar el cuerpo de la subrutina. En las
 subrutinas, también se eliminó el  símbolo \ingra{:} entre el identificador de
@@ -105,13 +105,13 @@ recursiva, esta simplemente es ignorada.
 \section{Cuantificaciones}
 
 Las cuantificaciones ya formaban parte del lenguaje en su versión original, pero
-se les hicieron algunas modificaciones. En primer lugar, la variable auxiliar
+se les hicieron algunas modificaciones. En primer lugar, la variable cuantificada
 ahora puede ser de tipo \ingra{float} o de una variable de tipo, en adición a
 los tipos permitidos anteriormente,  \ingra{int}, \ingra{char} o
 \ingra{boolean}. Se permiten variables de tipo \ingra{float} gracias a la
 adición de los tipos colección, explicados más adelante, ahora es posible
 definir iteraciones sobre números de punto flotante, usando el operador de
-pertenencia (\Elem) sobre una colección, mientras que se permiten las variables
+pertenencia (\ingra{~\Elem~}) sobre una colección, mientras que se permiten las variables
 de tipo debido a que éstas siempre serán instanciadas en alguno de los
 tipos \ingra{int}, \ingra{char}, \ingra{boolean} o \ingra{float}).
 
@@ -124,21 +124,21 @@ Conjuntiva, en las cuales se cumpla alguna de las siguientes condiciones:
 
 \begin{description}%[leftmargin=!,labelwidth=\widthof{\bfseries Rango de pertenencia}]
 
-  \item [Rango numérico] La variable auxiliar aparece, sola, en al menos dos
+  \item [Rango numérico] La variable cuantificada aparece, sola, en al menos dos
   desigualdades (\ingra{<}, \ingra{<=}, \ingra{>} o \ingra{>=}), como el
   operando menor y mayor en al menos una desigualdad, respectivamente, y
-  adicionalmente el tipo de la variable auxiliar es \ingra{int} o \ingra{char}.
+  adicionalmente el tipo de la variable cuantificada es \ingra{int} o \ingra{char}.
   En este caso, se forma un rango numérico entre el máximo de los límites
   inferiores y el mínimo de los límites superiores definidos por las
   desigualdades. Puede verse un ejemplo de esto en el fragmento de código~\ref{lst:numrange}. En ese caso, el rango resultante es el comprendido entre $0$ y $100$,
   incluyendo  el límite inferior pero no el superior.
 
 \begin{gracielacode}[caption=Cuantificación con rango numérico, label=lst:numrange]
-(% ~\qop~ i : int | 0 <= i /\ i < 100 | ... %)
+(% ~\qop~ i : int | 0 <= i /\ i < 1~~0~~0 | ... %)
 \end{gracielacode}
 
-  \item [Rango de pertenencia] La variable auxiliar aparece del lado izquierdo
-  de un operador de pertenencia (\Elem), con una colección en el lado derecho.
+  \item [Rango de pertenencia] La variable cuantificada aparece del lado izquierdo
+  de un operador de pertenencia (\ingra{~\Elem~}), con una colección en el lado derecho.
   En este caso, se forma un rango de pertenencia sobre la colección en
   cuestión. Puede verse un ejemplo de esto en el fragmento de código~\ref{lst:setrange}.  En ese caso, el rango resultante es el conjunto \ingra{s}.
 
@@ -148,14 +148,14 @@ var s : set of A
 (% ~\qop~ i : A | i ~\Elem~ s | ... %)
 \end{gracielacode}
 
-  \item [Rango puntual] La variable auxiliar aparece, sola, en cualquier lado de
-  un operador de igualdad (\ingra{==}). En este caso, se forma un rango puntual
+  \item [Rango unitario] La variable cuantificada aparece, sola, en cualquier lado de
+  un operador de igualdad (\ingra{==}). En este caso, se forma un rango unitario
   correspondiente a la expresión del otro lado del operador. Puede verse un
   ejemplo de esto en el fragmento de código~\ref{lst:pointrange}. En ese caso,
   el rango resultante es el valor de la expresión
   \lstinline[language=graciela]{a ~\op~b ~\op~c}.
 
-\begin{gracielacode}[caption=Cuantificación con rango puntual, label=lst:pointrange]
+\begin{gracielacode}[caption=Cuantificación con rango unitario, label=lst:pointrange]
 var a, b, c : int
 ...
 (% ~\qop~ i : int | i == a ~\op~b ~\op~c | ... %)
@@ -168,7 +168,7 @@ var a, b, c : int
   pueda tener esto para el valor de la cuantificación y la ejecución del
   programa.
 
-\begin{gracielacode}[caption=Cuantificación con rango puntual, label=lst:emptyrange]
+\begin{gracielacode}[caption=Cuantificación con rango vacío, label=lst:emptyrange]
 (% ~\qop~ i : A | false | ... %)
 \end{gracielacode}
 
@@ -180,13 +180,13 @@ la pertenencia en el segundo se evaluará para cada elemento de la iteración.
 
 \begin{enumerate}
   \item Rango vacío
-  \item Rango puntual
+  \item Rango unitario
   \item Rango de pertenencia
   \item Rango numérico
 \end{enumerate}
 
 Es decir, si a partir de una expresión de rango pueden formarse,
-simultáneamente, un rango vacío y uno puntual, se tomará el vacío. En caso de
+simultáneamente, un rango vacío y uno numérico, se tomará el vacío. En caso de
 poder formarse dos rangos de pertenencia, se tomará la primera colección para
 ejecutar la iteración, y la segunda relación de pertenencia será evaluada para
 cada elemento. En caso de poderse formar más de un rango numérico, se tomará su
@@ -199,12 +199,12 @@ expresión del cuerpo para los valores en el rango dado. De esta forma, se
 cumplen las equivalencias de los fragmentos de código~\ref{lst:forallcount} y
 \ref{lst:existcount}.
 
-\begin{gracielacode}[caption=Equivalencia entre cuantificador universal y count, label=lst:forallcount]
+\begin{gracielacode}[caption=Equivalencia entre cuantificador universal y \textit{count}, label=lst:forallcount]
 (% forall i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) ===
     (% count i : T | ~\textit{Rango}(~i) | ! ~\textit{Cuerpo}~(i) %) == 0
 \end{gracielacode}
 
-\begin{gracielacode}[caption=Equivalencia entre cuantificador existencial y count, label=lst:existcount]
+\begin{gracielacode}[caption=Equivalencia entre cuantificador existencial y \textit{count}, label=lst:existcount]
 (% exist i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) ===
     (% count i : T | ~\textit{Rango}(~i) | ~\textit{Cuerpo}~(i) %) != 0
 \end{gracielacode}
@@ -258,11 +258,11 @@ error durante la ejecución. De este modo, el fragmento código
 \ref{lst:pointer} debe ejecutarse cumpliendo todas las aserciones.
 
 \begin{gracielacode}[caption=Uso de apuntadores, label=lst:pointer]
-|[ var p1, p2 : int*; { p1 == null ~\Land~ p2 == null }
+|[ var p1, p2 : int*; { p1 == null ~\Land~  p2 == null }
  ; new(p1)            { p1 != null ~\Land~ *p1 == 0 }
  ; new(p2)            { p2 != null ~\Land~ *p2 == 0 }
- ; *p1 := 1           { p1 != p2 ~\Land~ *p1 == 1 }
- ; *p2 := *p1 + 1     { p1 != p2 ~\Land~ *p2 == 2 }
+ ; *p1 := 1           { p1 != p2   ~\Land~ *p1 == 1 }
+ ; *p2 := *p1 + 1     { p1 != p2   ~\Land~ *p2 == 2 }
  ; free(p1)
  ; free(p2)
  ; p1 := null         { p1 == null }
@@ -295,7 +295,7 @@ la colección vacía. Así, el conjunto, multiconjunto y secuencia con los núme
 fragmento de código~\ref{lst:extcollections}.
 
 \begin{gracielacode}[caption=Expresiones de tipos \textit{colección} por extensión, label=lst:extcollections]
-{1, 2, 3}
+{~~1, 2, 3~~}
 ~\Lbag~1, 2, 3~\Rbag~ // ó {:1, 2, 3:} sin UTF-8
 ~\Lseq~1, 2, 3~\Rseq~ // ó <<1, 2, 3>> sin UTF-8
 \end{gracielacode}
@@ -305,10 +305,10 @@ bastante similar a la de las cuantificaciones. Esta notación consiste en tres
 partes escritas entre los símbolos correspondientes a la colección deseada y
 separadas por caracteres \ingra{|}. En la primera parte se define una variable
 generadora con uno de los tipos permitidos para colecciones. En la segunda, el
-rango, se delimita el rango de la variable auxiliar, con las mismas
+rango, se delimita el rango de la variable cuantificada, con las mismas
 consideraciones que para las cuantificaciones. La tercera parte, el cuerpo, es
 la expresión que será agregada a la colección para cada valor posible de la
-variable auxiliar. Así, las mismas colecciones del ejemplo anterior podrían
+variable cuantificada. Así, las mismas colecciones del ejemplo anterior podrían
 escribirse, respectivamente, como se muestra en el
 fragmento de código~\ref{lst:compcollections}.
 
@@ -353,15 +353,15 @@ negativa puede escribirse como se muestra en el fragmento de código
 \ref{lst:relfunc}
 
 \begin{gracielacode}[caption=Expresión de tipo \textit{función}, label=lst:funcfunc]
-func({ int i | 0 < i /\ i <= 10 | (i, 2*i) })
+func({ int i | 0 < i /\ i <= 1~~0 | (i, 2*i) })
 \end{gracielacode}
 
 \begin{gracielacode}[caption=Expresión de tipo \textit{relación}, label=lst:relfunc]
 rel(
-  { int i | 0 < i /\ i <= 10 |
+  { int i | 0 < i /\ i <= 1~~0 |
     (toFloat(i),  (sqrt(toFloat(i))))
   } union
-  { int i | 0 < i /\ i <= 10 |
+  { int i | 0 < i /\ i <= 1~~0 |
     (toFloat(i), -(sqrt(toFloat(i))))
   }
 )
@@ -378,8 +378,8 @@ un conjunto, potencialmente vacío, de elementos del tipo del codominio. Puede
 verse un ejemplo de ambos casos en el fragmento de código~\ref{lst:funcreleval}.
 
 \begin{gracielacode}[caption=Evaluación de \textit{función} y \textit{relación}, label=lst:funcreleval]
-{ func ({ (2, 4), (3, 6), (5, 10) }) (3) == 6 };
-{ rel  ({ (2, 3), (1, 1), (1, -1) }) (1) == {1, -1} };
+{ func ({ (2, 4), (3, 6), (5, 1~~0) }) (3) == 6 };
+{ rel  ({ (2, 3), (1, 1), (1, -~~1) }) (1) == {~~1, -~~1~~} };
 \end{gracielacode}
 
 De manera similar a las colecciones, se permite la declaración de funciones y
@@ -387,7 +387,7 @@ relaciones entre dos tipos, con la notación mostrada en el fragmento de
 código~\ref{lst:funcreldecl}.
 
 \begin{gracielacode}[caption=Declaración de variables de tipos \textit{función} y \textit{relación}, label=lst:funcreldecl]
-var x : function int -> char;
+var x : function int  -> char;
 var y : relation int <-> char;
 \end{gracielacode}
 
@@ -413,18 +413,18 @@ de cualquier tipo, incluyendo tipos de la Teoría de Conjuntos. A continuación 
 debe especificar el invariante de representación dentro de un bloque contenido
 por los símbolos \ingra|{repinv| y \ingra|repinv}|. Por último, se declaran
 todos los procedimientos y funciones abstractas con sus respectivas
-precondiciones y poscondiciones.
+precondiciones y postcondiciones.
 
 Dentro de los procedimientos abstractos de un TDA pueden ser declaradas
 variables, especialmente variables de tipo de la Teoría de Conjuntos, con el
-fin de poder usarlas dentro de la precondición y la poscondición. Así, un tipo
+fin de poder usarlas dentro de la precondición y la postcondición. Así, un tipo
 de dato abstracto \ingra{Diccionario} con un procedimiento para agregar un
-elemento, puede declararse forma en la que se muestra en el fragmento de código
+elemento, puede declararse como se muestra en el fragmento de código
 \ref{lst:tadDicc}.
 
 \begin{widegracielacode}[caption=TDA Diccionario, label=lst:tadDicc]
 abstract Diccionario (T0, T1) begin
-  const MAX := 100 : int;
+  const MAX := 1~~0~~0 : int;
   var   conoc      : set of T0;
   var   tabla      : function T0 -> T1;
 
@@ -472,13 +472,13 @@ cabecera de un método, está restringido al caso en el que uno de los
 parámetros del mismo, sea del tipo de dato dentro del cual se está definiendo
 y contenga a su vez las variables de tipo en cuestión.
 
-Todas las variables y constantes presentes en el TDA, estarán disponibles en
+Todas las variables y constantes presentes en el TDA estarán disponibles en
 cualquier lugar del código como uno de los campos de la
-\textit{implementación}, si y solo si, no sea de un tipo de la Teoría de
-Conjuntos. El único lugar donde se está permitido hacer uso de las variables
+\textit{implementación}, si y solo si son de tipos básicos. El único lugar 
+donde está permitido hacer uso de las variables
 de alto nivel del TDA como campos de la \textit{implementación}, es dentro del
 invariante y la relación de acoplamiento. De esta forma, una posible
-implementación del TDA \ingra{Diccionario} debería verse de la como se muestra
+implementación del TDA \ingra{Diccionario} debería verse como se muestra
 en el fragmento de código~\ref{lst:dicc}
 
 \begin{widegracielacode}[caption=Una posible implementación del TDA Diccionario, label=lst:dicc]
@@ -495,8 +495,8 @@ type Dicc (T0, T1) implements Diccionario (T0, T1) begin
   {coupinv true coupinv}
 
   where {
-  tabla := func({i : int | 0 ≤ i ~\Land~ i < tam | (clave[i], valor[i])});
-  conoc := domain(tabla)
+    tabla := func({i : int | 0 ≤ i ~\Land~ i < tam | (clave[i], valor[i])});
+    conoc := domain(tabla)
   }
 
   proc agregar (inout d : Dicc (T0,T1), in c : T0, in v : T1)
@@ -518,8 +518,8 @@ type Dicc (T0, T1) implements Diccionario (T0, T1) begin
 end
 \end{widegracielacode}
 
-Cabe mencionar que no se pueden declarar variables de un TDA fuera del mismo y
-pueden existir múltiples implementaciones para un TDA.
+Cabe mencionar que nunca se pueden declarar variables de un TDA, sólo de sus 
+implementaciones, y que pueden existir múltiples implementaciones para un TDA.
 
 \section{Herramientas para el programador}
 
@@ -536,7 +536,7 @@ Para facilitar la instalación del compilador, se usaron las herramientas:
 
   \item [APT] Para instalar el compilador graciela en sistemas operativos
     derivados de Debian se hace a través de la herramienta APT, usando los
-    comandos del fragmento de código~\ref{lst:apt}
+    comandos del fragmento de código~\ref{lst:apt}.
 
   \item [Homebrew] La instalación del compilador graciela en sistemas
     operativos macOS se hace a través de la herramienta Homebrew,

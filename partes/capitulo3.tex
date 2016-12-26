@@ -284,7 +284,7 @@ fragmento de código~\ref{lst:arrproccall}.
 
 En este caso, el procedimiento \ingra{sub} espera un arreglo de tamaño
 \ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que el tamaño
-del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de tamaño
+del arreglo sea \ingra{[5, 1~~0]}. Sin embargo, recibe un arreglo de tamaño
 \ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa llamada.
 Esta verificación no puede hacerse a tiempo de compilación en el caso general,
 puesto que sería equivalente a predecir todos los posibles cursos de ejecución
@@ -297,11 +297,11 @@ Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
 para que fueran más similares a sus equivalentes en GCL. Simplemente, se
 eliminaron los lexemas \ingra{begin} y \ingra{end}, antes usados para
 delimitar el procedimiento, y el lexema \ingra{:} entre el identificador de la
-subrutina y su lista de parámetros, y se movió la poscondición junto a la
+subrutina y su lista de parámetros, y se movió la postcondición junto a la
 precondición, antes del cuerpo de la subrutina.
 
 Además, se agregó la posibilidad de especificar cotas para las subrutinas luego
-de la poscondición y antes del cuerpo, como requisito para hacer llamadas
+de la postcondición y antes del cuerpo, como requisito para hacer llamadas
 recursivas dentro de la misma. Así, es un error a tiempo de compilación escribir
 una llamada recursiva de una subrutina sin cota. En el caso contrario, el de una
 subrutina con cota pero sin recursión, ésta simplemente es ignorada. A pesar de
@@ -370,7 +370,7 @@ consideran los rangos generados por el operador de disyunción
 como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
 expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
 el uso de teoremas lógicos, convirtiendo una cuantificación en la disyunción de
-varias, o usando el operador de unión de conjuntos (\Union).
+varias, o usando el operador de unión de conjuntos (\ingra{~\Union~}).
 
 Finalmente, si se ha construido un rango válido, este se registra en el ASA
 correspondiente a la cuantificación. Si el rango es <<aritmético>>, se exige que
@@ -558,7 +558,7 @@ sea el sistema operativo quien emita el error.
 
 Para la reserva de memoria dinámica, se utilizó la función estándar de C
 \texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
-argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
+argumentos e inicializa todos los bytes a $0$. Por otro lado, la liberación de
 memoria dinámica se realiza llamando a la función estándar de C \texttt{free}.
 
 \subsection{Lógica de Separación}
@@ -603,7 +603,7 @@ lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
 GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
 alto nivel como el invariante de representación y las precondiciones y
-poscondiciones de los procedimientos y funciones que definen su interfaz.
+postcondiciones de los procedimientos y funciones que definen su interfaz.
 Estos tipos de dato, definidos dentro del lenguaje de programación con la
 palabra reservada \ingra{abstract}, nunca definen una implementación en
 particular, sino que se limitan, precisamente, a definir los comportamientos que
@@ -639,11 +639,11 @@ con cada instrucción produciendo, posiblemente, varias actualizaciones sobre
 estas estructuras, en general difíciles de predecir. Inclusive, el código que
 manipulara directamente la \textit{implementación} del TDA, fuera de sus
 procedimientos, debería ser capaz de actualizar estas estructuras, ya que de lo
-contrario se producirían inconsistencias. Así, se optó por no se almacenar de
+contrario se producirían inconsistencias. Así, se optó por no almacenar de
 manera persistente las variables del TDA de tipos de la teoría de conjuntos,
 sino por materializarlas, haciendo uso de la relación de acoplamiento, sólo
 cuando son necesarias para evaluar las distintas aserciones del TDA, por
-ejemplo, al momento de evaluar las precondiciones y poscondiciones de un
+ejemplo, al momento de evaluar las precondiciones y postcondiciones de un
 procedimiento abstracto.
 
 \subsection{Invariante de representación}
@@ -744,11 +744,11 @@ especificación de \ingra{Conjunto}, es sustituida por el tipo \ingra{int}.
 
 Como se mencionó previamente, los tipos de dato abstractos definen una
 interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
-cada una con sus respectivas precondiciones y poscondiciones.
+cada una con sus respectivas precondiciones y postcondiciones.
 
 Para definir una implementación de un tipo abstracto, se debe definir la
 implementación de todos los procedimientos y funciones que se encuentran en la
-interfaz del TDA, junto con un nuevo par de precondiciones y poscondiciones que
+interfaz del TDA, junto con un nuevo par de precondiciones y postcondiciones que
 podrán referirse únicamente a las estructuras propias de la implementación.
 Adicionalmente, una implementación puede agregar procedimientos y funciones que
 no estén presentes en el TDA implementado.
@@ -808,13 +808,13 @@ subrutina no hace uso alguno de variables de tipo, se genera una única rutina e
 código intermedio. En el caso contrario, se generan tantas rutinas en código
 intermedio como estructuras del tipo de dato en cuestión se hayan generado. De
 esta forma, suponiendo que el procedimiento \ingra{agregar} del tipo
-\ingra{Conjunto(X)} tiene un parámetro de tipo \ingra{Conjunto(X)}, y que en
+\ingra{Conjunto(T)} tiene un parámetro de tipo \ingra{Conjunto(T)}, y que en
 el código principal del programa se declararon variables de los tipos
 \ingra{Conjunto(int)} y \ingra{Conjunto(char)}, serán generadas en el código
 intermedio dos subrutinas llamadas \texttt{agregar-Conjunto-i} y
 \texttt{agregar-Conjunto-c}.
 
-Con respecto a la verificación de las precondiciones, poscondiciones e
+Con respecto a la verificación de las precondiciones, postcondiciones e
 invariantes, se genera el código necesario para las siguientes verificaciones:
 
 \begin{enumerate}
@@ -859,8 +859,8 @@ invariantes, se genera el código necesario para las siguientes verificaciones:
   falso, se emite un error a tiempo de ejecución.
 
   \item En el caso de los procedimientos que implementan
-  procedimientos del TDA, en este punto se evalúa la poscondición de este
-  último. Si esta es falsa, se espera a la verificación de la poscondición de la
+  procedimientos del TDA, en este punto se evalúa la postcondición de este
+  último. Si esta es falsa, se espera a la verificación de la postcondición de la
   implementación para emitir el error apropiado. Si es verdadera, continúan las
   demás verificaciones de esta lista. Si no existe un procedimiento
   correspondiente en el TDA, es decir, si se trata bien de un procedimiento
@@ -872,17 +872,17 @@ invariantes, se genera el código necesario para las siguientes verificaciones:
   invariante de representación de la \textit{implementación} correspondiente. Si
   alguno de estos es falso, se emite un error a tiempo de ejecución.
 
-  \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
+  \item Por ultimo se evalúa la postcondición de la \textit{implementación}. En
   este punto, el curso del programa dependerá de los valores que hayan tomado
-  esta última y la poscondición del TDA. Si no existe un procedimiento
+  esta última y la postcondición del TDA. Si no existe un procedimiento
   correspondiente en el TDA, se toma su valor como verdadero.
     \begin{itemize}
-      \item Si se cumplieron ambas poscondiciones, la ejecución sigue normalmente
-      \item Si sólo se cumple la poscondición del la implementación, se emite el
-      error <<No se cumple la poscondición>>
-      \item Si sólo se cumple la poscondición del TDA, se emite el error <<Este
+      \item Si se cumplieron ambas postcondiciones, la ejecución sigue normalmente
+      \item Si sólo se cumple la postcondición del la implementación, se emite el
+      error <<No se cumple la postcondición>>
+      \item Si sólo se cumple la postcondición del TDA, se emite el error <<Este
       procedimiento no implementa el TDA>>
-      \item Si ninguna de las dos poscondiciones se cumple, se emiten ambos errores.
+      \item Si ninguna de las dos postcondiciones se cumple, se emiten ambos errores.
     \end{itemize}
 \end{enumerate}
 
@@ -938,7 +938,7 @@ devuelve el más específico de sus operandos si son compatibles, o <<tipo
 indefinido>>, representado como \texttt{UNDEF} si no lo son. Así, por ejemplo,
 el resultado de \texttt{ANY <>{} int} es \texttt{int}, mientras que el resultado
 de \texttt{int <>{} char} es \texttt{UNDEF}. Este operador se definió de manera
-recursiva, de modo que el resultado de \texttt{set of a <>{} set of b} será
+recursiva, de modo que el resultado de \texttt{set of a <>{} set of b} será 
 \texttt{set of (a <>{} b)}. También se definió el operador binario \texttt{=:=}
 sobre los tipos de Graciela y con resultado booleano a partir del operador
 \texttt{<>}, definido como \texttt{False} si el resultado de \texttt{<>} es
@@ -988,14 +988,20 @@ las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje
 del compilador, pero para analizar sus usos se consiguen problemas en el caso de
 tipos algebraicos libres con tipos paramétricos. Por ejemplo, dada la definición
 
-$$ \textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) $$
+\begin{alignat*}{1}
+\textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T))
+\end{alignat*}
 
 si posteriormente el compilador encuentra un uso del constructor $Lvac$ como el
 siguiente,
 
-$$ \texttt{a ==}\  Lvac\ () $$
+\abovedisplayskip=-18pt plus 3pt %%0pt
+\begin{alignat*}{1}
+\texttt{a ==}\  Lvac\ ()
+\end{alignat*}
+\abovedisplayskip=-6pt plus 3pt %%0pt
 
-el tipo del constructor debe ser el mismo de la variable \texttt{a}, es decir,
+el tipo del constructor debe ser el mismo de la variable $\texttt{a}$, es decir,
 el sistema de tipos debe ser capaz de propagar información entre las
 expresiones, o, en otras palabras, debe ser capaz de efectuar unificación de
 tipos entre las expresiones de un programa.
