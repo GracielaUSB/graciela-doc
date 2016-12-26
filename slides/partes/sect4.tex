@@ -6,7 +6,7 @@
   \item Recomendación más importante de Araujo y Jiménez.
   \item Centro de la presente extensión al lenguaje Graciela.
   \item Se busca la misma expresividad del lenguaje GCL.
-  \item Se pueden definir restricciones y comportamientos abstractos que son verificados a tiempo de ejecución.
+  \item Restricciones y comportamientos verificados a tiempo de ejecución.
 \end{itemize}
 \end{frame}
 
@@ -18,8 +18,8 @@
 \begin{itemize}
   \item Se definen con la palabra reservada \ingra{abstract}.
   \item Variables internas para establecer propiedades.
-  \item Incluyen un invariante de representación, especificado con la palabra \ingra{repinv}.
-  \item Procedimientos y funciones sin cuerpos, y se limitan a definir una interfaz.
+  \item Invariante de representación (\ingra{repinv}).
+  \item Procedimientos y funciones sin cuerpos, definen una interfaz.
 \end{itemize}
 \end{frame}
 
@@ -28,14 +28,14 @@
 Para aprovechar la definición de un tipo de dato abstracto, es necesario proveer una \textit{implementación} de éste.
 \begin{itemize}
   \item Se definen con la palabra reservada \ingra{type}.
-  \item También cuentan con variables internas, pero estas sólo pueden ser de \textbf{tipos básicos}, apuntadores, o arreglos.
-  \item Incluyen un invariante de representación, especificado con la palabra \ingra{repinv}, que puede hacer mención de las variables internas de la implementación.
+  \item Variables internas de \textbf{tipos básicos}, apuntadores, o arreglos.
+  \item Invariante de representación (\ingra{repinv}).
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Implementaciones, cont.}
 \begin{itemize}
-    \item Se decidió separarar el invariante de acoplamiento de la literatura en dos partes
+    \item Se decidió separar el invariante de acoplamiento de la literatura en dos partes
     \begin{itemize}
       \item \textit{relación} de acoplamiento (\ingra{where})
       \item \textit{invariante} de acoplamiento (\ingra{coupinv}).
@@ -62,7 +62,7 @@ invariantes del valor $x$ si $x$ es de un TDA, entonces se debe cumplir que
 \end{frame}
 
 \begin{frame}{Relación \textit{implementa a}}
-Por lo tanto, cuando en Graciela se hace una llamada, se verifican las siguientes aserciones, en orden
+Por lo tanto, cuando en Graciela se hace una llamada, se genera código para las siguientes aserciones, en orden
 
 \begin{enumerate}
   \item Precondición de la implementación.
@@ -115,11 +115,11 @@ Adicionalmente, para cada implementación, se generan rutinas internas para crea
 Por supuesto, debe ser posible pasar objetos de un TDA en los distintos modos de parámetros del lenguaje Graciela, a saber, In, In-Out, Out y Ref.
 
 \begin{description}
-  \item [In]     Se crea en el heap una estructura del tipo apropiado, se copia el parámetro real en ella, y se pasa un apuntador a esta estructura.
+  \item [In]     Se crea en el heap una estructura del tipo apropiado, se copia el parámetro real en ella, pasando un apuntador a esta estructura.
   \item [Out]    Se crea en el heap una estructura del tipo apropiado, vacía, y se pasa un apuntador a esta estructura. Al finalizar el procedimiento, se copia esta estructura sobre el parámetro real.
   \item [In-Out] Combinación de los dos modos anteriores. 
   \item [Ref]    Simplemente se pasa una referencia al parámetro real.
-  \item [Const]  Este modo de parámetros sólo está disponible para variables de tipos básicos. 
+  \item [Const]  Sólo disponible para variables de tipos básicos. 
 \end{description}
 
 \end{frame}

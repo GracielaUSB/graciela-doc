@@ -78,12 +78,12 @@ var m := ~\Lbag~3, 3, 4, 4, 5~\Rbag~ ~\Msum~ ~\Lbag~5, 5, 7~\Rbag~ : multiset of
 var i := multiplicity (4, m) : int;
 { i == 2 }
 var s := toSet (m) ~\Union~ {~~3~~} : set of int;
-{ s == {3, 4, 5, 7} }
+{ s == {~~3, 4, 5, 7~~} }
 var q := ~\Lseq~'a', 'b', 'c'~\Rseq~ : sequence of char;
 var k := q[1] : char;
 { k == 'b' }
 var d : function int -> char;
-    d := func ({ (i, k), (2*i, q[0])});
+    d := func ({ (i, k), (~~2~~*i, q[0])});
 var e : relation int <-> char;
     e := rel  ({ (i, d(i)), (i, q[0]), (i, 'z') });
 var a := e (i) ~\Intersect~ {'z'} : set of char;
@@ -101,7 +101,7 @@ var a := e (i) ~\Intersect~ {'z'} : set of char;
 \begin{itemize}
   \item Biblioteca externa escrita en C++\footfullcite{cpp-lang}.
   \item Aprovecha la biblioteca estándar \texttt{stdlibc++}.
-  \item El manejo de memoria es responsabilidad del lenguaje.
+  \item El manejo de memoria es responsabilidad del compilador.
   \item Se libera el espacio asignado cada vez que salen de alcance.
 \end{itemize}
 \end{frame}
