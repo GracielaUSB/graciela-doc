@@ -55,6 +55,3 @@
 - Tipos sin parámetros no hacen match con abstract
 
 - prohibir parámetros const de tipos no-básicos \,
-
-# Syntax Highlighting
-- Agregar operador msum (misma categoría que union)

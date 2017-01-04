@@ -521,6 +521,18 @@ end
 Cabe mencionar que nunca se pueden declarar variables de un TDA, sólo de sus 
 implementaciones, y que pueden existir múltiples implementaciones para un TDA.
 
+
+\section{Colección de casos de prueba}
+
+Aprovechando las bibliotecas de Haskell QuickCheck~\cite{quickcheck} y
+HUnit~\cite{hunit}, se dotó al proyecto de una amplia colección de casos de
+prueba, disponibles junto al código del compilador, que permiten verificar que
+este último es capaz de generar código nativo para ellos y que este código
+nativo demuestra los comportamientos esperados. Esto permitirá que futuros
+desarrolladores del proyecto puedan tener seguridad de que sus adiciones al
+compilador y al lenguaje no dañan las características ofrecidas en versiones
+anteriores de este.
+
 \section{Herramientas para el programador}
 
 Se simplificó el proceso de compilación, de modo que ahora basta ejecutar el

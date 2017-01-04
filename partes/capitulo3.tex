@@ -5,14 +5,10 @@
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
-revisión del trabajo previo, el proyecto se orientó en cinco áreas, a saber,
+revisión del trabajo previo, el proyecto se orientó en seis áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
 por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
-programador.
-
-Durante el transcurso del proyecto, se escribieron múltiples programas de prueba
-con el fin de evaluar los distintos módulos del compilador. Estos programas de
-prueba pueden conseguirse en el apéndice G. %% \textbf{NUMERODEANEXO}.
+programador, (6) Colección de casos de prueba.
 
 % El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 % a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
@@ -1040,6 +1036,84 @@ Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
 que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a
 la usada en la teoría del curso mencionado, y podrían ser utilizados en los
 laboratorios correspondientes a esta área.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PROGRAMAS DE PRUEBA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Colección de casos de prueba}
+
+Durante el transcurso del proyecto, se escribieron, de manera paralela al código
+fuente del compilador, múltiples casos de prueba en el lenguaje Graciela, 
+que cumplieron distintos propósitos. En primer lugar, funcionaron como un 
+ejercicio de diseño del lenguaje, es decir, permitieron explorar alternativas 
+sintácticas y semánticas para distintas características del lenguaje. Una vez
+definida la notación para estas características, los casos de prueba 
+permitieron evaluar y depurar el código generado por el compilador, comparando 
+la ejecución de cada programa con la esperada, a través de la entrada y salida 
+de estos, y corrigiendo si diferían. Por último, estos programas forman parte 
+del código del proyecto Graciela, y desde un punto de vista de ingeniería de 
+la computación, permiten verificar que futuros cambios al compilador no dañan 
+o cambian el desempeño de programas que funcionaban en versiones anteriores de 
+este.
+
+\subsection{Ejercicio de diseño del lenguaje}
+
+Los primeros programas de prueba de este proyecto fueron escritos a manera 
+de esbozo con el objetivo de escoger la notación que se usaría en el lenguaje 
+final para expresar las nuevas capacidades de éste, en particular, las 
+expresiones propias de la teoría de conjuntos, el manejo de apuntadores, y la
+declaración y uso de Tipos de Dato definidos por el usuario.
+
+En esta etapa, se decidió, por ejemplo, que la notación para colecciones debería
+permitir tanto definiciones por extensión como por comprensión, con notación 
+similar a la usada en el área de las matemáticas, así como se decidió usar los 
+símbolos \ingra|{:| y \ingra|:}| para delimitar multiconjuntos. Por otro lado,
+se definió la forma que deberían tener la definición de un TDA y su 
+implementación, especificando primero variables internas, luego invariantes, y 
+finalmente procedimientos y funciones, estos últimos careciendo de cuerpo si se
+trata de un TDA.
+
+\subsection{Desarrollo orientado a pruebas}
+
+Posteriormente, estos programas de prueba funcionaron para trazar objetivos para
+el compilador. Inicialmente, se usaron para verificar que la etapa de análisis
+sintáctico identificaba correctamente las estructuras que se  encontraban en
+estos, y que adicionalmente éstas cumplían las restricciones de contexto
+apropiadas.
+
+Más adelante, cuando se comenzó a trabajar en la parte de generación de código
+intermedio LLVM, estos mismos programas de prueba fueron estructurados como un
+script de Haskell escrito con HUnit~\cite{hunit}, el cual los compila y
+posteriormente ejecuta con entradas (\texttt{stdin}) específicas y compara sus
+salidas (\texttt{stdout}) con las esperadas. Así, fue posible verificar que los
+programas eran compilados exitosamente, y que además demostraban los
+comportamientos esperados.
+
+Cuando fallaba la compilación de un programa, bien durante la generación de
+código LLVM o durante el pase de Clang a causa de un fragmento de código LLVM
+inválido, se revisaba la parte correspondiente del compilador para resolver el
+problema. Cuando la falla ocurría durante la ejecución del programa,
+similarmente, se revisaba la parte correspondiente al comportamiento inesperado,
+comparando con otros programas que sí hubieran  demostrado el comportamiento
+esperado.
+
+\subsection{Pruebas de regresión}
+
+En más de una ocasión se encontró que una extensión al lenguaje hacía que una
+prueba que funcionaba originalmente dejara de funcionar. Esto no habría sido
+posible si no se hubiesen escrito dichas pruebas en primer lugar. Luego de esta
+observación, se decidió desarrollar más profundamente la colección de programas
+de prueba, esta vez con la herramienta QuickCheck~\cite{quickcheck}. Con esta
+herramienta, se hizo innecesario escribir manualmente las entradas para los
+programas de prueba y sus correspondientes salidas esperadas. En su lugar, para
+cada programa de prueba se escribieron simuladores en Haskell de los
+comportamientos de cada uno, e instancias de la clase \texttt{Arbitrary}
+correspondientes a sus entradas. Con esto, se pasó de tener un par de casos de
+prueba para cada situación, a tener un número arbitrario de ellas, sin necesidad
+de escribir una sola. Estas pruebas ahora forman parte íntegra del proyecto
+Graciela, y permitirán que futuros desarrolladores puedan tener seguridad de no
+introducir fallas o comportamientos inesperados en las características estables
+del lenguaje.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
