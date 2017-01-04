@@ -1,9 +1,9 @@
 \section{Análisis del trabajo previo}
 
 \subsection*{Recomendaciones}
-\begin{frame}{Recomendaciones de Araujo y Jiménez}
+\begin{frame}{Recomendaciones de Araujo y Jiménez\footfullcite{ayj}}
 \begin{itemize}
-  \item Ofrecer Tipos de Dato Abstractos
+  \item Ofrecer Tipos de Dato Abstractos.
   \item Permitir la manipulación de apuntadores.
   \item Proveer tipos de dato enumerados.
 \end{itemize}
@@ -24,6 +24,7 @@ write(arr[6]); // Esta línea fallará a tiempo de ejecución
 `write(arr[3][4]);`
 var arr : array [5, 6] of int;
 write(arr[3, 4]);
+write(arr[3]); // Error a tiempo de compilación
 \end{lstlisting}
 }
 
@@ -46,10 +47,11 @@ proc p (in a : array [5] of int, out b : array [1~~0] of float)
 \framesubtitle{Arreglados, cont.}
 \begin{itemize}
 
-  \item Se agregó verificación de límites de arreglos. \limits{} Esto exigió un
-  cambio en su estructura interna para almacenar su tamaño antes de sus elementos, en una especie de arreglos conformantes.
+  \item Se agregó verificación de límites de arreglos, cambiando la estructura interna a una de \textit{Dope Vectors}. \limits{} 
 
-  GRAFIQUITO
+  \begin{center}
+  \includegraphics[width=5cm]{diag}
+  \end{center}
 
 \end{itemize}
 \end{frame}
@@ -73,7 +75,7 @@ proc p (...)
 
 \defverbatim[colored]\countquant{
 \begin{lstlisting}[language=graciela, style=code, escapechar=\~]
-(% # i : T | ... | ... %)
+(% # i : T | R(i) | P(i) %)
 \end{lstlisting}
 }
 
@@ -94,99 +96,9 @@ proc f (const c : int, out r : int)
 
 \begin{frame}{Otros cambios}
 \begin{itemize}
-  \item Se agregó el operador de cuantificación \texttt{count} de Dijkstra. \countquant{}
+  \item Se agregó el operador de cuantificación \texttt{count} sugerido por Dijkstra\footfullcite{ewd737}. \countquant{}
 
-  \item Se agregó el modo de parámetros Const, sólo para variables de tipos básicos, que asegura que el parámetro no es modificado dentro del procedimiento. \constmode{}
+  \item Se agregó el modo de parámetros Const. \constmode{}
 
 \end{itemize}
 \end{frame}
-
-% \section{Lo superficial}
-
-% \subsection*{Nombres}
-% \begin{frame}{Nombres}
-% \begin{itemize}
-%   \item This is not \textit{gacela}.
-%   \item El lenguaje es Graciela.
-%   \item El compilador es \texttt{graciela}.
-% \end{itemize}
-% \end{frame}
-
-
-% \subsection*{El comando}
-% \begin{frame}{El comando}
-% \framesubtitle{UX stands for stUdent eXperience}
-% \begin{itemize}
-%   \item Compilar antes: \begin{itemize}
-%     \item\texttt{gacela tarea.gcl 0}
-%     \item\texttt{llc-3.5 -filetype=obj tarea.bc}
-%     \item\texttt{gcc tarea.o /lib/x86\_64-linux-gnu/auxiliarFunctions.so -o tarea}
-%   \end{itemize}
-%    \item Compilar ahora: \begin{itemize}
-%     \item\texttt{graciela tarea.gcl -o tarea}
-%     \item That's it.
-%     \item Si el estudiante quiere ver más o menos errores, flag \texttt{-e=n}.
-%   \end{itemize}
-% \end{itemize}
-% \end{frame}
-
-
-% \subsection*{Instalación}
-% \begin{frame}{Instalación}
-% \framesubtitle{UX stands for stUdent eXperience}
-% \begin{itemize}
-%   \item apt-get (Ubuntu): \begin{itemize}
-%     \item\texttt{\# add-apt-repository ppa:graciela-usb/ppa}
-%     \item\texttt{\# apt-get install graciela}
-%   \end{itemize}
-%   \item Homebrew (OS X) : \begin{itemize}
-%     \item\texttt{\$ brew tap GracielaUSB/graciela}
-%     \item\texttt{\$ brew install graciela}
-%   \end{itemize}
-% \end{itemize}
-% \end{frame}
-
-
-% \subsection*{Add-ons}
-% \begin{frame}{Colores!}
-% \framesubtitle{UX stands for stUdent eXperience}
-% \begin{itemize}
-%   \item\visible<1->{Resaltador de sintaxis para Sublime Text},
-%   \item\visible<2->{próximamente para otros editores.}
-
-%   \vskip 1cm
-
-%   \item\visible<3->{*breve demostración*}
-% \end{itemize}
-% \end{frame}
-
-
-% \defverbatim[colored]\makeset{
-% \begin{lstlisting}[language=graciela, style=code, escapechar=\~]
-% var x : int;
-% \end{lstlisting}
-% }
-
-% \begin{frame}{SINTAXIS!}
-% \makeset
-% \end{frame}
-
-
-% \subsection*{Fixes}
-% \begin{frame}{Fixes}
-% \framesubtitle{Look ma, no floats!}
-% \begin{itemize}
-%   \item\visible<1->{El compilador no muestra (tantos) errores de Haskell}
-%   \item\visible<2->{Se mejoró la implementación de la recuperación de errores en el analizador sintáctico}
-%   \item\visible<3->{Los flotantes no dan error de compilación}
-% \end{itemize}
-% \end{frame}
-
-
-% \subsection*{Pendientes}
-% \begin{frame}{Pendientes}
-% \framesubtitle{\texttt{Non-exhaustive patterns in function <insert function here>}}
-% \begin{itemize}
-%   \item Sigue habiendo errores en la generación de código para cuantificadores (rangos),
-% \end{itemize}
-% \end{frame}

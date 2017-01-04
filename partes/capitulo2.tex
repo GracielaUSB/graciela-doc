@@ -149,6 +149,49 @@ sintáctico, a un nuevo árbol sintáctico a partir del cual posteriormente se
 genera automáticamente un archivo con la representación intermedia de LLVM del
 programa.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA LA CONSTRUCCIÓN Y EJECUCIÓN DE CASOS DE PRUEBA %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para la Construcción y Ejecución de Casos de Prueba}
+
+\subsection{HUnit}
+
+El sistema de pruebas unitarias HUnit~\cite{hunit}, desarrollado en Haskell, 
+permite ejecutar de manera sencilla y sistemática conjuntos específicos de 
+pruebas unitarias para un programa, comparando los resultados con valores 
+esperados de manera automática, con la intención de orientar el desarrollo 
+hacia cumplir dichas pruebas. Como funciona dentro del Monad \texttt{IO}, es 
+posible especificar pruebas que interactúan con el exterior, lo cual le brinda 
+una gran flexibilidad. En este proyecto, esta herramienta permitió la escritura 
+de una colección de programas de prueba que son compilados cada vez que se 
+desea, con la finalidad de comparar su salida real (\texttt{stdout} y 
+\texttt{stderr}) con la esperada para una entrada en particular 
+(\texttt{stdin}).
+
+\subsection{QuickCheck}
+
+La biblioteca QuickCheck~\cite{quickcheck}, desarrollada originalmente en
+Haskell y posteriormente imitada en otros lenguajes, ofrece una colección de
+combinadores para verificar propiedades lógicas de manera aleatoria. Esto
+significa que dada una propiedad parametrizada sobre un conjunto de variables,
+QuickCheck genera variables de los tipos apropiados, los usa como argumentos de
+la propiedad, y verifica si ésta se cumple. 
+
+Para que QuickCheck sea capaz de generar valores aleatorios de un tipo de dato,
+es necesario escribir la instancia correspondiente de la clase
+\texttt{Arbitrary}. Como su nombre sugiere, los tipos que pertenecen a esta
+clase pueden ser generados de manera arbitraria, siguiendo las instrucciones
+dadas en la función \texttt{arbitrary}. QuickCheck incluye las instancias
+\texttt{Arbitrary} de gran parte de los tipos básicos de Haskell, así como de
+algunas bibliotecas populares del lenguaje, y adicionalmente ofrece múltiples
+combinadores para definir nuevas instancias de esta clase, como \texttt{choose},
+para generar un valor dentro de un rango, y \texttt{frequency}, para generar
+valores a partir de una distribución ponderada de generadores.
+
+En este proyecto, esta biblioteca permitió generar entradas aleatorias para
+comparar la salida emitida por programas escritos en Graciela, con la producida
+por una simulación escrita en Haskell. Esta técnica resulta muy superior a la
+de HUnit, puesto que es posible hacer miles de pruebas sin escribir una sola.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA LA DEPURACIÓN DEL MANEJO DE MEMORIA %%%%%%%%%%%%%%%%%%%%%%%

@@ -27,12 +27,31 @@
 \usepackage{textpos}
 \usepackage{ulem}
 
+
+
+\input{./commands/listings}
+\setbeamerfont{footnote}{size=\tiny}
+
+\makeatletter
+% save the meaning of \@footnotetext
+\let\BEAMER@footnotetext\@footnotetext
+\makeatother
+
 \usepackage{setspace}% http://ctan.org/pkg/setspace
 \let\oldframetitle\frametitle% Store \frametitle in \oldframetitle
 \renewcommand{\frametitle}[1]{%
   \oldframetitle{#1}\setstretch{1.2}}
 
-\input{./commands/listings}
+\makeatletter
+% restore the meaning of \@footnotetext
+\let\@footnotetext\BEAMER@footnotetext
+% patch the relevant command to do single spacing in footnotes
+\expandafter\patchcmd\csname beamerx@\string\beamer@framefootnotetext\endcsname
+  {\reset@font}
+  {\def\baselinestretch{\setspace@singlespace}\reset@font}
+  {}{}
+\makeatother
+
 
 \graphicspath{{img/}}
 
@@ -60,6 +79,7 @@
   \tableofcontents
 \end{frame}
 
+\input{./partes/intro}
 \input{./partes/sect1}
 \input{./partes/sect2}
 \input{./partes/sect3}
