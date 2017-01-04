@@ -5,14 +5,10 @@
 
 El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
-revisión del trabajo previo, el proyecto se orientó en cinco áreas, a saber,
+revisión del trabajo previo, el proyecto se orientó en seis áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
 por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
-programador.
-
-Durante el transcurso del proyecto, se escribieron múltiples programas de prueba
-con el fin de evaluar los distintos módulos del compilador. Estos programas de
-prueba pueden conseguirse en el apéndice G. %% \textbf{NUMERODEANEXO}.
+programador, (6) Colección de casos de prueba.
 
 % El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 % a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
@@ -284,7 +280,7 @@ fragmento de código~\ref{lst:arrproccall}.
 
 En este caso, el procedimiento \ingra{sub} espera un arreglo de tamaño
 \ingra{[size, (size * 2)]}, y como recibe \ingra{size = 5}, espera que el tamaño
-del arreglo sea \ingra{[5, 10]}. Sin embargo, recibe un arreglo de tamaño
+del arreglo sea \ingra{[5, 1~~0]}. Sin embargo, recibe un arreglo de tamaño
 \ingra{[5, 5]}, por lo cual la ejecución debe abortar al momento de esa llamada.
 Esta verificación no puede hacerse a tiempo de compilación en el caso general,
 puesto que sería equivalente a predecir todos los posibles cursos de ejecución
@@ -297,11 +293,11 @@ Se decidió cambiar ligeramente la gramática de las funciones y procedimientos
 para que fueran más similares a sus equivalentes en GCL. Simplemente, se
 eliminaron los lexemas \ingra{begin} y \ingra{end}, antes usados para
 delimitar el procedimiento, y el lexema \ingra{:} entre el identificador de la
-subrutina y su lista de parámetros, y se movió la poscondición junto a la
+subrutina y su lista de parámetros, y se movió la postcondición junto a la
 precondición, antes del cuerpo de la subrutina.
 
 Además, se agregó la posibilidad de especificar cotas para las subrutinas luego
-de la poscondición y antes del cuerpo, como requisito para hacer llamadas
+de la postcondición y antes del cuerpo, como requisito para hacer llamadas
 recursivas dentro de la misma. Así, es un error a tiempo de compilación escribir
 una llamada recursiva de una subrutina sin cota. En el caso contrario, el de una
 subrutina con cota pero sin recursión, ésta simplemente es ignorada. A pesar de
@@ -370,7 +366,7 @@ consideran los rangos generados por el operador de disyunción
 como tal, debe estar escrito en Forma Normal Conjuntiva. Esto no le resta
 expresividad al lenguaje, ya que pueden conseguirse expresiones equivalentes con
 el uso de teoremas lógicos, convirtiendo una cuantificación en la disyunción de
-varias, o usando el operador de unión de conjuntos (\Union).
+varias, o usando el operador de unión de conjuntos (\ingra{~\Union~}).
 
 Finalmente, si se ha construido un rango válido, este se registra en el ASA
 correspondiente a la cuantificación. Si el rango es <<aritmético>>, se exige que
@@ -558,7 +554,7 @@ sea el sistema operativo quien emita el error.
 
 Para la reserva de memoria dinámica, se utilizó la función estándar de C
 \texttt{calloc}, la cual reserva la cantidad de memoria que se le da como
-argumentos e inicializa todos los bytes a 0. Por otro lado, la liberación de
+argumentos e inicializa todos los bytes a $0$. Por otro lado, la liberación de
 memoria dinámica se realiza llamando a la función estándar de C \texttt{free}.
 
 \subsection{Lógica de Separación}
@@ -603,7 +599,7 @@ lograr que el lenguaje Graciela cuente con la misma expresividad del lenguaje
 GCL, es necesario que su compilador permita definir restricciones y
 comportamientos abstractos para estos tipos, a través del uso de aserciones de
 alto nivel como el invariante de representación y las precondiciones y
-poscondiciones de los procedimientos y funciones que definen su interfaz.
+postcondiciones de los procedimientos y funciones que definen su interfaz.
 Estos tipos de dato, definidos dentro del lenguaje de programación con la
 palabra reservada \ingra{abstract}, nunca definen una implementación en
 particular, sino que se limitan, precisamente, a definir los comportamientos que
@@ -639,11 +635,11 @@ con cada instrucción produciendo, posiblemente, varias actualizaciones sobre
 estas estructuras, en general difíciles de predecir. Inclusive, el código que
 manipulara directamente la \textit{implementación} del TDA, fuera de sus
 procedimientos, debería ser capaz de actualizar estas estructuras, ya que de lo
-contrario se producirían inconsistencias. Así, se optó por no se almacenar de
+contrario se producirían inconsistencias. Así, se optó por no almacenar de
 manera persistente las variables del TDA de tipos de la teoría de conjuntos,
 sino por materializarlas, haciendo uso de la relación de acoplamiento, sólo
 cuando son necesarias para evaluar las distintas aserciones del TDA, por
-ejemplo, al momento de evaluar las precondiciones y poscondiciones de un
+ejemplo, al momento de evaluar las precondiciones y postcondiciones de un
 procedimiento abstracto.
 
 \subsection{Invariante de representación}
@@ -744,11 +740,11 @@ especificación de \ingra{Conjunto}, es sustituida por el tipo \ingra{int}.
 
 Como se mencionó previamente, los tipos de dato abstractos definen una
 interfaz. Esta interfaz se compone de una serie de procedimientos y funciones,
-cada una con sus respectivas precondiciones y poscondiciones.
+cada una con sus respectivas precondiciones y postcondiciones.
 
 Para definir una implementación de un tipo abstracto, se debe definir la
 implementación de todos los procedimientos y funciones que se encuentran en la
-interfaz del TDA, junto con un nuevo par de precondiciones y poscondiciones que
+interfaz del TDA, junto con un nuevo par de precondiciones y postcondiciones que
 podrán referirse únicamente a las estructuras propias de la implementación.
 Adicionalmente, una implementación puede agregar procedimientos y funciones que
 no estén presentes en el TDA implementado.
@@ -808,13 +804,13 @@ subrutina no hace uso alguno de variables de tipo, se genera una única rutina e
 código intermedio. En el caso contrario, se generan tantas rutinas en código
 intermedio como estructuras del tipo de dato en cuestión se hayan generado. De
 esta forma, suponiendo que el procedimiento \ingra{agregar} del tipo
-\ingra{Conjunto(X)} tiene un parámetro de tipo \ingra{Conjunto(X)}, y que en
+\ingra{Conjunto(T)} tiene un parámetro de tipo \ingra{Conjunto(T)}, y que en
 el código principal del programa se declararon variables de los tipos
 \ingra{Conjunto(int)} y \ingra{Conjunto(char)}, serán generadas en el código
 intermedio dos subrutinas llamadas \texttt{agregar-Conjunto-i} y
 \texttt{agregar-Conjunto-c}.
 
-Con respecto a la verificación de las precondiciones, poscondiciones e
+Con respecto a la verificación de las precondiciones, postcondiciones e
 invariantes, se genera el código necesario para las siguientes verificaciones:
 
 \begin{enumerate}
@@ -859,8 +855,8 @@ invariantes, se genera el código necesario para las siguientes verificaciones:
   falso, se emite un error a tiempo de ejecución.
 
   \item En el caso de los procedimientos que implementan
-  procedimientos del TDA, en este punto se evalúa la poscondición de este
-  último. Si esta es falsa, se espera a la verificación de la poscondición de la
+  procedimientos del TDA, en este punto se evalúa la postcondición de este
+  último. Si esta es falsa, se espera a la verificación de la postcondición de la
   implementación para emitir el error apropiado. Si es verdadera, continúan las
   demás verificaciones de esta lista. Si no existe un procedimiento
   correspondiente en el TDA, es decir, si se trata bien de un procedimiento
@@ -872,17 +868,17 @@ invariantes, se genera el código necesario para las siguientes verificaciones:
   invariante de representación de la \textit{implementación} correspondiente. Si
   alguno de estos es falso, se emite un error a tiempo de ejecución.
 
-  \item Por ultimo se evalúa la poscondición de la \textit{implementación}. En
+  \item Por ultimo se evalúa la postcondición de la \textit{implementación}. En
   este punto, el curso del programa dependerá de los valores que hayan tomado
-  esta última y la poscondición del TDA. Si no existe un procedimiento
+  esta última y la postcondición del TDA. Si no existe un procedimiento
   correspondiente en el TDA, se toma su valor como verdadero.
     \begin{itemize}
-      \item Si se cumplieron ambas poscondiciones, la ejecución sigue normalmente
-      \item Si sólo se cumple la poscondición del la implementación, se emite el
-      error <<No se cumple la poscondición>>
-      \item Si sólo se cumple la poscondición del TDA, se emite el error <<Este
+      \item Si se cumplieron ambas postcondiciones, la ejecución sigue normalmente
+      \item Si sólo se cumple la postcondición del la implementación, se emite el
+      error <<No se cumple la postcondición>>
+      \item Si sólo se cumple la postcondición del TDA, se emite el error <<Este
       procedimiento no implementa el TDA>>
-      \item Si ninguna de las dos poscondiciones se cumple, se emiten ambos errores.
+      \item Si ninguna de las dos postcondiciones se cumple, se emiten ambos errores.
     \end{itemize}
 \end{enumerate}
 
@@ -938,7 +934,7 @@ devuelve el más específico de sus operandos si son compatibles, o <<tipo
 indefinido>>, representado como \texttt{UNDEF} si no lo son. Así, por ejemplo,
 el resultado de \texttt{ANY <>{} int} es \texttt{int}, mientras que el resultado
 de \texttt{int <>{} char} es \texttt{UNDEF}. Este operador se definió de manera
-recursiva, de modo que el resultado de \texttt{set of a <>{} set of b} será
+recursiva, de modo que el resultado de \texttt{set of a <>{} set of b} será 
 \texttt{set of (a <>{} b)}. También se definió el operador binario \texttt{=:=}
 sobre los tipos de Graciela y con resultado booleano a partir del operador
 \texttt{<>}, definido como \texttt{False} si el resultado de \texttt{<>} es
@@ -988,14 +984,20 @@ las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje
 del compilador, pero para analizar sus usos se consiguen problemas en el caso de
 tipos algebraicos libres con tipos paramétricos. Por ejemplo, dada la definición
 
-$$ \textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) $$
+\begin{alignat*}{1}
+\textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T))
+\end{alignat*}
 
 si posteriormente el compilador encuentra un uso del constructor $Lvac$ como el
 siguiente,
 
-$$ \texttt{a ==}\  Lvac\ () $$
+\abovedisplayskip=-18pt plus 3pt %%0pt
+\begin{alignat*}{1}
+\texttt{a ==}\  Lvac\ ()
+\end{alignat*}
+\abovedisplayskip=-6pt plus 3pt %%0pt
 
-el tipo del constructor debe ser el mismo de la variable \texttt{a}, es decir,
+el tipo del constructor debe ser el mismo de la variable $\texttt{a}$, es decir,
 el sistema de tipos debe ser capaz de propagar información entre las
 expresiones, o, en otras palabras, debe ser capaz de efectuar unificación de
 tipos entre las expresiones de un programa.
@@ -1034,6 +1036,84 @@ Adicionalmente, existen otros lenguajes de programación, entre ellos Haskell,
 que implementan los Tipos Algebraicos Libres de manera exitosa y muy similar a
 la usada en la teoría del curso mencionado, y podrían ser utilizados en los
 laboratorios correspondientes a esta área.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PROGRAMAS DE PRUEBA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Colección de casos de prueba}
+
+Durante el transcurso del proyecto, se escribieron, de manera paralela al código
+fuente del compilador, múltiples casos de prueba en el lenguaje Graciela, 
+que cumplieron distintos propósitos. En primer lugar, funcionaron como un 
+ejercicio de diseño del lenguaje, es decir, permitieron explorar alternativas 
+sintácticas y semánticas para distintas características del lenguaje. Una vez
+definida la notación para estas características, los casos de prueba 
+permitieron evaluar y depurar el código generado por el compilador, comparando 
+la ejecución de cada programa con la esperada, a través de la entrada y salida 
+de estos, y corrigiendo si diferían. Por último, estos programas forman parte 
+del código del proyecto Graciela, y desde un punto de vista de ingeniería de 
+la computación, permiten verificar que futuros cambios al compilador no dañan 
+o cambian el desempeño de programas que funcionaban en versiones anteriores de 
+este.
+
+\subsection{Ejercicio de diseño del lenguaje}
+
+Los primeros programas de prueba de este proyecto fueron escritos a manera 
+de esbozo con el objetivo de escoger la notación que se usaría en el lenguaje 
+final para expresar las nuevas capacidades de éste, en particular, las 
+expresiones propias de la teoría de conjuntos, el manejo de apuntadores, y la
+declaración y uso de Tipos de Dato definidos por el usuario.
+
+En esta etapa, se decidió, por ejemplo, que la notación para colecciones debería
+permitir tanto definiciones por extensión como por comprensión, con notación 
+similar a la usada en el área de las matemáticas, así como se decidió usar los 
+símbolos \ingra|{:| y \ingra|:}| para delimitar multiconjuntos. Por otro lado,
+se definió la forma que deberían tener la definición de un TDA y su 
+implementación, especificando primero variables internas, luego invariantes, y 
+finalmente procedimientos y funciones, estos últimos careciendo de cuerpo si se
+trata de un TDA.
+
+\subsection{Desarrollo orientado a pruebas}
+
+Posteriormente, estos programas de prueba funcionaron para trazar objetivos para
+el compilador. Inicialmente, se usaron para verificar que la etapa de análisis
+sintáctico identificaba correctamente las estructuras que se  encontraban en
+estos, y que adicionalmente éstas cumplían las restricciones de contexto
+apropiadas.
+
+Más adelante, cuando se comenzó a trabajar en la parte de generación de código
+intermedio LLVM, estos mismos programas de prueba fueron estructurados como un
+script de Haskell escrito con HUnit~\cite{hunit}, el cual los compila y
+posteriormente ejecuta con entradas (\texttt{stdin}) específicas y compara sus
+salidas (\texttt{stdout}) con las esperadas. Así, fue posible verificar que los
+programas eran compilados exitosamente, y que además demostraban los
+comportamientos esperados.
+
+Cuando fallaba la compilación de un programa, bien durante la generación de
+código LLVM o durante el pase de Clang a causa de un fragmento de código LLVM
+inválido, se revisaba la parte correspondiente del compilador para resolver el
+problema. Cuando la falla ocurría durante la ejecución del programa,
+similarmente, se revisaba la parte correspondiente al comportamiento inesperado,
+comparando con otros programas que sí hubieran  demostrado el comportamiento
+esperado.
+
+\subsection{Pruebas de regresión}
+
+En más de una ocasión se encontró que una extensión al lenguaje hacía que una
+prueba que funcionaba originalmente dejara de funcionar. Esto no habría sido
+posible si no se hubiesen escrito dichas pruebas en primer lugar. Luego de esta
+observación, se decidió desarrollar más profundamente la colección de programas
+de prueba, esta vez con la herramienta QuickCheck~\cite{quickcheck}. Con esta
+herramienta, se hizo innecesario escribir manualmente las entradas para los
+programas de prueba y sus correspondientes salidas esperadas. En su lugar, para
+cada programa de prueba se escribieron simuladores en Haskell de los
+comportamientos de cada uno, e instancias de la clase \texttt{Arbitrary}
+correspondientes a sus entradas. Con esto, se pasó de tener un par de casos de
+prueba para cada situación, a tener un número arbitrario de ellas, sin necesidad
+de escribir una sola. Estas pruebas ahora forman parte íntegra del proyecto
+Graciela, y permitirán que futuros desarrolladores puedan tener seguridad de no
+introducir fallas o comportamientos inesperados en las características estables
+del lenguaje.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA EL PROGRAMADOR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

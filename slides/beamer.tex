@@ -1,0 +1,96 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Malmoe}
+  \useoutertheme{infolines}
+  \usecolortheme{beaver}
+  \usefonttheme{default}
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+  \setbeamertemplate{section in toc}[sections numbered]
+}
+
+\usepackage[spanish]{babel}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{../bibliografia.bib}
+\newbibmacro*{bbx:savehash}{\relax}
+\newrobustcmd*{\footlessfullcite}{\AtNextCite{\renewbibmacro{title}{}\renewbibmacro{in:}{}}\footfullcite}
+% \usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{syntax}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{fontspec}
+\usepackage{amssymb}
+\usepackage{textpos}
+\usepackage{ulem}
+
+
+
+\input{./commands/listings}
+\setbeamerfont{footnote}{size=\tiny}
+
+\makeatletter
+% save the meaning of \@footnotetext
+\let\BEAMER@footnotetext\@footnotetext
+\makeatother
+
+\usepackage{setspace}% http://ctan.org/pkg/setspace
+\let\oldframetitle\frametitle% Store \frametitle in \oldframetitle
+\renewcommand{\frametitle}[1]{%
+  \oldframetitle{#1}\setstretch{1.2}}
+
+\makeatletter
+% restore the meaning of \@footnotetext
+\let\@footnotetext\BEAMER@footnotetext
+% patch the relevant command to do single spacing in footnotes
+\expandafter\patchcmd\csname beamerx@\string\beamer@framefootnotetext\endcsname
+  {\reset@font}
+  {\def\baselinestretch{\setspace@singlespace}\reset@font}
+  {}{}
+\makeatother
+
+
+\graphicspath{{img/}}
+
+\setlength{\grammarparsep}{5pt plus 1pt minus 1pt}
+\setlength{\grammarindent}{7em}
+
+\title[Graciela]{\includegraphics[width=2cm]{usb} \\Apuntadores y Tipos de Dato Abstractos \\ para Graciela}
+\author[Ackerman - Spaggiari]{Moisés Ackerman \and Carlos Spaggiari}
+\institute[USB]{\large\bfseries{Universidad Simón Bolívar}}
+\date{\today{}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\addtobeamertemplate{footline}{}{%
+\begin{textblock*}{100mm}(.85\textwidth,-9.12cm)
+\includegraphics[height=0.8cm]{usb}
+\end{textblock*}}
+
+\section*{Agenda}
+\begin{frame}{Contenido}
+  \tableofcontents
+\end{frame}
+
+\input{./partes/intro}
+\input{./partes/sect1}
+\input{./partes/sect2}
+\input{./partes/sect3}
+\input{./partes/sect4}
+\input{./partes/sect5}
+\input{./partes/sect6}
+
+\begin{frame}[c]{\empty}
+\begin{center}
+\Huge{¿Preguntas?}
+\end{center}
+\end{frame}
+
+\end{document}
