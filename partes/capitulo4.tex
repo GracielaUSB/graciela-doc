@@ -546,9 +546,14 @@ Para facilitar la instalación del compilador, se usaron las herramientas:
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Homebrew}]
 
-  \item [APT] Para instalar el compilador graciela en sistemas operativos
-    derivados de Debian se hace a través de la herramienta APT, usando los
-    comandos del fragmento de código~\ref{lst:apt}.
+  \item [Deb] El procedimiento para instalar el compilador graciela en sistemas 
+    operativos derivados de Debian es el siguiente:
+    \begin{itemize}
+      \item Descargar el más reciente paquete \texttt{.deb} disponible
+        en~\cite{gracieladeb}.
+      \item Hacer doble clic sobre el archivo descargado y seguir las 
+        instrucciones del manejador de paquetes.
+    \end{itemize}
 
   \item [Homebrew] La instalación del compilador graciela en sistemas
     operativos macOS se hace a través de la herramienta Homebrew,
@@ -557,12 +562,6 @@ Para facilitar la instalación del compilador, se usaron las herramientas:
 \end{description}
 
 \newpage
-
-\begin{lstlisting}[caption=Instalación de Graciela en Linux con APT, label={lst:apt}]
-  # add-apt-repository ppa:graciela-usb/ppa
-  # apt-get update
-  # apt-get install graciela
-\end{lstlisting}
 
 \begin{lstlisting}[caption=Instalación de Graciela en macOS con Homebrew, label={lst:brew}]
   $ brew tap GracielaUSB/graciela
