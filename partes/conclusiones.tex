@@ -33,7 +33,7 @@ las bibliotecas de Haskell \textit{llvm-general} y \textit{llvm-general-pure}.
 Estas bibliotecas permiten emitir código intermedio de LLVM, que luego es
 optimizado y convertido en código nativo de alta calidad a través del compilador
 LLVM. Adicionalmente, se usaron los lenguajes C y C++, así como la librería
-estándar de este último, para implementar las biblioteas externas de funciones
+estándar de este último, para implementar las bibliotecas externas de funciones
 para los programas escritos en Graciela.
 
 Así, el producto final de este Proyecto de Grado es un lenguaje, junto con su
@@ -78,7 +78,7 @@ presentan las siguientes recomendaciones:
   y almacenar los identificadores definidos para cada tipo en la tabla de símbolos,
   para finalmente utilizar enteros como la representación en código intermedio.
 
-  \item Permitir la definición de Tipos Algebráicos Libres. Esto es un caso más
+  \item Permitir la definición de Tipos Algebraicos Libres. Esto es un caso más
   general de la recomendación anterior, de modo que sólo tiene sentido
   implementar una o la otra. En este caso, se debe permitir que los valores del
   tipo sean funciones de aridad arbitraria, posiblemente recursivas y con
@@ -108,7 +108,7 @@ presentan las siguientes recomendaciones:
   subrutinas sólo pueden llamarse a sí mismas (si tienen cota) o a subrutinas
   definidas antes de sí mismas, por lo cual no es posible crear correcursiones.
   Para poder llamar subrutinas definidas más abajo de sí mismas, debe agregarse
-  a la gramática la posiblidad de declarar subrutinas <<por adelantado>>, por
+  a la gramática la posibilidad de declarar subrutinas <<por adelantado>>, por
   ejemplo escribiendo la firma de la subrutina sola y posteriormente con su
   cuerpo. Para asegurar que los programas terminan, esto debe hacerse
   simultáneamente con un cambio sutil en el código generado para las subrutinas:
