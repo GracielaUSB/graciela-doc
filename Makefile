@@ -1,6 +1,6 @@
+dummy: tesis clean
 
-all:
-	OS=`uname`
+tesis:
 	xelatex portada.tex
 	xelatex portada2.tex
 	xelatex tesis.tex
@@ -10,5 +10,8 @@ all:
 	rm portada.pdf portada2.pdf
 	if [ `uname` = "Darwin" ]; then open tesis.pdf; else evince tesis.pdf; fi &
 
+cleanall: clean
+	rm -f tesis.pdf
+
 clean:
-	rm -f *.aux *.l* *.toc *.out *.blg *.bbl tesis.pdf
+	rm -f *.aux *.l* *.toc *.out *.blg *.bbl *blx.bib *.run.xml

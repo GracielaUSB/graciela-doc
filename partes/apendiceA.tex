@@ -1,29 +1,52 @@
-\chapter{@nombreApendice}
-\label{apendiceA}
-\setchapter{Apéndice A. \emph{@nombreApendice}}
+\chapter{Tripleta de Hoare para llamadas a procedimientos con TDAs}
+\label{derivhoare}
+\setchapter{Apéndice A. \emph{Tripleta de Hoare para llamadas a procedimientos con TDAs}}
 
-% En los apéndices se incluye cualquier información que no sea esencial para la
-% comprensión básica del trabajo, pero provea ejemplos y casos de estudio
-% extendidos que permitan un análisis más exhaustivo.
+En la sección \ref{tda1} se mostró la siguiente tripleta de Hoare:
 
-\section{@sección}
+\begin{alignat}{1}
+  \{ P[X,Y:=A,B]\, \land \, (\forall\ B', C'\ |\ Q[X,Y,Z:=A,&B',C'] : Invs(B' \cup C'))\, \land \, Invs(A \cup B)   \} \nonumber \\
+  p\  (A,&B,C) \label{eqn:tdatriple2} \\ 
+  \{ Q[X,Y,Z:=A,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
+\end{alignat}
 
+Esta tripleta corresponde a las llamadas a procedimientos donde 
+posiblemente algunos parámetros son de Tipos de Dato Abstractos,
+donde $p$ es un procedimiento definido como
+$\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son, respectivamente, la precondición y postcondición de este procedimiento, $X$, $Y$ y $Z$ son listas de parámetros formales que posiblemente incluyen
+variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, e $Invs(X)$ es equivalente a la expresión $(\forall x\ |\ x \in\ X \land \textrm{isTDA?}(x) : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
+invariantes del valor $x$ si $x$ es de un TDA.
 
-\subsection{@subsección}
+La postcondición de esta tripleta es, simplemente, la postcondición del procedimiento ($Q$), sustituyendo las listas de parámetros formales $Y$ y $Z$ por $B$ y $C$ respectivamente, y la verificación de los invariantes de todas las variables de Tipos de Dato Abstractos que estuvieran en las listas $B$ y $C$. No aparece en la postcondición la lista de parámetros reales $A$ puesto que la lista de parámetros formales $X$ es pasada en modo $in$.
 
+La precondición de esta tripleta, por otro lado, fue derivada con la fórmula de $wp$ (\textit{weakest precondition} o precondición más débil) de \cite{flaviani}, según la cual $wp([P, Q], Post)$ es equivalente a $P (x,y) \land (\forall y'\,|\,Q(x, y') : Post (x, y')$, como se explica a continuación.
 
-``Saludo''.
+Como se desea conocer la precondición más débil de la llamada $p\  (A,B,C)$, con precondición $P$ y postcondición $Q$, dada la postcondición $Post := Q[Y,Z:=B,C]\, \land \, Invs(B \cup C)$ explicada anteriormente, tenemos
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=0.5\textwidth]{grafo.pdf}
-\caption[Grafo]{Grafo gris.}
-\label{imagen:grafo}
-\end{figure}
+\begin{alignat}{1}
+wp(p\  (A,B,C), Post)
+\end{alignat}
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=\textwidth]{grafocolor.pdf}
-\caption[Grafo coloreado (esto sale en la tabla de contenidos)]{Grafo con color.}
-\label{imagen:grafodecolores}
-\end{figure}
+Por definición de la instrucción de llamada a procedimiento, según la cual se sustituyen los parámetros formales en modos $in$ e $in\textrm{-}out$ por los correspondientes parámetros formales, luego se ejecuta el
+cuerpo del procedimiento y por último se sustituyen los parámetros
+actuales en modos $in\textrm{-}out$ y $out$ por los correspondientes parámetros formales, esto es equivalente a
+
+\begin{alignat}{1}
+wp(X,Y := A,B; [P,Q]; B,C := Y,Z, Post)
+\end{alignat}
+
+Esto a su vez es equivalente a
+
+\begin{alignat}{1}
+wp([P[X,Y := A,B],Q[X:=A]], Post[B,C := Y,Z])
+\end{alignat}
+
+Que por la definición de $wp$ es equivalente a
+
+\begin{alignat}{1}
+P[X,Y := A,B] \land (\forall B', C')\ |\ Q[X,Y,Z:=A,B',C'] : Post[B,C := Y,Z])
+\end{alignat}
+
+Esta última expresión, sin embargo, no asegura que los invariantes de
+las variables de TDAs usadas como parámetros reales se cumplan antes de la llamada, por lo cual se agregó a ella, con una conjunción,s $Invs(A \cup B)$, es decir, que para todos los parámetros reales de TDAs en modo 
+$in$ o $in\textrm{-}out$ se cumplan los invariantes correspondientes.

@@ -82,7 +82,7 @@ construcción de analizadores sintácticos recursivos descendentes~\cite{parsec}
 Esta biblioteca provee estructuras monádica con las que se pueden generar
 reconocedores sintácticos básicos y combinarlos para formar reconocedores cada
 vez más complejos.  Esta biblioteca provee combinadores como \texttt{many} y
-\texttt{<|>} los cuales permiten, respectivamente, ejecutar cero o mas veces un
+\texttt{<|>} los cuales permiten, respectivamente, ejecutar cero o más veces un
 reconocedor, o ejecutar un segundo reconocedor en caso de que el primero falle.
 
 Si bien esta biblioteca no ofrece soporte para recuperación de errores durante
@@ -149,6 +149,49 @@ sintáctico, a un nuevo árbol sintáctico a partir del cual posteriormente se
 genera automáticamente un archivo con la representación intermedia de LLVM del
 programa.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% HERRAMIENTAS PARA LA CONSTRUCCIÓN Y EJECUCIÓN DE CASOS DE PRUEBA %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Herramientas para la Construcción y Ejecución de Casos de Prueba}
+
+\subsection{HUnit}
+
+El sistema de pruebas unitarias HUnit~\cite{hunit}, desarrollado en Haskell, 
+permite ejecutar de manera sencilla y sistemática conjuntos específicos de 
+pruebas unitarias para un programa, comparando los resultados con valores 
+esperados de manera automática, con la intención de orientar el desarrollo 
+hacia cumplir dichas pruebas. Como funciona dentro del Monad \texttt{IO}, es 
+posible especificar pruebas que interactúan con el exterior, lo cual le brinda 
+una gran flexibilidad. En este proyecto, esta herramienta permitió la escritura 
+de una colección de programas de prueba que son compilados cada vez que se 
+desea, con la finalidad de comparar su salida real (\texttt{stdout} y 
+\texttt{stderr}) con la esperada para una entrada en particular 
+(\texttt{stdin}).
+
+\subsection{QuickCheck}
+
+La biblioteca QuickCheck~\cite{quickcheck}, desarrollada originalmente en
+Haskell y posteriormente imitada en otros lenguajes, ofrece una colección de
+combinadores para verificar propiedades lógicas de manera aleatoria. Esto
+significa que dada una propiedad parametrizada sobre un conjunto de variables,
+QuickCheck genera variables de los tipos apropiados, los usa como argumentos de
+la propiedad, y verifica si ésta se cumple. 
+
+Para que QuickCheck sea capaz de generar valores aleatorios de un tipo de dato,
+es necesario escribir la instancia correspondiente de la clase
+\texttt{Arbitrary}. Como su nombre sugiere, los tipos que pertenecen a esta
+clase pueden ser generados de manera arbitraria, siguiendo las instrucciones
+dadas en la función \texttt{arbitrary}. QuickCheck incluye las instancias
+\texttt{Arbitrary} de gran parte de los tipos básicos de Haskell, así como de
+algunas bibliotecas populares del lenguaje, y adicionalmente ofrece múltiples
+combinadores para definir nuevas instancias de esta clase, como \texttt{choose},
+para generar un valor dentro de un rango, y \texttt{frequency}, para generar
+valores a partir de una distribución ponderada de generadores.
+
+En este proyecto, esta biblioteca permitió generar entradas aleatorias para
+comparar la salida emitida por programas escritos en Graciela, con la producida
+por una simulación escrita en Haskell. Esta técnica resulta muy superior a la
+de HUnit, puesto que es posible hacer miles de pruebas sin escribir una sola.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HERRAMIENTAS PARA LA DEPURACIÓN DEL MANEJO DE MEMORIA %%%%%%%%%%%%%%%%%%%%%%%
@@ -220,12 +263,12 @@ sencillo agregar el compilador a sus sistemas, y mantenerlo actualizado con la
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Homebrew}]
 
-\item [APT]~\cite{apt} (Advanced Package Tool, <<Herramienta Avanzada de
-Paquetes>>) es una herramienta de software propia de Debian y distribuciones de
-Linux derivadas de Debian, que administra la instalación y remoción de software
-en estos sistemas operativos. Se decidió utilizar APT debido, precisamente, a
-que está incluida en una gran cantidad de sistemas operativos, y a su facilidad
-de uso.
+\item [Deb]~\cite{deb} Un paquete Debian es un archivo con la extensión 
+\texttt{.deb} que contiene archivos ejecutables que pueden ser instalados de
+manera automatizada en un sistema Debian u otro tipo de sistema Linux derivado
+de Debian. Se decidió utilizar un paquete Deb para la distribución del proyecto
+debido a que existe soporte para estos en una gran cantidad de sistemas 
+operativos, y a su facilidad de uso.
 
 \item [Homebrew]~\cite{brew} es un manejador de paquetes para el sistema
 operativo macOS. Entre las razones por la cual se eligió este manejador de
