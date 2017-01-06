@@ -224,19 +224,28 @@ $\texttt{sizeof(T)} * \texttt{tam}$ y asociarle al identificador \ingra{x} el
 apuntador al primer elemento. Los arreglos multidimensionales se escribían como
 arreglos de arreglos, e internamente ocupaban un espacio contiguo de memoria.
 Como se deseaba almacenar los tamaños de los arreglos junto con sus elementos,
-se decidió usar una representación interna similar a la de arreglos
-conformantes, es decir, una estructura cuya primera entrada es la cantidad de
+se decidió usar una representación interna de \textit{Dope Vectors}, es decir, una estructura cuya primera entrada es la cantidad de
 elementos y cuya segunda entrada es el bloque de memoria donde se almacenan los
 elementos.
 
-Específicamente, para arreglos de \ingra{n} dimensiones, se generan estructuras
+Específicamente, como se muestra en la figura \ref{fig:diag}, para arreglos de \ingra{n} dimensiones, se generan estructuras
 <<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo entero
-de 32 bit, corresponden a los tamaños en cada dimensión del arreglo, y el último
+de 32 bit, corresponden a los tamaños en cada dimensión del arreglo ($d_0..d_i$ en la figura), y el último
 corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
 es un arreglo estático, o en la memoria dinámica si se trata de un apuntador a
 un arreglo inicializado con la instrucción \ingra{new(*)}.
+
+\begin{figure}[h!]
+  \hspace{8mm}
+  \caption{Representación interna de los arreglos en Graciela.}
+  \centering
+    \fboxsep=5mm
+    \fboxrule=0.75pt
+    \fcolorbox{gray}{white}{\includegraphics[width=0.5\textwidth]{diag2}}
+    \label{fig:diag}
+\end{figure}
 
 Cuando todas las dimensiones del arreglo son conocidas a tiempo de compilación,
 los tamaños de cada dimensión son almacenados estáticamente en la <<cabecera>> y
