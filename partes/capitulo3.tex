@@ -10,43 +10,6 @@ revisión del trabajo previo, el proyecto se orientó en seis áreas, a saber,
 por el programador, (4) Tipos Algebraicos Libres, (5) Colección de casos de 
 prueba, (6) Herramientas para el programador.
 
-% El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
-% a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
-% etapa,
-%#  se estudió el estado del compilador elaborado por Araujo y Jiménez,
-%#  se evaluaron las recomendaciones que sobre la semántica de este lenguaje hizo el
-%# jurado de este primer proyecto,
-%  se revisó la bibliografía relacionada con el manejo de tipos definidos por el
-% usuario en el contexto de programación formal,
-%  se investigó sobre posibles estructuras de datos para implantar tipos que modelen la teoría de conjuntos,
-%  se especificó formalmente la sintaxis para las nuevas funcionalidades propuestas
-% y
-%  se extendieron los analizadores lexicográfico y sintáctico para concordar con
-% dicha especificación formal.
-%
-% En la segunda etapa,
-%  se completó la verificación de tipos en presencia de tipos definidos por el
-% usuario y tipos que modelan la teoría de conjuntos,
-%  se extendió la biblioteca
-% externa de Graciela para soportar expresiones de tipos que modelan la teoría de
-% conjuntos,
-%  se inició la extensión al generador de código intermedio LLVM para producir las
-% instrucciones correspondientes a las nuevas funcionalidades y
-%  se escribió una colección de programas que ejercitan las capacidades del
-% lenguaje, tanto nuevas como originales, a fin de evaluar que el código generado
-% fuera correcto.
-%
-% En la tercera etapa,
-%  se culminó la extensión al generador de código intermedio iniciada en la etapa
-% anterior,
-%  se extendió el manual de usuario para presentar las nuevas funcionalidades del
-% lenguaje,
-%  se investigaron formas para permitir que programadores noveles instalen el compilador
-% sin mayor dificultad
-%  se estudiaron las herramientas necesarias para incorporar facilidades de
-% depuración (\emph{debugging}) y análisis de rendimiento (\emph{profiling}) al
-% compilador.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% REVISIÓN DEL TRABAJO PREVIO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1095,9 +1058,26 @@ Más adelante, cuando se comenzó a trabajar en la parte de generación de códi
 intermedio LLVM, estos mismos programas de prueba fueron estructurados como un
 script de Haskell escrito con HUnit~\cite{hunit}, el cual los compila y
 posteriormente ejecuta con entradas (\texttt{stdin}) específicas y compara sus
-salidas (\texttt{stdout}) con las esperadas. Así, fue posible verificar que los
-programas eran compilados exitosamente, y que además demostraban los
-comportamientos esperados.
+salidas (\texttt{stdout}) con las esperadas. Un caso de prueba como éste podría
+escribirse como el fragmento de código \ref{lst:hunitex}. Aquí, se entremezclan
+acciones del Monad \texttt{IO}, como \inhas{compilar archivo} y 
+\inhas{readFile "entrada"}, con combinadores propios de HUnit, como \inhas{@?=}, 
+el cual genera la aserción <<el valor a la izquierda es idéntico al esperado, a
+la derecha>>. Así, fue posible verificar que los programas eran compilados
+exitosamente, y que además demostraban los comportamientos esperados.
+
+\begin{haskellcode}[caption=Ejemplo de uso de HUnit, label=lst:hunitex]
+test_ejecutar :: String -> Assertion
+test_ejecutar fuente = do
+  (status, ejecutable) <- compilar fuente
+  status @?= OK
+
+  entrada <- readFile "entrada"
+  salidaEsperada <- readFile "salida"
+  salidaReal <- ejecutar ejecutable entrada
+
+  salidaReal @?= salidaEsperada
+\end{haskellcode}
 
 Cuando fallaba la compilación de un programa, bien durante la generación de
 código LLVM o durante el pase de Clang a causa de un fragmento de código LLVM
@@ -1113,10 +1093,58 @@ En más de una ocasión se encontró que una extensión al lenguaje hacía que u
 prueba que funcionaba originalmente dejara de funcionar. Esto no habría sido
 posible si no se hubiesen escrito dichas pruebas en primer lugar. Luego de esta
 observación, se decidió desarrollar más profundamente la colección de programas
-de prueba, esta vez con la herramienta QuickCheck~\cite{quickcheck}. Con esta
-herramienta, se hizo innecesario escribir manualmente las entradas para los
-programas de prueba y sus correspondientes salidas esperadas. En su lugar, para
-cada programa de prueba se escribieron simuladores en Haskell de los
+de prueba, esta vez con la herramienta QuickCheck~\cite{quickcheck}. Un caso de
+prueba escrito con QuickCheck toma la forma de una propiedad sobre unos
+parámetros, los cuales son generados por la herramienta (siempre que existan
+para ellos las instancias \texttt{Arbitrary} correspondientes) y probados hasta
+encontrarse un contraejemplo o llegar a un límite predefinido (normalmente cien
+intentos).
+
+Tomando la idea de los casos de prueba escritos con HUnit, probar que la salida
+del archivo ejecutable es idéntica a la esperada, y generalizándola, se
+consiguió que se trataba de una propiedad de las entradas pasadas a los
+programas: <<la salida producida por el ejecutable dada esta entrada debe ser
+idéntica a la producida por un programa <<simulador>> correcto que reciba la
+misma entrada>>. Así, se escribieron propiedades (o casos de prueba), como la
+del fragmento de código \ref{lst:quickex}, en el cual se quiere probar que el
+comportamiento de un programa que manipula conjuntos es el esperado. 
+
+\begin{haskellcode}[caption=Ejemplo de uso de QuickCheck, label=lst:quickex]
+prop_conjunto :: EntradaConjunto -> Property
+prop_conjunto entrada = do
+  salida <- run $ ejecutar "conjunto" entrada
+  assert $ salida == simularConjunto entrada
+\end{haskellcode}
+
+Cabe resaltar que fue necesario escribir un <<simulador>> (en el ejemplo,
+\inhas{simularConjunto}, escrito aprovechando la biblioteca de Haskell
+\inhas{Data.Set}) para cada propiedad, es decir, una función en Haskell capaz de
+generar la salida a partir de la entrada de manera correcta, así como una
+instancia \inhas{Arbitrary} para las entradas de cada propiedad (en el ejemplo,
+\inhas{EntradaConjunto}). El fragmento de código \ref{lst:quickex2} muestra una
+sencilla instancia \inhas{Arbitrary} para el tipo \inhas{EntradaConjunto}. Puede
+verse que el programa (tanto el escrito en Graciela como el simulador) acepta
+tres tipos de instrucciones, a saber, insertar o buscar un elemento,
+o imprimir el conjunto. Esta instancia \inhas{Arbitrary} genera listas de \inhas{200} instrucciones con
+el combinador \inhas{vectorOf}, donde cada instrucción es generada por
+\inhas{linea}. Este generador, a su vez, aprovecha el combinador \inhas{frequency}, el cual <<escoge>> un
+generador entre la lista con una distribución aleatoria ponderada por los coeficientes. El generador \inhas{pure Imprimir} simplemente devuelve la instrucción \inhas{Imprimir},
+mientras que los que hacen uso del operador \inhas{<$>} aprovechan la instancia
+\inhas{Arbitrary} del tipo del elemento a usar en el conjunto para devolver una instrucción como \inhas{Insertar (Entero 3)}.
+
+\begin{haskellcode}[caption=Ejemplo de instancia \inhas{Arbitrary}, label=lst:quickex2]
+instance Arbitray EntradaConjunto where
+  arbitrary = vectorOf 200 linea
+    where
+      linea = frequency
+        [ (4, Insertar  <$> arbitrary) 
+        , (3, Pertenece <$> arbitrary)
+        , (1, pure Imprimir) ]
+\end{haskellcode}
+
+Con esta herramienta, se hizo innecesario escribir manualmente las entradas para
+los programas de prueba y sus correspondientes salidas esperadas. En su lugar,
+para cada programa de prueba se escribieron simuladores en Haskell de los
 comportamientos de cada uno, e instancias de la clase \texttt{Arbitrary}
 correspondientes a sus entradas. Con esto, se pasó de tener un par de casos de
 prueba para cada situación, a tener un número arbitrario de ellas, sin necesidad
