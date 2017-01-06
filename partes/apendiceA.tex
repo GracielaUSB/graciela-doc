@@ -13,15 +13,15 @@ En la sección \ref{tda1} se mostró la siguiente tripleta de Hoare:
 Esta tripleta corresponde a las llamadas a procedimientos donde 
 posiblemente algunos parámetros son de Tipos de Dato Abstractos,
 donde $p$ es un procedimiento definido como
-$\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son, respectivamente, la precondición y poscondición de este procedimiento, $X$, $Y$ y $Z$ son listas de parámetros formales que posiblemente incluyen
+$\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son, respectivamente, la precondición y postcondición de este procedimiento, $X$, $Y$ y $Z$ son listas de parámetros formales que posiblemente incluyen
 variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, e $Invs(X)$ es equivalente a la expresión $(\forall x\ |\ x \in\ X \land \textrm{isTDA?}(x) : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
 invariantes del valor $x$ si $x$ es de un TDA.
 
-La poscondición de esta tripleta es, simplemente, la poscondición del procedimiento ($Q$), sustituyendo las listas de parámetros formales $Y$ y $Z$ por $B$ y $C$ respectivamente, y la verificación de los invariantes de todas las variables de Tipos de Dato Abstractos que estuvieran en las listas $B$ y $C$. No aparece en la poscondición la lista de parámetros reales $A$ puesto que la lista de parámetros formales $X$ es pasada en modo $in$.
+La postcondición de esta tripleta es, simplemente, la postcondición del procedimiento ($Q$), sustituyendo las listas de parámetros formales $Y$ y $Z$ por $B$ y $C$ respectivamente, y la verificación de los invariantes de todas las variables de Tipos de Dato Abstractos que estuvieran en las listas $B$ y $C$. No aparece en la postcondición la lista de parámetros reales $A$ puesto que la lista de parámetros formales $X$ es pasada en modo $in$.
 
 La precondición de esta tripleta, por otro lado, fue derivada con la fórmula de $wp$ (\textit{weakest precondition} o precondición más débil) de \cite{flaviani}, según la cual $wp([P, Q], Post)$ es equivalente a $P (x,y) \land (\forall y'\,|\,Q(x, y') : Post (x, y')$, como se explica a continuación.
 
-Como se desea conocer la precondición más débil de la llamada $p\  (A,B,C)$, con precondición $P$ y poscondición $Q$, dada la poscondición $Post := Q[Y,Z:=B,C]\, \land \, Invs(B \cup C)$ explicada anteriormente, tenemos
+Como se desea conocer la precondición más débil de la llamada $p\  (A,B,C)$, con precondición $P$ y postcondición $Q$, dada la postcondición $Post := Q[Y,Z:=B,C]\, \land \, Invs(B \cup C)$ explicada anteriormente, tenemos
 
 \begin{alignat}{1}
 wp(p\  (A,B,C), Post)
