@@ -7,8 +7,8 @@ El diseño y desarrollo de la extensión al compilador de Graciela fueron llevad
 a cabo entre marzo y noviembre del año 2016. Luego de una primera etapa de
 revisión del trabajo previo, el proyecto se orientó en seis áreas, a saber,
 (1) Manejo de apuntadores, (2) Teoría de Conjuntos, (3) Tipos de dato definidos
-por el programador, (4) Tipos Algebraicos Libres, (5) Herramientas para el
-programador, (6) Colección de casos de prueba.
+por el programador, (4) Tipos Algebraicos Libres, (5) Colección de casos de 
+prueba, (6) Herramientas para el programador.
 
 % El diseño y desarrollo de la extensión al compilador de Graciela fueron llevados
 % a cabo en tres etapas, entre marzo y noviembre del año 2016. En la primera
@@ -230,7 +230,7 @@ elementos.
 
 Específicamente, como se muestra en la figura \ref{fig:diag}, para arreglos de \ingra{n} dimensiones, se generan estructuras
 <<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo entero
-de 32 bit, corresponden a los tamaños en cada dimensión del arreglo ($d_0..d_n$ en la figura), y el último
+de 32 bit, corresponden a los tamaños en cada dimensión del arreglo ($d_1..d_n$ en la figura), y el último
 corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
@@ -499,7 +499,8 @@ capacidad de reconocer estos tipos y de dar mensajes de error apropiados cuando
 se intente usarlos fuera de Tipos de Dato Abstractos.
 
 Finalmente, se agregaron los operadores usuales de la teoría de conjuntos. Se
-hace una exposición de ellos en el apéndice NUMERODEAPENDICE.
+hace una exposición de ellos en el manual del programador del lenguaje 
+(ver apéndice \ref{manual}).
 
 \subsection{Biblioteca externa para teoría de conjuntos}
 
@@ -991,25 +992,25 @@ constructores e identificadores de tipos, para luego usarlos en el
 reconocimiento y análisis de expresiones que hagan uso de ellos. Para reconocer
 las definiciones de estos tipos bastaría con ampliar la gramática del lenguaje y
 del compilador, pero para analizar sus usos se consiguen problemas en el caso de
-tipos algebraicos libres con tipos paramétricos. Por ejemplo, dada la definición
+tipos algebraicos libres con tipos paramétricos. 
 
-\begin{alignat*}{1}
-\textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T))
-\end{alignat*}
+Por ejemplo, dada la definición de la figura \ref{fig:freetype}, si el
+compilador encuentra un uso del  constructor $Lvac$ como el de la figura
+\ref{fig:lvac}, el tipo del constructor debe ser el mismo de la variable
+$\texttt{a}$, es decir, el sistema de tipos debe ser capaz de propagar
+información entre las expresiones, o, en otras palabras, debe ser capaz de
+efectuar unificación de tipos entre las expresiones de un programa.
 
-si posteriormente el compilador encuentra un uso del constructor $Lvac$ como el
-siguiente,
+\setcounter{equation}{1}
+\begin{alignat}{1}
+\textbf{freetype}\ Lista\ (T) ::= Lvac\ |\ Cons\ (T, Lista (T)) \label{fig:freetype}
+\end{alignat}
 
 \abovedisplayskip=-18pt plus 3pt %%0pt
-\begin{alignat*}{1}
-\texttt{a ==}\  Lvac\ ()
-\end{alignat*}
+\begin{alignat}{1}
+\texttt{a ==}\  Lvac\ () \label{fig:lvac}
+\end{alignat}
 \abovedisplayskip=-6pt plus 3pt %%0pt
-
-el tipo del constructor debe ser el mismo de la variable $\texttt{a}$, es decir,
-el sistema de tipos debe ser capaz de propagar información entre las
-expresiones, o, en otras palabras, debe ser capaz de efectuar unificación de
-tipos entre las expresiones de un programa.
 
 Sin embargo, no basta con permitir su uso en expresiones. Una de las
 características más útiles de los TALs es la posibilidad de usar el predicado
