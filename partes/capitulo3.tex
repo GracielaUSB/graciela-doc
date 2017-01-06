@@ -230,7 +230,7 @@ elementos.
 
 Específicamente, como se muestra en la figura \ref{fig:diag}, para arreglos de \ingra{n} dimensiones, se generan estructuras
 <<cabecera>> de \ingra{n+1} campos, donde los primeros \ingra{n}, de tipo entero
-de 32 bit, corresponden a los tamaños en cada dimensión del arreglo ($d_0..d_i$ en la figura), y el último
+de 32 bit, corresponden a los tamaños en cada dimensión del arreglo ($d_0..d_n$ en la figura), y el último
 corresponde a un apuntador a un espacio de memoria contiguo de tamaño
 $\texttt{sizeof(T)} * \prod\limits_{i=1}^\texttt{n} dimensi\acute{o}n_i$, que se
 reserva en el mismo tipo de memoria que la <<cabecera>>, es decir, en la pila si
@@ -1068,7 +1068,7 @@ este.
 \subsection{Ejercicio de diseño del lenguaje}
 
 Los primeros programas de prueba de este proyecto fueron escritos a manera 
-de esbozo con el objetivo de escoger la notación que se usaría en el lenguaje 
+de esbozo, con el objetivo de escoger la notación que se usaría en el lenguaje 
 final para expresar las nuevas capacidades de éste, en particular, las 
 expresiones propias de la teoría de conjuntos, el manejo de apuntadores, y la
 declaración y uso de Tipos de Dato definidos por el usuario.
