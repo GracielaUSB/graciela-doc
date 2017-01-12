@@ -397,7 +397,22 @@
 \includepdf[offset=2.5cm -2.5cm]{portada.pdf}
 \cleardoublepage
 \includepdf[offset=2.5cm -2.5cm]{portada2.pdf}
+\clearpage % No idea why cleardoublepage doesn't work here
+
+
+\newgeometry{left=3cm,bottom=0.1cm}
+\pagestyle{empty}
+\includegraphics[width=0.95\paperwidth]{evalMAL.jpg}\hspace*{-\textwidth}
 \cleardoublepage
+\includegraphics[width=0.95\paperwidth]{evalCSR.jpg}\hspace*{-\textwidth}
+\cleardoublepage
+
+\includegraphics[width=0.95\paperwidth]{contMAL.jpg}\hspace*{-\textwidth}
+\cleardoublepage
+\includegraphics[width=0.95\paperwidth]{contCSR.jpg}\hspace*{-\textwidth}
+\cleardoublepage
+
+\restoregeometry
 
 \frontmatter
 
@@ -411,6 +426,7 @@
 \addtotoc{Resumen}
 
 \setcounter{page}{5}
+% \setcounter{page}{7}
 \abstract{
 
 El lenguaje Graciela y su compilador, diseñados por Araujo y Jiménez~\cite{ayj},
