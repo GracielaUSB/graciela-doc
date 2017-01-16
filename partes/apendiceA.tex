@@ -4,10 +4,10 @@
 
 En la sección \ref{tda1} se mostró la siguiente tripleta de Hoare:
 
-\begin{alignat}{1}
+\begin{alignat}{1}%1
   \{ P[X,Y:=A,&B]\, \land \, Invs(A \cup B)\} \nonumber \\
   p\  (A,&B,C) \label{eqn:tdatriple2} \\ 
-  \{ Q[X,Y,Z:=A,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
+  \{ Q[X,Y,Z:=A_0,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
 \end{alignat}
 
 Esta tripleta corresponde a las llamadas a procedimientos donde 
@@ -17,13 +17,19 @@ $\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z
 variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, e $Invs(X)$ es equivalente a la expresión $(\forall\, x\ |\ x \in\ X : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
 invariantes del valor $x$ si $x$ es de un TDA.
 
-La postcondición de esta tripleta es, simplemente, la postcondición del procedimiento $p$ ($Q$), sustituyendo las listas de parámetros formales $Y$ y $Z$ por $B$ y $C$ respectivamente, y la verificación de los invariantes de todas las variables de Tipos de Dato Abstractos que estuvieran en las listas $B$ y $C$. No aparece en la postcondición la lista de parámetros reales $A$ puesto que la lista de parámetros formales $X$ es pasada en modo $in$.
+Adicionalmente, y sin pérdida de generalidad, supondremos que $P$ es de la forma $X = A_0 \land P'$. Esto es posible dado que $A_0$ es una variable de 
+especificación, y si $P$ no contiene esta igualdad, se puede suponer que es
+una abreviación de $P \land X = A_0$.
+
+La postcondición de esta tripleta es, simplemente, la postcondición del procedimiento $p$ ($Q$), sustituyendo las listas de parámetros formales $Y$, $Z$ y $X$ por $B$, $C$ y el valor inicial de $A$ ($A_0$), respectivamente, y la verificación de los invariantes de todas las variables de Tipos de Dato Abstractos que estuvieran en las listas $B$ y $C$. No se verifican los 
+invariantes de las variables de Tipos de Dato Abstractos que estuvieran en 
+$A_0$ puesto que la lista de parámetros formales $X$ es pasada en modo $in$. Formalmente, $Post := Q[X,Y,Z := A_0,B,C]\, \land \, Invs(B \cup C)$.
 
 La precondición de esta tripleta, por otro lado, fue derivada usando la fórmula de $wp$ (\textit{weakest precondition} o precondición más débil) de \cite{flaviani}, según la cual $wp([P, Q], Post)$ es equivalente a $P (x,y) \land (\forall\, y'\,|\,Q(x, y') : Post (x, y'))$, como se explica a continuación.
 
-Como se desea conocer la precondición más débil de la llamada $p\  (A,B,C)$, con precondición $P$ y postcondición $Q$, dada la postcondición $Post := Q[X,Y,Z := A,B,C]\, \land \, Invs(B \cup C)$ explicada anteriormente, tenemos
+Como se desea conocer la precondición más débil de la llamada $p\  (A,B,C)$, con especificación $[P, Q]$, dada la postcondición $Post$ explicada anteriormente, tenemos
 
-\begin{alignat}{1}
+\begin{alignat}{1}%2
 wp(p\  (A,B,C), Post)
 \end{alignat}
 
@@ -31,61 +37,91 @@ Por definición de la instrucción de llamada a procedimiento, según la cual se
 cuerpo del procedimiento y por último se sustituyen los parámetros
 actuales en modos $in\textrm{-}out$ y $out$ por los correspondientes parámetros formales, esto es equivalente a
 
-\begin{alignat}{1}
+\begin{alignat}{1}%3
 wp(X,Y := A,B; [P,Q]; B,C := Y,Z, Post)
 \end{alignat}
 
 Esto a su vez es equivalente a
 
-\begin{alignat}{1}
+\begin{alignat}{1}%4
 wp(X,Y := A,B; [P,Q], Post[B,C := Y,Z] \land Invs(Y \cup Z))
 \end{alignat}
 
 Aplicando $wp$ de nuevo,
 
-\begin{alignat}{1}
+\begin{alignat}{1}%5
 wp(X,Y := A,B, wp([P,Q], Post[B,C := Y,Z] \land Invs(Y \cup Z)))
 \end{alignat}
 
 Lo cual por la definición de $wp$ es equivalente a
 
-\begin{alignat}{1}
+\begin{alignat}{1}%6
 wp(X,Y := A,B, P \land (\forall\, B',C'\ &|\ Q [Y,Z := B',C'] \land Invs (B' \cup C') \nonumber \\
                                        &: Post [B,C := B',C'] \land Invs (B' \cup C')))
 \end{alignat}
 
 Esto último puede simplificarse a
 
-\begin{alignat}{1}
+\begin{alignat}{1}%7
 wp(X,Y := A,B, P \land (\forall\, B',C'\ &|\ Q [Y,Z := B',C'] \land Invs (B' \cup C') \nonumber \\
                                        &: Post [B,C := B',C']))
 \end{alignat}
 
 Aplicando la definición de $Post$,
 
-\begin{alignat}{1}
+\begin{alignat}{1}%8
 wp(X,Y := A,B, P \land (\forall\, B',C'\ &|\ Q [Y,Z := B',C']\, \land Invs (B' \cup C')  \nonumber \\
-                                       &:  Q [X,Y,Z := A, B',C']\, \land Invs (B' \cup C')
+                                       &:  Q [X,Y,Z := A_0, B',C']\, \land Invs (B' \cup C')
 \end{alignat}
 
 Que puede simplificarse a
 
-\begin{alignat}{1}
+\begin{alignat}{1}%9
 wp(X,Y := A,B, P \land (\forall\, B',C'\ &|\ Q [Y,Z := B',C']\, \land\, Invs (B' \cup C')  \nonumber \\
-                                       &:  Q [X,Y,Z := A, B',C'])
+                                       &:  Q [X,Y,Z := A_0, B',C'])
 \end{alignat}
 
+\newpage
 Evaluando $wp$,
 
-\begin{alignat}{1}
+\begin{alignat}{1}%10
 P[X,Y := A,B] \land Invs (A \cup B) \land (\forall\, B',C'\ &|\ Q [X,Y,Z := A,B',C']\, \land\, Invs (B' \cup C')  \nonumber \\
-                                                          &:  Q [X,Y,Z := A, B',C'])
+                                                          &:  Q [X,Y,Z := A_0, B',C'])
+\end{alignat}
+
+Usando la suposición de que $P \equiv X = A_0 \land P'$,
+
+\begin{alignat}{3}%11
+A = A_0 & \land P'[X,Y &&:= A,B] \land Invs (A \cup B) \nonumber \\
+        & \land (\forall\, B',C'\ &&|\ Q [X,Y,Z := A,B',C']\, \land\, Invs (B' \cup C')  \nonumber \\
+        &                         &&:  Q [X,Y,Z := A_0,B',C'])
+\end{alignat}
+
+Como $A = A_0$, podemos sustituir las ocurrencias de $A$ por $A_0$, quedando
+
+\begin{alignat}{3}%11
+A = A_0 & \land P'[X,Y &&:= A,B] \land Invs (A \cup B) \nonumber \\
+        & \land (\forall\, B',C'\ &&|\ Q [X,Y,Z := A_0,B',C']\, \land\, Invs (B' \cup C')  \nonumber \\
+        &                         &&:  Q [X,Y,Z := A_0,B',C'])
 \end{alignat}
 
 Como el rango de la cuantificación universal implica al cuerpo, ésta es cierta,
 quedando simplemente
 
-\begin{alignat}{1}
+\begin{alignat}{1}%13
+A = A_0 \land P'[X,Y := A,B] \land Invs (A \cup B)
+\end{alignat}
+
+Que es equivalente a
+
+\begin{alignat}{1}%14
+(X = A_0 \land P')[X,Y := A,B] \land Invs (A \cup B)
+\end{alignat}
+
+\newpage
+Usando nuevamente la suposición de que $P \equiv X = A_0 \land P'$, tenemos
+
+\begin{alignat}{1}%15
 P[X,Y := A,B] \land Invs (A \cup B)
 \end{alignat}
 
