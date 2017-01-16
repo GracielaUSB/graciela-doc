@@ -122,7 +122,7 @@ operaciones del TDA~\cite{ravelo}.
 \begin{alignat}{1}
   \{ P[X,Y:=A,&B]\, \land \, Invs(A \cup B)\} \nonumber \\
   p\  (A,&B,C) \label{eqn:tdatriple} \\ 
-  \{ Q[X,Y,Z:=A,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
+  \{ Q[X,Y,Z:=A_0,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
 \end{alignat}
 
 Una propiedad importante de los TDAs es que sus procedimientos jamás deben
@@ -131,7 +131,8 @@ procedimiento ya no pertenecería al modelo abstracto. Esta propiedad puede
 representarse como una familia de tripletas de Hoare (figura
 \ref{eqn:tdatriple}), donde $p$ es un procedimiento definido como
 $\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son, respectivamente, la precondición y postcondición de este procedimiento, $X$, $Y$ y $Z$ son listas de parámetros formales que posiblemente incluyen
-variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, e $Invs(X)$ es equivalente a la expresión $(\forall x\ |\ x \in\ X : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
+variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, $A_0$ es la lista con los valores iniciales de los valores
+en $A$, e $Invs(X)$ es equivalente a la expresión $(\forall x\ |\ x \in X : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
 invariantes del valor $x$ si $x$ es de un TDA. La derivación de esta tripleta de Hoare se muestra en el apéndice \ref{derivhoare}.
 
 \section{Tipos Algebraicos Libres}

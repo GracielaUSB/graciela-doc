@@ -10,12 +10,18 @@ En la sección \ref{tda1} se mostró la siguiente tripleta de Hoare:
   \{ Q[X,Y,Z:=A_0,&B,C]\, \land \, Invs(B \cup C)\} \nonumber
 \end{alignat}
 
-Esta tripleta corresponde a las llamadas a procedimientos donde 
-posiblemente algunos parámetros son de Tipos de Dato Abstractos,
-donde $p$ es un procedimiento definido como
-$\textbf{proc}\ p (in\ X : \textrm{TX}, in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son, respectivamente, la precondición y postcondición de este procedimiento, $X$, $Y$ y $Z$ son listas de parámetros formales que posiblemente incluyen
-variables de Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y $Z$ respectivamente, e $Invs(X)$ es equivalente a la expresión $(\forall\, x\ |\ x \in\ X : Inv(x) )$, donde $Inv(x)$ es el predicado que condensa todos los
-invariantes del valor $x$ si $x$ es de un TDA.
+Esta tripleta corresponde a las llamadas a procedimientos donde  posiblemente
+algunos parámetros son de Tipos de Dato Abstractos, donde $p$ es un
+procedimiento definido como $\textbf{proc}\ p (in\ X : \textrm{TX},
+in\textrm{-}out\ Y : \textrm{TY}, out\ Z : \textrm{TZ})$, $P$ y $Q$ son,
+respectivamente, la precondición y postcondición de este procedimiento, $X$, $Y$
+y $Z$ son listas de parámetros formales que posiblemente incluyen variables de
+Tipos de Dato Abstractos, $A$, $B$ y $C$ son listas de parámetros reales pasados
+al procedimiento $p$ tal que todos sus tipos corresponden a los de $X$, $Y$ y
+$Z$ respectivamente, $A_0$ es la lista con los valores iniciales de los valores
+en $A$, e $Invs(X)$ es equivalente a la expresión 
+$(\forall\, x\ |\ x \in X : Inv(x) )$, donde $Inv(x)$ es el predicado que 
+condensa todos los invariantes del valor $x$ si $x$ es de un TDA.
 
 Adicionalmente, y sin pérdida de generalidad, supondremos que $P$ es de la forma $X = A_0 \land P'$. Esto es posible dado que $A_0$ es una variable de 
 especificación, y si $P$ no contiene esta igualdad, se puede suponer que es
