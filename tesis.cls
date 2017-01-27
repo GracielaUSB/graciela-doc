@@ -70,9 +70,10 @@
 \interfootnotelinepenalty=9999    % Almost never break footnotes.
 \usepackage{fancyhdr}
 
-\fancyhead[LE,RO]{\thepage}
-\fancyhead[LO]{\thechaptername}
-\fancyhead[RE]{\relax}
+\fancyhead[R]{\thepage}
+\fancyhead[L]{\thechaptername}
+%\fancyhead[LO]{\thechaptername}
+%\fancyhead[RE]{\relax}
 
 % \lhead[\rm\thepage]{\fancyplain{}{\sl{\rightmark}}}
 % \rhead[\fancyplain{}{\sl{\leftmark}}]{\rm\thepage}
@@ -246,7 +247,7 @@
 }
 {
   \vfil\vfil\vfil\null
-  \cleardoublepage
+  %\cleardoublepage
 }
 \addtocounter{secnumdepth}{1}
 \setcounter{tocdepth}{6}
@@ -268,7 +269,7 @@
            \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}
     \@starttoc{toc}
     \if@restonecol\twocolumn\fi
-   \cleardoublepage
+   %\cleardoublepage
 }\end{spacing}
 }
 \renewcommand\listoffigures{
@@ -285,7 +286,7 @@
               {\MakeUppercase\listfigurename}}
     \@starttoc{lof}
     \if@restonecol\twocolumn\fi
-    \cleardoublepage
+    %\cleardoublepage
 }\end{spacing}
 }
 \renewcommand\listoftables{
@@ -302,7 +303,7 @@
               {\MakeUppercase\listtablename}}
     \@starttoc{lot}
     \if@restonecol\twocolumn\fi
-    \cleardoublepage
+    %\cleardoublepage
 }\end{spacing}
 }
 
@@ -313,7 +314,7 @@
       \@mkboth{
           \MakeUppercase\listsymbolname}{\MakeUppercase\listsymbolname}}
 \begin{longtable}[c]{#1}#2\end{longtable}\par
-    \cleardoublepage
+    %\cleardoublepage
 }
 \newcommand\listconstants{Physical Constants}
 \usepackage{longtable}
@@ -324,7 +325,7 @@
       \@mkboth{
           \MakeUppercase\listconstants}{\MakeUppercase\listconstants}}
 \begin{longtable}[c]{#1}#2\end{longtable}\par
-    \cleardoublepage
+    %\cleardoublepage
 }
 \newcommand\listnomenclature{Symbols}
 \usepackage{longtable}
@@ -335,7 +336,7 @@
       \@mkboth{
           \MakeUppercase\listnomenclature}{\MakeUppercase\listnomenclature}}
 \begin{longtable}[c]{#1}#2\end{longtable}\par
-    \cleardoublepage
+    %\cleardoublepage
 }
 \newcommand\acknowledgements[1]{
 \btypeout{Agradecimientos}
@@ -364,11 +365,11 @@
 \vskip 60\p@
 \begin{center}{\Large \sl #1}\end{center}
 \vfil\null
-\cleardoublepage
+%\cleardoublepage
 }
 \renewcommand\backmatter{
   \if@openright
-    \cleardoublepage
+    %\cleardoublepage
   \else
     \clearpage
   \fi

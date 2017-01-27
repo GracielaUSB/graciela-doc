@@ -7,7 +7,7 @@ tesis:
 	bibtex8 tesis
 	xelatex tesis.tex
 	xelatex tesis.tex
-	rm portada.pdf portada2.pdf
+	# rm portada.pdf portada2.pdf
 	if [ `uname` = "Darwin" ]; then open tesis.pdf; else evince tesis.pdf; fi &
 
 cleanall: clean

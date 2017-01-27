@@ -1,4 +1,4 @@
-\documentclass[letterpaper, 12pt, twoside, spanish]{tesis}
+\documentclass[letterpaper, oneside, 12pt, spanish]{tesis}
 
 % Paquetes para idioma
 \usepackage{babel}
@@ -395,24 +395,21 @@
 \begin{document}
 
 \includepdf[offset=2.5cm -2.5cm]{portada.pdf}
-\cleardoublepage
 \includepdf[offset=2.5cm -2.5cm]{portada2.pdf}
-\clearpage % No idea why cleardoublepage doesn't work here
+\includepdf[pages=-, offset=2.5cm -2.5cm]{actas.pdf}
 
+% \newgeometry{left=2cm,bottom=0.1cm,top=4cm,right=0.1cm}
+% \pagestyle{empty}
 
-\newgeometry{left=3cm,bottom=0.1cm}
-\pagestyle{empty}
-\includegraphics[width=0.95\paperwidth]{evalMAL.jpg}\hspace*{-\textwidth}
-\cleardoublepage
-\includegraphics[width=0.95\paperwidth]{evalCSR.jpg}\hspace*{-\textwidth}
-\cleardoublepage
+% \includegraphics[width=0.95\paperwidth,height=0.95\paperheight]{contMAL.jpg}
+% \newpage
+% \includegraphics[width=0.95\paperwidth,height=0.95\paperheight,keepaspectratio]{contCSR.jpg}
+% \newpage
+% \includegraphics[width=0.95\paperwidth,height=0.95\paperheight,keepaspectratio]{evalMAL.jpg}
+% \newpage
+% \includegraphics[width=0.95\paperwidth,height=0.95\paperheight,keepaspectratio]{evalCSR.jpg}
 
-\includegraphics[width=0.95\paperwidth]{contMAL.jpg}\hspace*{-\textwidth}
-\cleardoublepage
-\includegraphics[width=0.95\paperwidth]{contCSR.jpg}\hspace*{-\textwidth}
-\cleardoublepage
-
-\restoregeometry
+% \restoregeometry
 
 \frontmatter
 
@@ -458,7 +455,7 @@ modular para facilitar la escritura de futuras extensiones a su compilador.
 }
 
 % Iniciar nueva página luego del resumen
-\cleardoublepage
+\clearpage %\cleardoublepage
 
 
 % \setstretch{1.3}  % Return the line spacing back to 1.3
@@ -549,7 +546,7 @@ proyecto.
 \end{flushright}
 \end{multicols}
 }}
-\cleardoublepage
+\clearpage %\cleardoublepage
 
 \pagestyle{fancy}
 
@@ -567,6 +564,8 @@ proyecto.
 % \lhead{\emph{Índice de Tablas}}
 % \renewcommand*\listtablename{Índice de Tablas}
 % \listoftables
+
+\newpage
 
 \setchapter{\emph{Índice de Fragmentos de Código}}
 \renewcommand{\lstlistlistingname}{Índice de Fragmentos de Código}
@@ -618,14 +617,14 @@ proyecto.
 \input{./partes/capitulo2}
 \input{./partes/capitulo3}
 \input{./partes/capitulo4}
-
 \input{./partes/conclusiones}
+\newpage
 
 % El estilo de la bibliografía es AAAI, definido en el archivo aaai.bst.
 \label{bibliography}
 \addtocontents{toc}{\vspace{2em}}
-\printbibliography
 \setchapter{\emph{Bibliografía}}
+\printbibliography
 % \addcontentsline{toc}{chapter}{Bibliografía}
 
 % Apéndices
